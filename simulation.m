@@ -3,8 +3,8 @@
 % Written by Harang Ju. January 29, 2018.
 
 %% Parameters
-N = 20; % number of nodes
-frac_conn = 5e-2; % fraction connectivity
+N = 1e3; % number of nodes
+frac_conn = 1e-3; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
 activity = 1e-3;
@@ -45,14 +45,14 @@ for i = 1 : N
     if max(on) == 0
         plot(0); continue
     end
-    plot(x(on), i*on(on), '.', 'MarkerSize', 10)
+    plot(x(on), i*on(on), '.', 'MarkerSize', 1)
 end
 title('inputs')
 axis([0 t_final 0 N+0.5]); axis square
 xlabel('trial'); ylabel('neuron');
 hold off; prettify
 
-if N <= 20
+if N <= 100
     subplot(2,2,3)
     plot_network(A)
 end
@@ -64,7 +64,7 @@ for i = 1 : N
         plot(0); continue
     end
     on_u = u_t(i,:) > 0;
-    plot(x(on), i*on(on), '.', 'MarkerSize', 10)
+    plot(x(on), i*on(on), '.', 'MarkerSize', 1)
 end
 title('activity raster')
 axis([0 t_final 0 N+0.5]); axis square
@@ -72,5 +72,3 @@ xlabel('trial'); ylabel('neuron');
 hold off; prettify
 
 clear x i on
-
-[source target]

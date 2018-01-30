@@ -9,12 +9,14 @@ for i = 1 : length(avalanche)
         'b.', 'MarkerSize', 20)
     % plot lines
     if i > 1
-        plot(repmat([i-1 i], [1 width]),...
-            reshape(avalanche{i}', [1 width*2]), 'k')
+        for j = 1 : width
+            plot([i-1 i], avalanche{i}(j,:), 'k')
+        end
     end
 end
-title('avalanche')
-axis([0 length(avalanche)+1 0 N+0.5]); axis square
+title(['avalanche from anchor(s): ' num2str(avalanche{1}(:,2)')])
+% axis([0 length(avalanche)+1 0 N]); 
+axis square
 xlabel('trial'); ylabel('neuron');
 hold off; prettify
 

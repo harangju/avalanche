@@ -3,7 +3,7 @@
 % Written by Harang Ju. January 29, 2018.
 
 %% Parameters
-N = 10; % number of nodes
+N = 20; % number of nodes
 frac_conn = 4e-2; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
@@ -13,7 +13,8 @@ fire_threshold = 1;
 %% Initialize
 X = zeros(N,1); % system state, [N X 1]
 A = rand(N) < frac_conn; % system connectivity, [pre X post]
-B = diag(ones(N,1)); % system input connectivity, [input X N]
+A = A & ~diag(ones(N,1)); % prevent recursive connectivity
+B = ones(N,1); % system input connectivity, [N X 1]
 u = zeros(N,1); % system input, [N X 1]
 
 %% Simulation
@@ -22,7 +23,7 @@ u_t = zeros(size(X_t));
 for t = 1 : t_final/step_size
     u = rand(N,1) < activity;
     u_t(:,t) = u;
-    X = A * X + B * u;
+    X = A' * X + B .* u;
     X_t(:,t) = X;
 end
 
@@ -51,7 +52,7 @@ axis([0 t_final 0 N+0.5]); axis square
 xlabel('trial'); ylabel('neuron');
 hold off; prettify
 
-if N <= 15
+if N <= 20
     subplot(2,2,3);
     source = mod(find(A),N);
     source(source==0) = N;

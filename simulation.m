@@ -4,7 +4,7 @@
 
 %% Parameters
 N = 1e3; % number of nodes
-frac_conn = 1e-3; % fraction connectivity
+frac_conn = 1e-2; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
 activity = 1e-3;
@@ -52,9 +52,16 @@ axis([0 t_final 0 N+0.5]); axis square
 xlabel('trial'); ylabel('neuron');
 hold off; prettify
 
-if N <= 100
-    subplot(2,2,3)
+subplot(2,2,3)
+if N <= 50
     plot_network(A)
+else
+    durs = avalanche_duration(A, B);
+    [n_durs, edges] = histcounts(durs, N/1e2);
+    bar(edges(2:end), n_durs)
+    xlabel('duration of avalanche'); ylabel('number of avalanches')
+    title('avalanche duration')
+    axis square; prettify
 end
 
 subplot(2,2,4); hold on

@@ -3,7 +3,8 @@ function avalanche = find_avalanche(A, B, anchors)
 %   A: system connectivity, [pre X post]
 %   B: system input connectivity, [input X N]
 %   anchors: index of neurons to start avalanche
-%   avalanche: 
+%   avalanche: cell array of transitions,
+%       e.g. [1 2; 1 3] -> transitions from node 1 to nodes 2 and 3
 
 max_iter = 1e3;
 

@@ -1,23 +1,16 @@
-function plot_avalanche(avalanche, A)
+function plot_avalanche(avalanche, N)
 %plot_avalanche Plots an avalanche
-
-N = size(A,1);
+%   avalanche: cell array of transitions
 
 clf; hold on
 for i = 1 : length(avalanche)
-    plot(i*ones(length(avalanche{i})), avalanche{i},...
+    width = size(avalanche{i}, 1);
+    plot(i*ones(width, 1), avalanche{i}(:, 2),...
         'b.', 'MarkerSize', 20)
     % plot lines
-    if i < length(avalanche)
-        for j = 1 : length(avalanche{i})
-            current_node = avalanche{i}(j);
-            for k = 1 : length(avalanche{i})
-                next_nodes = find(A(current_node,:));
-                for l = 1 : length(next_nodes)
-                    plot([i i+1], [current_node next_nodes(l)], 'k')
-                end
-            end
-        end
+    if i > 1
+        plot(repmat([i-1 i], [1 width]),...
+            reshape(avalanche{i}', [1 width*2]), 'k')
     end
 end
 title('avalanche')

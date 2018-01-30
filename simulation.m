@@ -4,7 +4,7 @@
 
 %% Parameters
 N = 20; % number of nodes
-frac_conn = 4e-2; % fraction connectivity
+frac_conn = 5e-2; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
 activity = 1e-3;
@@ -53,15 +53,8 @@ xlabel('trial'); ylabel('neuron');
 hold off; prettify
 
 if N <= 20
-    subplot(2,2,3);
-    source = mod(find(A),N);
-    source(source==0) = N;
-    target = repelem(1:N, sum(A))';
-    g = digraph(source,target);
-    plot(g, 'MarkerSize', 5)
-    title('graph')
-    axis square; axis off
-    prettify
+    subplot(2,2,3)
+    plot_network(A)
 end
 
 subplot(2,2,4); hold on

@@ -45,7 +45,7 @@ for i = 1 : N
     if max(on) == 0
         plot(0); continue
     end
-    plot(x(on), i*on(on), '.', 'MarkerSize', 1)
+    plot(x(on), i*on(on), '.', 'MarkerSize', 5)
 end
 title('inputs')
 axis([0 t_final 0 N+0.5]); axis square
@@ -71,7 +71,7 @@ for i = 1 : N
         plot(0); continue
     end
     on_u = u_t(i,:) > 0;
-    plot(x(on), i*on(on), '.', 'MarkerSize', 1)
+    plot(x(on), i*on(on), '.', 'MarkerSize', 5)
 end
 title('activity raster')
 axis([0 t_final 0 N+0.5]); axis square

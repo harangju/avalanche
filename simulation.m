@@ -4,10 +4,10 @@
 
 %% Parameters
 N = 1e3; % number of nodes
-frac_conn = 1e-2; % fraction connectivity
+frac_conn = 6e-4; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
-activity = 1e-3;
+activity = 1e-4;
 fire_threshold = 1;
 
 %% Initialize
@@ -55,12 +55,11 @@ hold off; prettify
 subplot(2,2,3)
 if N <= 50
     plot_network(A)
-else
-    durs = avalanche_duration(A, B);
-    [n_durs, edges] = histcounts(durs, N/1e2);
-    bar(edges(2:end), n_durs)
-    xlabel('duration of avalanche'); ylabel('number of avalanches')
-    title('avalanche duration')
+else%if false
+    sizes = avalanche_size(A, B);
+    [n_sizes, edges] = histcounts(sizes, N/1e2);
+    bar(edges(2:end), n_sizes)
+    xlabel('avalanche size'); ylabel('number of avalanches')
     axis square; prettify
 end
 

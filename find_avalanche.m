@@ -6,7 +6,7 @@ function avalanche = find_avalanche(A, B, anchors)
 %   avalanche: cell array of transitions,
 %       e.g. [1 2; 1 3] -> transitions from node 1 to nodes 2 and 3
 
-max_iter = 1e3;
+max_iter = 1e2;
 
 N = size(A,1); % number of neurons
 X = zeros(N,1); % system state, [N X 1]

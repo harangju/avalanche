@@ -3,8 +3,8 @@
 % Written by Harang Ju. January 29, 2018.
 
 %% Parameters
-N = 1e1; %1e3; % number of nodes
-frac_conn = 1e-1; %6e-4; % fraction connectivity
+N = 1e3; % number of nodes
+frac_conn = 6e-4; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
 activity = 1e-3;
@@ -14,7 +14,7 @@ fire_threshold = 1;
 X = zeros(N,1); % system state, [N X 1]
 A = rand(N) < frac_conn; % system connectivity, [pre X post]
 A = A & ~diag(ones(N,1)); % prevent recursive connectivity
-A = A .* rand(N);
+A = A .* (rand(N) * 0.5 + 0.5);
 B = ones(N,1); % system input connectivity, [N X 1]
 u = zeros(N,1); % system input, [N X 1]
 

@@ -8,12 +8,14 @@ N = size(A,1);
 sizes = zeros(N,1);
 
 for i = 1 : N
-    avalanche = find_avalanche(A,B,i);
+    u_t = zeros(N,1);
+    u_t(i) = 1;
+    [~, trans] = trigger_avalanche(A,B,u_t);
     nodes = [];
-    for j = 1 : length(avalanche)
-        nodes = [nodes; avalanche{j}];
+    for j = 2 : length(trans)
+        nodes = [nodes; trans{j}(:,2)];
     end
-    sizes(i) = length(unique(nodes(:)));
+    sizes(i) = length(unique(nodes(:))) + 1;
 end
 
 end

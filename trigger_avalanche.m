@@ -1,4 +1,4 @@
-function [transitions, X_t] = trigger_avalanche(A, B, u_t)
+function [X_t, transitions] = trigger_avalanche(A, B, u_t)
 %trigger_avalanche
 %   A: system connectivity, [pre X post]
 %   B: system input connectivity, [input X N]
@@ -10,6 +10,7 @@ max_iter = 1e2;
 
 N = size(A,1); % number of neurons
 X = zeros(N,1); % system state, [N X 1]
+C = A > 0; % connectivity matrix
 
 X_t = zeros(N,max_iter); % system state over time
 transitions = cell(1,max_iter);
@@ -23,9 +24,9 @@ for t = 1 : max_iter
     X_t(:,t) = X;
     if t > 1
         X_prev_idx = find(X_t(:,t-1));
-        source = A(X_prev_idx,:) .* X_prev_idx;
+        source = C(X_prev_idx,:) .* X_prev_idx;
         source(source==0) = [];
-        edges = sum(A(X_prev_idx,:), 1)';
+        edges = sum(C(X_prev_idx,:)>0, 1)';
         target_idx = find(edges);
         target = repelem(target_idx, edges(target_idx));
         transitions{t} = [source' target];

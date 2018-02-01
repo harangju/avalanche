@@ -4,7 +4,7 @@ function plot_network(A)
 N = size(A,1);
 source = mod(find(A),N);
 source(source==0) = N;
-target = repelem(1:N, sum(A))';
+target = repelem(1:N, sum(A>0))';
 g = digraph(source,target);
 plot(g, 'MarkerSize', 5)
 title('graph')

@@ -4,28 +4,36 @@ function plot_avalanche(X_t, transitions)
 %   transitions: cell array of transitions {1 X t}
 
 marker_size_unit = 50;
+color_input = .8;
+color_active = .2;
 
 N = size(X_t,1);
-duration = size(X_t,2) - 1;
+duration = size(X_t,2);
+
+g = zeros(1, duration);
 
 clf; hold on
-for t = 1 : size(X_t, 2)
+for t = 1 : duration
     X = X_t(:,t);
+    trans = transitions{t};
+    % plot active neurons
     X_idx = find(X);
-    scatter(t*ones(size(X_idx)), X_idx, marker_size_unit * X(X_idx), ...
-        'b', 'filled')
+    colors = color_active * ones(size(X_idx));
+    if t == 1
+        colors(:) = color_input;
+    else
+        colors(~ismember(X_idx, trans(:,2))) = color_input;
+    end
+    g(t) = scatter(t*ones(size(X_idx)), X_idx, ...
+        marker_size_unit * X(X_idx), colors, 'filled');
     % plot transitions
-    if t > 1
-        trans = transitions{t};
-        width = size(trans, 1);
-        for j = 1 : width
-            plot([t-1 t], trans(j,:), 'k')
-        end
+    for j = 1 : size(trans,1)
+        plot([t-1 t], trans(j,:), 'k')
     end
 end
-axis([0 floor(duration*1.2) 0 floor(N*1.2)]); 
-axis square
+axis([0 floor(duration*1.1) 0 floor(N*1.1)]);
 title('avalanche'); xlabel('trial'); ylabel('neuron');
-hold off; prettify
+hold off; prettify; colormap jet; caxis([0 1])
+legend(g(1:2), {'input', 'activated'})
 
 end

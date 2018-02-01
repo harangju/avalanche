@@ -3,8 +3,8 @@
 % Written by Harang Ju. January 29, 2018.
 
 %% Parameters
-N = 1e3; % number of nodes
-frac_conn = 6e-4; % fraction connectivity
+N = 128; % number of nodes
+frac_conn = 1e-2; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
 activity = 1e-3;
@@ -58,7 +58,7 @@ if N <= 50
     plot_network(A)
 else%if false
     sizes = avalanche_size(A, B);
-    [n_sizes, edges] = histcounts(sizes, N/1e2);
+    [n_sizes, edges] = histcounts(sizes);
     bar(edges(2:end), n_sizes)
     xlabel('avalanche size'); ylabel('number of avalanches')
     axis square; prettify

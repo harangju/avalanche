@@ -3,8 +3,8 @@
 % Written by Harang Ju. January 29, 2018.
 
 %% Parameters
-N = 1e3; % number of nodes
-frac_conn = 6e-4; % fraction connectivity
+N = 1e1; %1e3; % number of nodes
+frac_conn = 1e-1; %6e-4; % fraction connectivity
 step_size = 1; % time, unitless
 t_final = 1e3;
 activity = 1e-4;

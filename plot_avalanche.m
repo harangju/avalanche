@@ -1,23 +1,31 @@
-function plot_avalanche(avalanche, N)
+function plot_avalanche(X_t, transitions)
 %plot_avalanche Plots an avalanche
-%   avalanche: cell array of transitions
+%   X_t: system state over time, [N X t]
+%   transitions: cell array of transitions {1 X t}
+
+marker_size_unit = 50;
+
+N = size(X_t,1);
+duration = size(X_t,2) - 1;
 
 clf; hold on
-for i = 1 : length(avalanche)
-    width = size(avalanche{i}, 1);
-    plot(i*ones(width, 1), avalanche{i}(:, 2),...
-        'b.', 'MarkerSize', 20)
-    % plot lines
-    if i > 1
+for t = 1 : size(X_t, 2)
+    X = X_t(:,t);
+    X_idx = find(X);
+    scatter(t*ones(size(X_idx)), X_idx, marker_size_unit * X(X_idx), ...
+        'b', 'filled')
+    % plot transitions
+    if t > 1
+        trans = transitions{t};
+        width = size(trans, 1);
         for j = 1 : width
-            plot([i-1 i], avalanche{i}(j,:), 'k')
+            plot([t-1 t], trans(j,:), 'k')
         end
     end
 end
-title(['avalanche from anchor(s): ' num2str(avalanche{1}(:,2)')])
-% axis([0 length(avalanche)+1 0 N]); 
+axis([0 floor(duration*1.2) 0 floor(N*1.2)]); 
 axis square
-xlabel('trial'); ylabel('neuron');
+title('avalanche'); xlabel('trial'); ylabel('neuron');
 hold off; prettify
 
 end

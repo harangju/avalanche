@@ -10,6 +10,8 @@ c = 0;
 switch type
     case 'global'
         
+    case 'average'
+        
     case 'modal'
         
     case 'boundary'
@@ -19,4 +21,3 @@ switch type
 end
 
 end
-

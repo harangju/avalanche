@@ -6,7 +6,7 @@ N = size(A,1);
 durations = zeros(N,1);
 
 for i = 1 : N
-    durations(i) = length(find_avalanche(A,B,i));
+    durations(i) = length(find_expected_avalanche(A,B,i));
 end
 
 end

@@ -4,22 +4,25 @@
 
 %% Parameters
 N = 1e2; % number of nodes
-frac_conn = 1e-1; % fraction connectivity
+frac_conn = 2e-2; % fraction connectivity
 step_size = 10e-3; % time (msec)
 t_final = 1; % (sec)
-activity = 1e-3;
+activity = 1e-2;
 fire_threshold = 1;
 
 %% Initialize
+disp('Initializing...')
 X = zeros(N,1); % system state, [N X 1]
 % A = rand(N) < frac_conn; % system connectivity, [pre X post]
 % A = A & ~diag(ones(N,1)); % prevent recursive connectivity
 % A = A .* (rand(N) * 0.5 + 0.5);
-[~, A] = Weighted_Random_Graph(N, frac_conn, frac_conn*N*(N-1)/2);
+[~, A] = Weighted_Random_Graph(N, frac_conn/1e1, frac_conn*N*(N-1)/2);
+A = A / max(max(A)) * 0.9;
 B = ones(N,1); % system input connectivity, [N X 1]
 u = zeros(N,1); % system input, [N X 1]
 
 %% Simulation
+disp('Simulating...')
 X_t = zeros(N,t_final/step_size);
 u_t = zeros(size(X_t));
 for t = 1 : t_final/step_size
@@ -32,6 +35,8 @@ end
 clear t
 
 %% Plot
+disp('Plotting...')
+
 figure(1); clf
 
 subplot(2,2,1);
@@ -86,21 +91,23 @@ figure(2); clf
 subplot(1,2,1); hold on
 ave_c = ave_control(A);
 [n_ave_c, e_ave_c] = histcounts(ave_c);
-plot(e_ave_c(2:end), n_ave_c, '-o')
+e_ave_c = e_ave_c(2:end);
+plot(e_ave_c(n_ave_c>0), n_ave_c(n_ave_c>0), '-o')
 mod_c = modal_control(A);
 [n_mod_c, e_mod_c] = histcounts(mod_c);
-plot(e_mod_c(2:end), n_mod_c, '-o')
+e_mod_c = e_mod_c(2:end);
+plot(e_mod_c(n_mod_c>0), n_mod_c(n_mod_c>0), '-o')
 legend({'average', 'modal'})
 prettify; axis square; xlabel('controllability'); ylabel('number of neurons')
 
 subplot(1,2,2);
 u_t = zeros(N,1);
-[~, idx_max_ave_c] = max(ave_c);
-[~, idx_max_mod_c] = max(mod_c);
-u_t(idx_max_ave_c,1) = 1;
+[~, idx_max_ave_c] = sort(ave_c);
+[~, idx_max_mod_c] = sort(mod_c);
+u_t(idx_max_ave_c(end-20),1) = 1;
 [X_t, trans] = trigger_avalanche(A,B,u_t);
 % plot_avalanche(X_t, trans)
-imagesc(X_t); colorbar; caxis([0 1e4])
+imagesc(X_t); colorbar; %caxis([0 1e1])
 prettify; axis square; xlabel('time unit'); ylabel('neuron')
 
 clear x i on

@@ -12,7 +12,6 @@ duration = size(X_t,2);
 
 g = zeros(1, duration);
 
-clf; hold on
 for t = 1 : duration
     X = X_t(:,t);
     trans = transitions{t};
@@ -26,13 +25,14 @@ for t = 1 : duration
     end
     g(t) = scatter(t*ones(size(X_idx)), X_idx, ...
         marker_size_unit * X(X_idx), colors, 'filled');
+    hold on
     % plot transitions
     for j = 1 : size(trans,1)
         plot([t-1 t], trans(j,:), 'k')
     end
 end
 axis([0 floor((duration+1)*1.1) 0 floor(N*1.1)]); axis square
-title('avalanche'); xlabel('trial'); ylabel('neuron');
+title('avalanche'); xlabel('time'); ylabel('neuron');
 hold off; prettify; colormap jet; caxis([0 1])
 legend(g(1:2), {'input', 'activated'})
 

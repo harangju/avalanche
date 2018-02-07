@@ -9,13 +9,10 @@ function [Y_t, transitions] = trigger_avalanche(A, B, u_t)
 %       e.g. [1 2; 1 3] -> transitions from node 1 to nodes 2 and 3
 
 max_iter = 1e2;
-
 N = size(A,1); % number of neurons
-C = A > 0; % connectivity matrix
 
 Y_t = zeros(N,max_iter); % firing
 u_t = padarray(u_t, [0 max_iter-size(u_t,2)], 'post'); % add zero padding to u_t
-transitions = cell(1,max_iter);
 
 for t = 1 : max_iter
     for j = 1 : N % firing Y, neuron i -> neuron j
@@ -28,19 +25,10 @@ for t = 1 : max_iter
         end
         Y_t(j,t) = Y_t(j,t) + spikes_u + spikes_Y_j;
     end
-    if t > 1 % transitions
-        Y_prev_idx = find(Y_t(:,t-1));
-        source = C(Y_prev_idx,:) .* Y_prev_idx;
-        source(source==0) = [];
-        edges = sum(C(Y_prev_idx,:)>0, 1)';
-        target_idx = find(edges);
-        target = repelem(target_idx, edges(target_idx));
-        transitions{t} = [source' target];
-    end
     if sum(Y_t(:,t)) == 0; break; end
 end
 
 Y_t = Y_t(:,1:t);
-transitions = transitions(1:t);
+transitions = avalanche_transitions(Y_t, A);
 
 end

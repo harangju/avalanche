@@ -14,10 +14,7 @@ max_iter = 1e2;
 
 N = size(A,1); % number of neurons
 X = zeros(N,1); % system state, [N X 1]
-C = A > 0; % connectivity matrix
-
 X_t = zeros(N,max_iter); % system state [N X 1] over time
-transitions = cell(1,max_iter);
 
 for t = 1 : max_iter
     u = zeros(N,1);
@@ -26,19 +23,10 @@ for t = 1 : max_iter
     end
     X = A' * X + B .* u;
     X_t(:,t) = X;
-    if t > 1
-        X_prev_idx = find(X_t(:,t-1));
-        source = C(X_prev_idx,:) .* X_prev_idx;
-        source(source==0) = [];
-        edges = sum(C(X_prev_idx,:)>0, 1)';
-        target_idx = find(edges);
-        target = repelem(target_idx, edges(target_idx));
-        transitions{t} = [source' target];
-    end
     if sum(X) == 0; break; end
 end
 
 X_t = X_t(:,1:t);
-transitions = transitions(1:t);
+transitions = avalanche_transitions(X_t, A);
 
 end

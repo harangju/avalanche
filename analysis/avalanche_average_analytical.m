@@ -1,4 +1,4 @@
-function [X_t, transitions] = avalanche_average_analytical(A, B, u_t)
+function X_t = avalanche_average_analytical(A, B, u_t)
 %avalanche_average_analytical
 %   Analytically calculates the expected average avalanche
 %   max_iter - maximum duration of avalanche
@@ -7,8 +7,6 @@ function [X_t, transitions] = avalanche_average_analytical(A, B, u_t)
 %   u_t: input to system over time t, [N X t]
 % returns
 %   X_t: activation over time
-%   transitions: cell array of transitions,
-%       e.g. [1 2; 1 3] -> transitions from node 1 to nodes 2 and 3
 
 max_iter = 1e2;
 
@@ -25,8 +23,6 @@ for t = 1 : max_iter
     X_t(:,t) = X;
     if sum(X) == 0; break; end
 end
-
 X_t = X_t(:,1:t);
-transitions = avalanche_transitions(X_t, A);
 
 end

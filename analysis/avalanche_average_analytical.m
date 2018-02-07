@@ -1,20 +1,19 @@
-function X_t = avalanche_average_analytical(A, B, u_t)
+function X_t = avalanche_average_analytical(A, B, u_t, max_duration)
 %avalanche_average_analytical
 %   Analytically calculates the expected average avalanche
 %   max_iter - maximum duration of avalanche
 %   A: system connectivity, [pre X post]
 %   B: system input connectivity, [input X N]
 %   u_t: input to system over time t, [N X t]
+%   max_duration: max avalanche duration
 % returns
 %   X_t: activation over time
 
-max_iter = 1e2;
-
 N = size(A,1); % number of neurons
 X = zeros(N,1); % system state, [N X 1]
-X_t = zeros(N,max_iter); % system state [N X 1] over time
+X_t = zeros(N,max_duration); % system state [N X 1] over time
 
-for t = 1 : max_iter
+for t = 1 : max_duration
     u = zeros(N,1);
     if t <= size(u_t,2)
         u = u_t(:,t);
@@ -23,6 +22,6 @@ for t = 1 : max_iter
     X_t(:,t) = X;
     if sum(X) == 0; break; end
 end
-X_t = X_t(:,1:t);
+X_t = X_t(:,1:t-1);
 
 end

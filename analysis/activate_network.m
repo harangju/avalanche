@@ -14,7 +14,7 @@ N = size(A,1); % number of neurons
 X = zeros(N,1); % system state, [N X 1]
 C = A > 0; % connectivity matrix
 
-X_t = zeros(N,max_iter); % system state over time
+X_t = zeros(N,max_iter); % system state [N X 1] over time
 transitions = cell(1,max_iter);
 
 for t = 1 : max_iter

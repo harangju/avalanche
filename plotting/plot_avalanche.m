@@ -31,7 +31,7 @@ for t = 1 : duration
         plot([t-1 t], trans(j,:), 'k')
     end
 end
-axis([0 floor(duration*1.1) 0 floor(N*1.1)]);
+axis([0 floor((duration+1)*1.1) 0 floor(N*1.1)]); axis square
 title('avalanche'); xlabel('trial'); ylabel('neuron');
 hold off; prettify; colormap jet; caxis([0 1])
 legend(g(1:2), {'input', 'activated'})

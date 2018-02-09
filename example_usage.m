@@ -1,11 +1,14 @@
 
 load('avalanche/example networks/network_wrg_n1e2_p2e-3_k99_2.mat')
 %%
+disp('Analytically calculating expected activations...')
 X_t = avalanche_average_analytical(A,B,u_t,1e2);
 trans_emp = avalanche_transitions(X_t, A);
+disp('Calculating empirical average of activations...')
 Y_t_avg = avalanche_average_empirical(A, B, u_t, 1e3, 1e2);
 trans_avg = avalanche_transitions(Y_t_avg, A);
 %% plot
+disp('Plotting avalanche')
 clf
 subplot(2,2,1); plot_avalanche(X_t, trans_emp)
 title('analytical average avalanche')

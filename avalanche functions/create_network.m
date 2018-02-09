@@ -8,13 +8,14 @@ function [A, B] = create_network(param)
 
 A = 0;
 B = ones(param.num_nodes, 1);
+num_possible_edges = param.num_nodes * (param.num_nodes - 1) / 2;
 
 switch param.graph_type
     case 'WRG' % weighted random graph
         [~, A] = Weighted_Random_Graph(param.num_nodes,...
-            param.frac_conn, ...
-            param.frac_conn * param.num_nodes * (param.num_nodes-1)/2);
+            param.frac_conn, param.frac_conn * num_possible_edges);
     case 'RL' % ring lattice
+        [~, A] = ;
     case 'WS' % watts-strogatz
     case 'MD2' % modular network with 2 communities
     case 'MD4' % " " " 4 "

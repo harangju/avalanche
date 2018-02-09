@@ -13,6 +13,7 @@ imagesc(A); title('connectivity')
 set(gca,'YDir','normal')
 xlabel('post-'); ylabel('pre-')
 colorbar; axis square; prettify
+drawnow
 
 subplot(2,2,2)
 [n_sizes, edges] = histcounts(avalanche_sizes);
@@ -20,6 +21,7 @@ bar(edges(2:end), n_sizes)
 title('expected average avalanches')
 xlabel('avalanche size'); ylabel('number of avalanches')
 axis square; prettify
+drawnow
 
 subplot(2,2,3); hold on
 % ave_c = ave_control(A);
@@ -32,11 +34,13 @@ e_mod_c = e_mod_c(2:end);
 plot(e_mod_c(n_mod_c>0), n_mod_c(n_mod_c>0), '-o')
 legend({'average', 'modal'})
 prettify; axis square; xlabel('controllability'); ylabel('number of neurons')
+drawnow
 
 subplot(2,2,4);
 plot_avalanche(ex_Y_t, ex_transition)
 title('example avalanche')
 prettify; axis square; xlabel('time unit'); ylabel('neuron')
+drawnow
 
 end
 

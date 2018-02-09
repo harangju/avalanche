@@ -40,6 +40,7 @@ end
 
 switch p.weighting
     case 'G' % gaussian
+        
     case 'PL' % power law
     case 'SC' % streamline counts
         warning('create_network(): streamline counts not implemented')

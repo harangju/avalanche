@@ -1,20 +1,21 @@
+% example_usage.m
+% simulation of networks
+% Written by Harang Ju. February 9, 2018.
 
-load('avalanche/example networks/network_wrg_n1e2_p2e-3_k99_2.mat')
-%%
-disp('Analytically calculating expected activations...')
-X_t = avalanche_average_analytical(A,B,u_t,1e2);
-trans_emp = avalanche_transitions(X_t, A);
-disp('Calculating empirical average of activations...')
-Y_t_avg = avalanche_average_empirical(A, B, u_t, 1e3, 1e2);
-trans_avg = avalanche_transitions(Y_t_avg, A);
-%% plot
-disp('Plotting avalanche')
-clf
-subplot(2,2,1); plot_avalanche(X_t, trans_emp)
-title('analytical average avalanche')
-subplot(2,2,2); imagesc(X_t); colorbar; axis square; prettify;
-xlabel('time'); title('analytical'); set(gca, 'YDir', 'normal')
-subplot(2,2,3); plot_avalanche(Y_t_avg, trans_avg)
-title('empirical average avalanche')
-subplot(2,2,4); imagesc(Y_t_avg); colorbar; axis square; prettify;
-xlabel('time'); title('empirical'); set(gca, 'YDir', 'normal')
+%% Initialize
+disp('Initializing...')
+p = default_network_parameters;
+p.frac_conn = 2e-2;
+p.weight_max = 0.8;
+p.graph_type = 'WRG';
+[A, B] = create_network(p);
+
+%% Analysis
+disp('Analyzing...')
+u_t = zeros(p.num_nodes, 1);
+[~, idx_max_ave_c] = sort(ave_control(A));
+[~, idx_max_mod_c] = sort(modal_control(A));
+u_t(idx_max_ave_c(end-1:end), 1) = 1;
+Y_t = trigger_avalanche(A, B, u_t);
+clf; plot_summary(A, avalanche_size(A, B, p.num_nodes),...
+    ave_control(A), modal_control(A), Y_t, avalanche_transitions(Y_t, A))

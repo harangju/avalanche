@@ -1,4 +1,4 @@
-% simulation.m
+% scratchpad.m
 % simulation of networks
 % Written by Harang Ju. January 29, 2018.
 

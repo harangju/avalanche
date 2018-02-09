@@ -10,8 +10,8 @@ param.frac_conn = 1e-1; % fractional connectivity
 param.weight_max = 1;
 param.weight_min = 0;
 param.allow_autapses = false;
-param.graph_type = ''; % see wu-yan-2018-code > functions > graph generation
-param.weighting = ''; % see wu-yan-2018-code > functions > edge weighting
+param.graph_type = 'WRG'; % see wu-yan-2018-code > functions > graph generation
+param.weighting = 'G'; % see wu-yan-2018-code > functions > edge weighting
 
 end
 

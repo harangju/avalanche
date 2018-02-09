@@ -12,6 +12,7 @@ param.weight_min = 0;
 param.allow_autapses = false;
 param.graph_type = 'WRG'; % see wu-yan-2018-code > functions > graph generation
 param.weighting = 'G'; % see wu-yan-2018-code > functions > edge weighting
+param.p_rewire = 1e-2; % Pr(rewiring) in Watts-Strogatz network
 
 end
 

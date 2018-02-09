@@ -1,10 +1,9 @@
-function sizes = avalanche_size(A, B)
+function sizes = avalanche_size(A, B, max_duration)
 %avalanche_size finds sizes of avalanches
 %   size is defined as the total number of neurons activated
 %   A: system connectivity, [pre X post]
 %   B: system input connectivity, [N X 1]
-
-max_duration = 1e2;
+%   max_duration: of avalanches (this stops cycles)
 
 N = size(A,1);
 sizes = zeros(N,1);

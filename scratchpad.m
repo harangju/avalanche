@@ -5,6 +5,7 @@
 %% Initialize
 disp('Initializing...')
 p = default_network_parameters;
+p.num_nodes = 1e2;
 p.frac_conn = 2e-2;
 p.weight_max = 0.8;
 p.graph_type = 'WRG';

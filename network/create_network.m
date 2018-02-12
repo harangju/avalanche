@@ -40,8 +40,9 @@ end
 
 switch p.weighting
     case 'G' % gaussian
-        
+        A = weigh_normal(A);
     case 'PL' % power law
+        A = weigh_power(A);
     case 'SC' % streamline counts
         warning('create_network(): streamline counts not implemented')
     case 'FA' % fractional anistropy

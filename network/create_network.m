@@ -25,7 +25,7 @@ switch p.graph_type
         [~, A] = Watts_Strogatz(p.num_nodes, degree, p.p_rewire,num_edges);
     case 'MD2' % modular network with 2 communities
         A = fcn_modular_network(p.num_nodes, num_edges, 2, 0.8);
-        warning('what is 0.8')
+        warning('modular network: what is 0.8')
     case 'MD4'
         A = fcn_modular_network(p.num_nodes, num_edges, 4, 0.8);
     case 'MD8'

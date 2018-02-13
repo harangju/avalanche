@@ -3,7 +3,7 @@ function plot_avalanche(X_t, transitions)
 %   X_t: system state over time, [N X t]
 %   transitions: cell array of transitions {1 X t}
 
-marker_size_unit = 50;
+marker_size_unit = 80;
 color_input = .8;
 color_active = .2;
 

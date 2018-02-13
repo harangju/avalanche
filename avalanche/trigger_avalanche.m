@@ -1,17 +1,17 @@
-function Y_t = trigger_avalanche(A, B, u_t)
+function Y_t = trigger_avalanche(A, B, u_t, max_duration)
 %trigger_avalanche
 %   A: system connectivity, [pre X post]
 %   B: system input connectivity, [input X N]
 %   u_t: input to system over time t, [N X t]
 % returns
 %   Y_t: neuron firing over time
+%   max_duration: of avalanche
 
-max_iter = 1e2;
 N = size(A,1); % number of neurons
-Y_t = zeros(N,max_iter); % firing
-u_t = padarray(u_t, [0 max_iter-size(u_t,2)], 'post'); % add zero padding to u_t
+Y_t = zeros(N, max_duration); % firing
+u_t = padarray(u_t, [0 max_duration-size(u_t,2)], 'post'); % add zero padding to u_t
 
-for t = 1 : max_iter
+for t = 1 : max_duration
     for j = 1 : N % firing Y, neuron i -> neuron j
         spikes_u = sum(rand(u_t(j,t),1) < B(j));
         spikes_Y_j = 0;

@@ -6,10 +6,13 @@
 disp('Initializing...')
 p = default_network_parameters;
 p.num_nodes = 2^8;
-p.frac_conn = 5e-3;
-p.weight_max = 0.8;
-p.graph_type = 'MD4';
+p.frac_conn = 2e-2;
+p.weight_max = 0.9;
+p.graph_type = 'WRG';
 [A, B] = create_network(p);
+X_t = avalanche_average_analytical(A,B,...
+    inputs(p.num_nodes,1,{idx_max_ave_c(end)}),5);
+trans = avalanche_transitions(X_t,A); plot_avalanche(X_t,trans)
 
 %% Analysis
 disp('Analyzing...')

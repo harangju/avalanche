@@ -1,4 +1,4 @@
-function A_norm = weigh_normal(A)
+function A_norm = weigh_normal(A, mu, sigma)
 %weigh_normal 
 %   Returns a matrix that rank-orders the edge weights of the original 
 %   weighted matrix and replaces those weights with the corresponding
@@ -8,8 +8,8 @@ function A_norm = weigh_normal(A)
 %   sigma: standard deviation of distribution
 %   A_norm: A weighted by normal distribution
 
-mu = 0.5;
-sigma = 0.12;
+% mu = 0.5;
+% sigma = 0.12;
 
 [~, idx] = sort(A(A>0));
 norm_val = normrnd(mu, sigma, [length(idx) 1]);

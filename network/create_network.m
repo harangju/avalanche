@@ -40,7 +40,13 @@ end
 
 switch p.weighting
     case 'G' % gaussian
-        A = weigh_normal(A);
+        mu = p.weighting_params(1);
+        sigma = p.weighting_params(2);
+        mu = desired_mean_weight(p.exp_branching, p.frac_conn, p.num_nodes);
+        if mu < 3*sigma
+            sigma = mu/3;
+        end
+        A = weigh_normal(A, mu, sigma);
     case 'PL' % power law
         A = weigh_power(A);
     case 'SC' % streamline counts
@@ -53,7 +59,12 @@ end
 
 % normalize weighting
 warning('create_network: implement min weight')
-A = A / max(max(A)) * p.weight_max;
+if min(A(:)) < p.weight_min
+    A = A - min(A(:));
+end
+if max(A(:)) > p.weight_max
+    A = A / max(max(A)) * p.weight_max;
+end
 
 if ~p.allow_autapses
     A = A .* ~diag(ones(p.num_nodes,1));

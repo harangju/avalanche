@@ -6,14 +6,14 @@
 disp('Initializing...')
 p = default_network_parameters;
 p.num_nodes = 90;
-% p.num_nodes_input = 30;
-% p.num_nodes_output = 30;
-% p.num_nodes_hidden = 30;
+p.num_nodes_input = 30;
+p.num_nodes_output = 30;
+p.num_nodes_hidden = 30;
 p.frac_conn = 2e-2;
 p.graph_type = 'WRG';
 p.exp_branching = 1;
 % p.weighting_params(1) = 0.1;
-[A, B] = network_create(p);
+[A, B, C] = network_create(p);
 
 %% Analysis
 disp('Analyzing...')

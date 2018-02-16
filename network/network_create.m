@@ -29,8 +29,8 @@ if ~p.allow_autapses
 end
 % input output connectivity
 idx_io = randperm(p.num_nodes, p.num_nodes_input + p.num_nodes_output);
-B = zeros(p.num_nodes, 1);
-B(idx_io(1:p.num_nodes_input)) = 1;
-C = zeros(p.num_nodes, 1);
-C(idx_io(p.num_nodes_input+1:end)) = 1;
+idx_i = idx_io(1:p.num_nodes_input);
+idx_o = idx_io(p.num_nodes_input+1:end);
+B = zeros(p.num_nodes, 1); B(idx_i) = 1;
+C = zeros(p.num_nodes, 1); C(idx_o) = 1;
 end

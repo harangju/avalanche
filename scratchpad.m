@@ -5,10 +5,10 @@
 %% Initialize
 disp('Initializing...')
 p = default_network_parameters;
-p.num_nodes = 90;
-p.num_nodes_input = 30;
-p.num_nodes_output = 30;
-p.num_nodes_hidden = 30;
+p.num_nodes = 300;
+p.num_nodes_input = 100;
+p.num_nodes_output = 100;
+p.num_nodes_hidden = 100;
 p.frac_conn = 2e-2;
 p.graph_type = 'WRG';
 p.exp_branching = 1;

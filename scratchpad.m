@@ -7,13 +7,14 @@ disp('Initializing...')
 p = default_network_parameters;
 p.num_nodes = 2^8;
 p.frac_conn = 2e-2;
-p.graph_type = 'WRG';
+p.graph_type = 'WS';
 p.exp_branching = 1;
+p.weighting_params(1) = 0.1;
 [A, B] = create_network(p);
 
 %% Analysis
 disp('Analyzing...')
-sig = branching_parameter(A);
+sig = branching(A);
 disp(['avg branching parameter: ' num2str(mean(sig)) '+-' ...
     num2str(std(sig)/p.num_nodes)])
 u_t = zeros(p.num_nodes, 1);

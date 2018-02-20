@@ -18,11 +18,12 @@ num_edges_max = p.num_nodes * (p.num_nodes - 1) / 2;
 degree_max = num_edges_max / p.num_nodes;
 % network values
 num_edges = ceil(p.frac_conn * num_edges_max);
-degree = 2 * ceil(p.frac_conn * degree_max);
-% network connectivity
+% degree = 2*ceil(p.frac_conn * degree_max);
+degree = ceil(p.frac_conn * degree_max);
+% network connectivity 
 A = network_connect(p.graph_type, p.num_nodes, p.frac_conn, num_edges,...
     degree, p.p_rewire);
-A = network_weigh(A, p.weighting, p.weighting_params);
+A = network_weigh(A, p.weighting, degree, p.weighting_params);
 A = weights_bound(A, p.weight_min, p.weight_max);
 if ~p.allow_autapses
     A = A .* ~diag(ones(p.num_nodes,1));
@@ -30,7 +31,7 @@ end
 % input output connectivity
 idx_io = randperm(p.num_nodes, p.num_nodes_input + p.num_nodes_output);
 idx_i = idx_io(1:p.num_nodes_input);
-idx_o = idx_io(p.num_nodes_input+1:end);
+idx_o = idx_io(end+1-p.num_nodes_output:end);
 B = zeros(p.num_nodes, 1); B(idx_i) = 1;
 C = zeros(p.num_nodes, 1); C(idx_o) = 1;
 end

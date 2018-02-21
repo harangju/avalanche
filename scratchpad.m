@@ -5,10 +5,10 @@
 %% Initialize
 disp('Initializing...')
 p = default_network_parameters;
-p.num_nodes = 20;
+p.num_nodes = 100;
 p.num_nodes_input = p.num_nodes;
-p.frac_conn = 3e-1;
-p.graph_type = 'RL';
+p.frac_conn = 1e-1;
+p.graph_type = 'WRG';
 p.exp_branching = 1;
 % p.weighting_params(1) = 0.1;
 [A, B, C] = network_create(p);

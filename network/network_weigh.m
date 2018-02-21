@@ -1,4 +1,4 @@
-function A = network_weigh(A, type, degree, params, exp_branching)
+function A = network_weigh(A, type, params, exp_branching, degree)
 %network_weigh Returns a weighted network
 %   called by network_create
 

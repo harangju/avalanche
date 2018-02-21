@@ -1,20 +1,20 @@
-function info = mutual_info(Y, pattern_idx)
+function info = mutual_info(Y, pattern)
 %mutual_info Calculates the mutual information between patterns & firing at
 %a time during an avalanche
-%   pattern_idx: vector of indices of patterns, [1 X number of patterns]
-%   patterns: cell array of patterns
-%       a pattern is a cell array of nodes to activate across time
 %   Y: [num_nodes X max_duration X iterations] matrix
+%   pattern: vector of pattern indices
 %       See trigger_many_avalanches.m
 %returns
-%   info
+%   info: the mutual information of a node at time t during an avalanche
+%       and the pattern
 
 N = size(Y,1);
 max_dur = size(Y,2);
 info = zeros(N,max_dur);
+if size(pattern,1) == 1; pattern = pattern'; end
 for n = 1 : N
     for t = 1 : max_dur
-        info(n, t) = mi(pattern_idx', squeeze(Y(n, t, :)));
+        info(n, t) = mi(pattern, squeeze(Y(n, t, :)));
     end
 end
 

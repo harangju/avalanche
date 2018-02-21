@@ -1,12 +1,12 @@
-function A = network_weigh(A, type, parameters)
+function A = network_weigh(A, type, degree, params, exp_branching)
 %network_weigh Returns a weighted network
 %   called by network_create
 
 switch type
     case 'G' % gaussian
-        mu = parameters(1);
-        sigma = parameters(2);
-%         mu = desired_mean_weight(p.exp_branching, p.frac_conn, p.num_nodes);
+%         mu = params(1);
+        sigma = params(2);
+        mu = desired_mean_weight(exp_branching, degree);
         if mu < 3*sigma
             sigma = mu/3;
         end

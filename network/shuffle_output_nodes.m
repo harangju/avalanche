@@ -3,6 +3,9 @@ function C = shuffle_output_nodes(N, B, num_nodes_output)
 %   N: number of nodes
 %   B: connectivity for inputs
 %   num_nodes_output
+%returns
+%   C: connectivity for outputs, does not select input nodes that already
+%   exist
 
 idx = 1:N;
 idx(B>0) = [];

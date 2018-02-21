@@ -12,8 +12,8 @@ node = find(C);
 node(mi_max<=0) = [];
 time(mi_max<=0) = [];
 mi_max(mi_max<=0) = [];
-node(t_max==1) = [];
-time(t_max==1) = [];
-mi_max(t_max==1) = [];
+node(time==1) = [];
+mi_max(time==1) = [];
+time(time==1) = [];
 
 end

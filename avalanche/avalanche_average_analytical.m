@@ -20,7 +20,7 @@ for t = 1 : max_duration
     end
     X = A' * X + B .* u;
     X_t(:,t) = X;
-    if sum(X) == 0; break; end
+    if sum(X) == 0 && t >= size(u_t,2); break; end
 end
 X_t = X_t(:,1:t-1);
 

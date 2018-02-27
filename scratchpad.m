@@ -6,8 +6,8 @@
 disp('Initializing...')
 p = default_network_parameters;
 p.num_nodes = 30;
-p.num_nodes_input = 10;
-p.num_nodes_output = 20;
+p.num_nodes_input = 30;
+p.num_nodes_output = 30;
 p.frac_conn = 2e-1;
 p.graph_type = 'WRG';
 p.exp_branching = 1;

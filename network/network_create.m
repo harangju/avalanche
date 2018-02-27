@@ -8,11 +8,11 @@ function [A, B, C] = network_create(p)
 %   C: output connectivity/weight vector, [N X 1]
 
 % check node number
-if p.num_nodes ~= p.num_nodes_input + p.num_nodes_output + ...
-        p.num_nodes_hidden
-    error(['Number of nodes should equal number of input, output, and '...
-        'hidden nodes.'])
-end
+% if p.num_nodes ~= p.num_nodes_input + p.num_nodes_output + ...
+%         p.num_nodes_hidden
+%     error(['Number of nodes should equal number of input, output, and '...
+%         'hidden nodes.'])
+% end
 % max values
 num_edges_max = p.num_nodes * (p.num_nodes - 1) / 2;
 degree_max = num_edges_max / p.num_nodes;
@@ -30,7 +30,7 @@ if ~p.allow_autapses
     A = A .* ~diag(ones(p.num_nodes,1));
 end
 % input output connectivity
-idx_io = randperm(p.num_nodes, p.num_nodes_input + p.num_nodes_output);
+idx_io = randperm(p.num_nodes, p.num_nodes);
 idx_i = idx_io(1:p.num_nodes_input);
 idx_o = idx_io(end+1-p.num_nodes_output:end);
 B = zeros(p.num_nodes, 1); B(idx_i) = 1;

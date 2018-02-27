@@ -17,7 +17,7 @@ for t = 2 : max_iter
     source(source==0) = [];
     edges = sum(C(X_prev_idx,:)>0, 1)';
     target_idx = find(edges);
-    target = repelem(target_idx, edges(target_idx));
+    target = repelem(target_idx, edges(target_idx), 1);
     transitions{t} = [source' target];
 end
 

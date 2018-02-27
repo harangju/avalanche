@@ -3,6 +3,8 @@ function A = network_weigh(A, type, params, exp_branching, degree)
 %   called by network_create
 
 switch type
+    case 'F' % fixed
+        A = A>0;
     case 'G' % gaussian
 %         mu = params(1);
         sigma = params(2);

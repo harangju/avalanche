@@ -5,12 +5,13 @@
 %% Initialize
 disp('Initializing...')
 p = default_network_parameters;
-p.num_nodes = 30;
+p.num_nodes = 4;
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
-p.frac_conn = 3e-1;
+p.frac_conn = 8e-1;
 p.graph_type = 'WRG';
-p.exp_branching = 1;
+% p.exp_branching = 1;
+p.weighting = 'F';
 [A, B, C] = network_create(p);
 
 %% Analysis
@@ -27,7 +28,7 @@ clf; plot_summary(A, avalanche_size_analytical(A, B, 5),...
 %% Mutual information
 
 probs = [0.5 0.5];
-iter = 1e2; dur = 5;
+iter = 1e2; dur = 8;
 max_mi = cell(1,p.num_nodes_input);
 max_nodes = cell(1,p.num_nodes_input);
 max_time = cell(1,p.num_nodes_input);
@@ -38,6 +39,8 @@ for i = 2:length(input_nodes)-1
 %     pattern = {{input_nodes(i)}, {}};
     pattern = {{input_nodes(i) input_nodes(i-1)},...
         {input_nodes(i) input_nodes(i+1)}};
+%     pattern = {{[input_nodes(i) input_nodes(i-1)]},...
+%         {[input_nodes(i) input_nodes(i+1)]}};
     [Y, pat, s] = trigger_many_avalanches(A, B, pattern, probs, dur, iter);
     mean_sizes(i) = mean(s);
     info = mutual_info(Y, pat);
@@ -51,7 +54,24 @@ for i = 1:length(input_nodes)
     max_info(i,:) = [max_mi{i}(idx) max_nodes{i}(idx) max_time{i}(idx)];
 end
 clear probs iter dur input_nodes i pattern Y pat s info idx
-% shuffle input output nodes
+%%
+i=2;
+input_nodes = find(B);
+probs = [0.5 0.5];
+iter = 1e2; dur = 5;
+pattern = {{1 4}, {1 3}};
+% pattern = {{input_nodes(i) input_nodes(i-1)},...
+%         {input_nodes(i) input_nodes(i+1)}};
+% pattern = {{[input_nodes(i) input_nodes(i-1)]},...
+%     {[input_nodes(i) input_nodes(i+1)]}};
+[Y, pat] = trigger_many_avalanches(A, B, pattern, probs, dur, iter);
+subplot(1,2,1)
+plot_avalanche(mean(Y(:,:,pat==1),3),...
+    avalanche_transitions(mean(Y(:,:,pat==1),3),A))
+subplot(1,2,2)
+plot_avalanche(mean(Y(:,:,pat==2),3),...
+    avalanche_transitions(mean(Y(:,:,pat==2),3),A))
+% clear i input_nodes probs iter pattern Y pat s
 %%
 subplot(2,2,1)
 scatter(max_info(:,2),indegree(A),'filled')

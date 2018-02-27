@@ -21,14 +21,18 @@ for t = 1 : duration
     if t == 1
         colors(:) = color_input;
     else
-        colors(~ismember(X_idx, trans(:,2))) = color_input;
+        if ~isempty(trans)
+            colors(~ismember(X_idx, trans(:,2))) = color_input;
+        end
     end
     g(t) = scatter(t*ones(size(X_idx)), X_idx, ...
         marker_size_unit * X(X_idx), colors, 'filled');
     hold on
     % plot transitions
     for j = 1 : size(trans,1)
-        plot([t-1 t], trans(j,:), 'k')
+        if ~isempty(trans(j,:))
+            plot([t-1 t], trans(j,:), 'k')
+        end
     end
 end
 axis([0 floor((duration+1)*1.1) 0 floor(N*1.1)]); axis square

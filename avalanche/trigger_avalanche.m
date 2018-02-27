@@ -22,7 +22,7 @@ for t = 1 : max_duration
         end
         Y_t(j,t) = Y_t(j,t) + spikes_u + spikes_Y_j;
     end
-    if sum(Y_t(:,t)) == 0; break; end
+    if sum(Y_t(:,t)) == 0 && t >= size(u_t,2); break; end
 end
 Y_t = Y_t(:,1:t);
 

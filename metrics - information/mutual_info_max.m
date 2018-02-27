@@ -1,7 +1,8 @@
-function [mi_max, node, time] = mutual_info_max(info, C)
+function [mi_max, node, time] = mutual_info_max(info, C, t_last_input)
 %mutual_info_max 
 %   mi: [N X ] matrix
 %   C: output nodes
+%   t_last_input: time of last input
 %returns
 %   mi_max: vector of max MI values (excluding zero MI's)
 %   node: node idx (excluding input nodes)
@@ -12,8 +13,8 @@ node = find(C);
 node(mi_max<=0) = [];
 time(mi_max<=0) = [];
 mi_max(mi_max<=0) = [];
-node(time==1) = [];
-mi_max(time==1) = [];
-time(time==1) = [];
+node(time==t_last_input) = [];
+mi_max(time==t_last_input) = [];
+time(time==t_last_input) = [];
 
 end

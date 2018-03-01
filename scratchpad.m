@@ -28,33 +28,16 @@ clf; plot_summary(A, avalanche_size_analytical(A, B, 5),...
 
 %% Mutual information
 
-probs = [0.5 0.5];
 iter = 1e2; dur = 4;
-max_mi = cell(1,p.num_nodes_input);
-max_nodes = cell(1,p.num_nodes_input);
-max_time = cell(1,p.num_nodes_input);
-mean_sizes = zeros(1,p.num_nodes_input);
+patterns = cell(1,p.num_nodes_input);
 input_nodes = find(B);
-for i = 1:length(input_nodes)%2:length(input_nodes)-1
-    disp(i)
-    pattern = {{input_nodes(i)}, {}};
-%     pattern = {{input_nodes(i) input_nodes(i-1)},...
-%         {input_nodes(i) input_nodes(i+1)}};
-%     pattern = {{[input_nodes(i) input_nodes(i-1)]},...
-%         {[input_nodes(i) input_nodes(i+1)]}};
-    [Y, pat, s] = trigger_many_avalanches(A, B, pattern, probs, dur, iter);
-    mean_sizes(i) = mean(s);
-    info = mutual_info(Y, pat);
-    [max_mi{i}, max_nodes{i}, max_time{i}] = mutual_info_max(info, C,...
-        max(cellfun(@length,pattern)));
+for i = 1 : p.num_nodes_input
+    patterns{i} = {{input_nodes(i)}, {}};
 end
-max_info = zeros(p.num_nodes_input,3);
-for i = 1:length(input_nodes)
-    [~,idx] = max(max_mi{i});
-    if isempty(idx); continue; end
-    max_info(i,:) = [max_mi{i}(idx) max_nodes{i}(idx) max_time{i}(idx)];
-end
-clear probs iter dur input_nodes i pattern Y pat s info idx
+[summary, max_mi, max_nodes, max_time, mean_sizes] = ...
+    mutual_info_max_patterns(A, B, C, patterns, dur, iter);
+clear i iter dur input_nodes
+
 %%
 i=2;
 input_nodes = find(B);

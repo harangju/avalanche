@@ -1,5 +1,5 @@
-function [summary, max_mi, max_nodes, max_time, mean_sizes] = ...
-    mutual_info_max_patterns(A, B, C, patterns, dur, iter)
+function [summary, input_entropy, max_mi, max_nodes, max_time, ...
+    mean_sizes] = mutual_info_max_patterns(A, B, C, patterns, dur, iter)
 %mutual_info_max_patterns 
 %   A: connectivity matrix
 %   B: input connectivity vector
@@ -19,6 +19,7 @@ function [summary, max_mi, max_nodes, max_time, mean_sizes] = ...
 
 % iter = 1e2; dur = 4;
 probs = [0.5 0.5];
+input_entropy = zeros(1,length(patterns));
 max_mi = cell(1,length(patterns));
 max_nodes = cell(size(max_mi));
 max_time = cell(size(max_mi));
@@ -29,14 +30,16 @@ for i = 1 : length(patterns)
         iter);
     mean_sizes(i) = mean(s);
     info = mutual_info(Y, pat);
+    input_entropy(i) = h(pat');
     [max_mi{i}, max_nodes{i}, max_time{i}] = mutual_info_max(info, C,...
         max(cellfun(@length,patterns{i})));
 end
-summary = zeros(length(patterns),3);
+summary = zeros(length(patterns), 4);
 for i = 1:length(patterns)
     [~,idx] = max(max_mi{i});
     if isempty(idx); continue; end
-    summary(i,:) = [max_mi{i}(idx) max_nodes{i}(idx) max_time{i}(idx)];
+    summary(i,:) = [input_entropy(i) max_mi{i}(idx) max_nodes{i}(idx)...
+        max_time{i}(idx)];
 end
 
 end

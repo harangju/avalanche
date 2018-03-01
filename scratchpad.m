@@ -4,12 +4,12 @@
 %% Initialize
 disp('Initializing...')
 p = default_network_parameters;
-p.num_nodes = 10;
+p.num_nodes = 16;
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
-p.frac_conn = 4e-1;
+p.frac_conn = 2e-1;
 p.graph_type = 'WRG';
-p.exp_branching = .6;
+% p.exp_branching = .6;
 p.exp_branching = 1;
 % p.weighting = 'F';
 [A, B, C] = network_create(p);
@@ -18,29 +18,33 @@ p.exp_branching = 1;
 iter = 1e2; dur = 5; input_nodes = find(B);
 patterns = cell(1,p.num_nodes_input);
 for i = 1 : p.num_nodes_input
-    patterns{i} = {{input_nodes(i)}, {}};
+%     patterns{i} = {{input_nodes(i)}, {}};
+    patterns{i} = {input_nodes(i)};
 end
-summary_ping = mutual_info_max_patterns(A, B, C, patterns, dur, iter);
+% summary_ping = mutual_info_max_patterns(A, B, C, patterns, dur, iter);
+[Y, pat] = trigger_many_avalanches(A,B,patterns,...
+    ones(1,p.num_nodes_input)/p.num_nodes_input,5,1e3);
+mi_info = mutual_info(Y,pat);
+[mi_max, mi_node, mi_time] = mutual_info_max(mi_info,C,1);
 clear i j iter dur input_nodes
+% clear Y pat
 %% mutual information - delayed pairs
 iter = 1e2; dur = 5; input_nodes = find(B);
 patterns = cell(1,p.num_nodes_input^2);
 for i = 1 : p.num_nodes_input
     for j = 1 : p.num_nodes_input
-%         patterns{(i-1)*p.num_nodes_input+j} = ...
-%             {{input_nodes(i) input_nodes(j)},...
-%             {input_nodes(j) input_nodes(i)}};
         patterns{(i-1)*p.num_nodes_input+j} = ...
-            {input_nodes(i), [], input_nodes(j)};
+            {{input_nodes(i) input_nodes(j)},...
+            {input_nodes(i) input_nodes(i)}};
+%         patterns{(i-1)*p.num_nodes_input+j} = ...
+%             {input_nodes(i), input_nodes(j)};
     end
 end
-% summary_delayed_pairs = ...
-%     mutual_info_max_patterns(A, B, C, patterns, dur, iter);
+summary_delayed_pairs = ...
+    mutual_info_max_patterns(A, B, C, patterns, dur, iter);
 clear i j iter dur input_nodes
 
-
 %% avalanche intersections
-
 
 
 %%

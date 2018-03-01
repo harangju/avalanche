@@ -9,7 +9,7 @@ function [Y, pattern_order, sizes] = trigger_many_avalanches(A, B, patterns, ...
 %   Y: [num_nodes X max_duration X iterations] matrix
 %   pattern_order: order of pattern presentation
 
-if sum(pattern_probs) ~= 1
+if abs(sum(pattern_probs) - 1) > 0.0001
     error('sum(u_t_prob) does not equal 1.')
 end
 

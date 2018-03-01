@@ -24,6 +24,7 @@ max_nodes = cell(size(max_mi));
 max_time = cell(size(max_mi));
 mean_sizes = zeros(size(max_mi));
 for i = 1 : length(patterns)
+    disp(['pattern: ' num2str(i) '/' num2str(length(patterns))])
     [Y, pat, s] = trigger_many_avalanches(A, B, patterns{i}, probs, dur,...
         iter);
     mean_sizes(i) = mean(s);

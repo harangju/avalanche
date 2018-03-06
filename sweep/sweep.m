@@ -5,13 +5,11 @@
 % update parameters
 % measure
 
-% nodes = [2 4 8 16 32 64];
 nodes = [2 4 8 16 32 64];
-% conn = [0.9 0.3 0.1 0.03 0.01 0.003];
-conn = [0.9 0.3 0.1 0.03 0.01 0.003];
+conn = [0.3 0.1 0.03 0.01 0.003];
 % graph = {'WRG' 'RL' 'WS' 'MD2' 'MD4' 'MD8' 'RG' 'BA'};
 graph = {'WRG' 'RG' 'BA'};
-branch = [0.2 0.6 1.0 1.4 1.8 2.2 2.6 3.0 3.4 3.8 4.2];
+branch = [0.2 0.6 1.0 1.4 1.8 2.2 2.6];
 iter = 1e1;
 ping_iter = 1e3; ping_dur = 10;
 mi_mean = zeros(length(nodes),length(conn),length(graph),length(branch));
@@ -25,8 +23,9 @@ for c = 1 : length(conn)
 for g = 1 : length(graph)
 for b = 1 : length(branch)
     for i = 1 : iter
-        r = ['n ' num2str(n) ' c ' num2str(c) ' g ' num2str(g)...
-            ' b ' num2str(b) ' i ' num2str(i)];
+        r = ['n ' num2str(nodes(n)) ' c ' num2str(conn(c))...
+            ' g ' graph{g} ' b ' num2str(branch(b))...
+            ' i ' num2str(i)];
         disp(r)
         p = default_network_parameters;
         p.num_nodes = nodes(n);

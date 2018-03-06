@@ -1,7 +1,14 @@
 
-%%
+%% Beggs dataset
+load('beggs data/data/DataSet1.mat')
+%% format Beggs dataset
+asdf = data.spikes;
+asdf{end+2} = [data.nNeurons data.recordinglength];
+
+%% Izhikevich data analysis
 load('te_matlab_0.5/Izhik_100_0.mat')
-%%
+
+%% jitter functions
 jitter_size = 19;
 jitter = @(x) jitter_size * (ones(size(x)) - 2*(rand(size(x)) < 0.5)) + x;
 one_bound = @(x) max(1,x);
@@ -13,7 +20,13 @@ asdf_j(end+1:end+2) = asdf(end-1:end);
 delays = 1:30;
 tic; [te_pk, ci] = ASDFTE(asdf,delays); toc
 tic; [te_pk_j, ci_j] = ASDFTE(asdf_j,delays); toc
+%% remove autapses
+te_pk = te_pk - diag(diag(te_pk));
+ci = ci - diag(diag(ci));
+te_pk_j = te_pk_j - diag(diag(te_pk_j));
+ci_j = ci_j - diag(diag(ci_j));
 %% create filter
+% filt_dim = [40 40];
 filt_dim = [25 25];
 filt_bounds = [-8 -2 0 1];
 edge_te_pk = linspace(filt_bounds(1),filt_bounds(2),filt_dim(1)+1);
@@ -25,7 +38,7 @@ n = histcounts2(log10(te_pk(:)),  ci(:),...
 filt = n_j ./ (n + n_j);
 filt(isnan(filt)) = 0;
 %% filter
-thresh = 0.1; %0.37;
+thresh = 0.1;%0.1; %0.37;
 filt_thr = 1 - (filt > thresh);
 keep = zeros(size(ci));
 for i = 1 : asdf{end}(1)
@@ -51,32 +64,38 @@ scatter(log10(te_pk(keep>0)),ci(keep>0),'.')
 prettify; axis square; title('separation');
 axis([-8 -2 0 1])
 subplot(2,2,4)
-imagesc(filt_thr')
-% imagesc(filt')
+% imagesc(filt_thr')
+imagesc(filt')
 prettify; axis square; title('filter'); set(gca,'YDir','normal');
 colormap gray; colorbar
 subplot(2,2,4)
 %%
-bounds = 1:80;
-c = conmat(bounds,bounds);
+bounds = 1:data.nNeurons;
+% bounds = 1:80;
+% c = conmat(bounds,bounds);
 k = keep(bounds,bounds);
 figure(2)
-subplot(2,2,1)
-imagesc(k)
+% subplot(2,2,1)
+imagesc(k .* te_pk(bounds,bounds))
+% imagesc(k)
 prettify; axis square; colorbar; set(gca,'YDir','normal')
 title('TE & CI')
-subplot(2,2,2)
-imagesc(c~=0)
-prettify; axis square; colorbar; set(gca,'YDir','normal')
-title('actual')
-subplot(2,2,3)
-imagesc((c~=0) & k)
-prettify; axis square; colorbar; set(gca,'YDir','normal')
-title('both')
-tpr = sum(c(:)~=0 & k(:)) / sum(k(:)); % TPR=TP/P=TP/(TP+FN)
-tnr = sum(c(:)==0 & ~k(:)) / sum(~k(:)); % TNR=TN/N=TN/(TN+FP)
-fpr = sum(c(:)==0 & k(:)) / sum(~k(:)); % FPR=FP/N=FP/(FP+TN)=1-TNR
-rt = tpr/fpr;
-disp([tpr tnr (1-tnr) fpr rt tpr+tnr])
-clear c k
+% subplot(2,2,2)
+% imagesc(c~=0)
+% prettify; axis square; colorbar; set(gca,'YDir','normal')
+% title('actual')
+% subplot(2,2,3)
+% imagesc((c~=0) & k)
+% prettify; axis square; colorbar; set(gca,'YDir','normal')
+% title('both')
+% subplot(2,2,4)
+% imagesc(c)
+% prettify; axis square; colorbar; set(gca,'YDir','normal')
+% title('weighted')
+% tpr = sum(c(:)~=0 & k(:)) / sum(k(:)); % TPR=TP/P=TP/(TP+FN)
+% tnr = sum(c(:)==0 & ~k(:)) / sum(~k(:)); % TNR=TN/N=TN/(TN+FP)
+% fpr = sum(c(:)==0 & k(:)) / sum(~k(:)); % FPR=FP/N=FP/(FP+TN)=1-TNR
+% rt = tpr/fpr;
+% disp([tpr tnr (1-tnr) fpr tpr+tnr])
+% clear c k
 

@@ -1,11 +1,13 @@
-function plot_avalanche(X_t, transitions)
+function plot_avalanche(X_t, transitions, scale_dot_size)
 %plot_avalanche Plots an avalanche
 %   X_t: system state over time, [N X t]
 %   transitions: cell array of transitions {1 X t}
+%   scale_dot_size: 
 
 marker_size_unit = 80;
 color_input = .8;
 color_active = .2;
+if nargin < 3; scale_dot_size = false; end
 
 N = size(X_t,1);
 duration = size(X_t,2);
@@ -25,8 +27,11 @@ for t = 1 : duration
             colors(~ismember(X_idx, trans(:,2))) = color_input;
         end
     end
-    g(t) = scatter(t*ones(size(X_idx)), X_idx, ...
-        marker_size_unit * X(X_idx), colors, 'filled');
+    dots = marker_size_unit;
+    if scale_dot_size
+        dots = marker_size_unit * X(X_idx);
+    end
+    g(t) = scatter(t*ones(size(X_idx)), X_idx, dots, colors, 'filled');
     hold on
     % plot transitions
     for j = 1 : size(trans,1)

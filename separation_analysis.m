@@ -1,0 +1,5 @@
+
+% given criticality
+
+% Hamming distance
+

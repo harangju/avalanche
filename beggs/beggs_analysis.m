@@ -1,12 +1,12 @@
 
+%% Izhikevich data analysis
+load('te_matlab_0.5/Izhik_100_0.mat')
+
 %% Beggs dataset
-load('beggs data/data/DataSet1.mat')
+load('beggs data/DataSet2.mat')
 %% format Beggs dataset
 asdf = data.spikes;
 asdf{end+2} = [data.nNeurons data.recordinglength];
-
-%% Izhikevich data analysis
-load('te_matlab_0.5/Izhik_100_0.mat')
 
 %% jitter functions
 jitter_size = 19;

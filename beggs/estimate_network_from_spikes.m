@@ -1,12 +1,13 @@
 function [A, te_pk, ci, te_pk_j, ci_j, filt] = ...
-    estimate_network_from_spikes(data)
+    estimate_network_from_spikes(data, filt_thresh)
 %estimate_network_from_spikes(data)
 %   data: the data variable from Beggs datasets
+%   filt_thresh: filter threshold
 % requires
 %   te_matlab https://code.google.com/archive/p/transfer-entropy-toolbox/downloads
 
 delays = 1:30;
-filt_dim = [25 25]; filt_bounds = [-8 -2 0 1]; filt_thresh = 0.1;
+filt_dim = [25 25]; filt_bounds = [-8 -2 0 1]; %filt_thresh = 0.1;
 disp('Preparing data...')
 asdf = data.spikes;
 asdf{end+2} = [data.nNeurons data.recordinglength];

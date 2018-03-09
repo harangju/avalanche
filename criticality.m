@@ -1,8 +1,14 @@
 
 
-% driven mode
+%% driven mode
+% given A, B
+iter = 1e3; dur = 7; bins = 20;
+Y = ping_nodes(A, B, iter, dur);
+[s, e] = avalanche_size_distr(Y, bins);
+f = avalanche_size_distr_exp_fit(s,e);
+disp(['Slope: ' num2str(f.a)])
 
-% spontaneous mode
+%% spontaneous mode
 
 
 % 1. Criticality arises when a system is close to dynamic instability and is reflected by scale-free temporal and spatial fluctuations

@@ -13,6 +13,7 @@ Y = ping_nodes(A, B, iter, dur);
 [s, e] = avalanche_size_distr(Y, bins);
 f = avalanche_size_distr_exp_fit(s,e);
 disp(['Slope: ' num2str(f.b)])
+plot(f,e(2:end),log10(s)); prettify; axis square
 
 %% spontaneous mode
 p_spont = 0.0005;

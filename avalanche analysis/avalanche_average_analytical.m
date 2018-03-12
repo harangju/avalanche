@@ -22,6 +22,6 @@ for t = 1 : max_duration
     X_t(:,t) = X;
     if sum(X) == 0 && t >= size(u_t,2); break; end
 end
-X_t = X_t(:,1:t-1);
+% X_t = X_t(:,1:t-1);
 
 end

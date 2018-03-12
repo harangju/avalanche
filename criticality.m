@@ -1,15 +1,16 @@
 
 
 %% generate network
-load('beggs data/DataSet1.mat')
+load('beggs data/DataSet2.mat')
 A = estimate_network_from_spikes(data, 0.1);
 B = ones(size(A,1),1);
 A = scale_weights_to_criticality(A);
+beep
 
 %% driven mode
 % given A, B
 iter = 1e4; dur = 7;
-Y = ping_nodes(A, B, iter, dur);
+[Y, pat] = ping_nodes(A, B, iter, dur);
 
 %% spontaneous mode
 p_spont = 0.0003;

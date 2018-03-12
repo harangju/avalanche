@@ -1,5 +1,9 @@
 
 % given criticality
 
-% Hamming distance
+%% Hamming distance
+
+
+%% mutual information
+
 

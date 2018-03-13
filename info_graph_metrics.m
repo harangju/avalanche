@@ -41,7 +41,8 @@ c = centrality(g,'betweenness');
 scatter(c(nodes),mi_max,'filled')
 
 %% rich-club
-
+k = 3;
+rc = rich_club_coeff(A,k);
 
 %% avalanche size
 

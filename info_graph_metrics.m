@@ -28,12 +28,17 @@ subplot(1,2,1)
 scatter(convergence(A(:,nodes)),mi_max,'filled')
 prettify; axis square; xlabel('convergence'); ylabel('I(X;Y)')
 p = polyfit(convergence(A(:,nodes)),mi_max,1);
-hold on; plot(0:0.1:4.5,p(1)*(0:0.1:4.5)+p(2),'LineWidth',2); hold off
+hold on; plot(0:0.1:6,p(1)*(0:0.1:6)+p(2),'LineWidth',2); hold off
 subplot(1,2,2)
 scatter(indegree(A(:,nodes)),mi_max,'filled')
 prettify; axis square; xlabel('indegree'); ylabel('I(X;Y)')
 p = polyfit(indegree(A(:,nodes)),mi_max,1);
-hold on; plot(0:0.1:8,p(1)*(0:0.1:8)+p(2),'LineWidth',2); hold off
+hold on; plot(0:0.1:14,p(1)*(0:0.1:14)+p(2),'LineWidth',2); hold off
+
+%% controllability
+scatter(ave_control(A(nodes,nodes)),mi_max,'filled')
+prettify; axis square; xlabel('average controllability'); ylabel('I(X;Y)')
+
 
 %% centrality - betwenness vs mutual info
 g = graph_from_matrix(A);
@@ -41,8 +46,8 @@ c = centrality(g,'betweenness');
 scatter(c(nodes),mi_max,'filled')
 
 %% rich-club
-k = 3;
-rc = rich_club_coeff(A,k);
+k = 5;
+rc = rich_club_coeff(A,k)
 
 %% avalanche size
 

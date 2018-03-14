@@ -2,14 +2,15 @@
 
 %% driven mode
 % given A, B
-iter = 1e4; dur = 7;
+iter = 1e4; dur = 10;
 [Y, pat] = ping_nodes(A, B, iter, dur);
 
 %% spontaneous mode
-p_spont = 0.0003;
-iter = 3e4;
+p_spont = 0.0001;
+iter = 1e5;
 Y_cont = spontaneous_avalanches(A, B, p_spont, iter);
 Y = find_avalanches(Y_cont);
+beep
 
 %% exponential fit of avalanche size
 bins = 20;

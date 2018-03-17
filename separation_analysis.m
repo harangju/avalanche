@@ -54,7 +54,7 @@ axis([0 dur+1 0 ceil(max(mi_pop))])
 %%
 yyaxis right
 plot(squeeze(mean(mean(dist(nodes,nodes,:),2),1)),'LineWidth',2)
-ylabel(dist_type)
+ylabel(dist_type); ylim([0 1])
 %% 
 
 

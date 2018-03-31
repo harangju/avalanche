@@ -1,4 +1,4 @@
-function Y_t_avg = avalanche_average_empirical(A, B, u_t, num_trials, ...
+function [Y_t_avg, Y_t_var] = avalanche_average_empirical(A, B, u_t, num_trials, ...
     max_duration)
 %avalanche_average_empirical
 %   Calls trigger_avalanche T times & averages the spike counts
@@ -18,8 +18,10 @@ for trial = 1 : num_trials
     Y_t_trials(:, 1:size(Y_t,2), trial) = Y_t;
 end
 Y_t_avg = mean(Y_t_trials, 3);
+Y_t_var = var(Y_t_trials, 0, 3);
 t_last_firing = find(sum(Y_t_avg, 1), 1, 'last');
 Y_t_avg = Y_t_avg(:, 1:t_last_firing);
+Y_t_var = Y_t_var(:, 1:t_last_firing);
 
 end
 

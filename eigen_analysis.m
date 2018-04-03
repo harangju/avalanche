@@ -37,4 +37,11 @@ x0=-1*v(:,88); x=[];
 for i=1:10; x=[x A_conn^i*x0]; end;
 plot(x','LineWidth',2); prettify; axis square
 
+%%
+[Yp,pat] = trigger_many_avalanches(A_conn,ones(size(A_conn,1),1),...
+    {{n(randperm(length(n),2))},...
+        {n(randperm(length(n),2))},...
+        {n(randperm(length(n),2))}}, [1 1 1]/3,10,100);
+
+
 

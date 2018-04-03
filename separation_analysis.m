@@ -1,9 +1,28 @@
 
 
+
+
+
 %% avalanches
 iter = 1e3; dur = 6;
 [Y, pat] = ping_nodes(A, B, iter, dur); beep
 % [Y, pat] = ping_nodes_analytical(A, B, dur);
+
+%% avalanche with patterns
+iter = 3e2; dur = 10;
+% patterns = {{n(randperm(length(n),2))},...
+%     {n(randperm(length(n),2))}, ...
+%     {n(randperm(length(n),2))}};
+% patterns = {{randperm(size(A_conn,1),2)},...
+%     {randperm(size(A_conn,1),2)}, ...
+%     {randperm(size(A_conn,1),2)}};
+patterns = {{n(randperm(length(n),2))},...
+    {randperm(size(A_conn,1),2)}, ...
+    {randperm(size(A_conn,1),2)}};
+probs = ones(1,length(patterns)) / length(patterns);
+[Y, pat] = trigger_many_avalanches(A_conn, ones(size(A_conn,1),1),...
+    patterns, probs, dur, iter);
+
 %% average avalanches
 nodes_in = find(B)';
 Y_pat = zeros(size(Y,1), size(Y,2), length(nodes_in));

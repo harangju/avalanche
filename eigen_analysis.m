@@ -27,7 +27,21 @@ plot(g,'NodeCData',modal_control(A_conn),...
     'LineWidth',2*g.Edges.Weight/max(g.Edges.Weight))
 colorbar; set(gca,'visible','off'); axis square
 %% using eigenvectors as stimuli
-
+dur=7; iter=100;
+idx = length(u); num_other = 10; scale = 5;
+pats = cell(1,1+num_other);
+pats{1} = round(scale * v(:,idx));
+if find(pats{1}<0); pats{1} = -1 * pats{1}; end
+idxs = randperm(length(u),num_other);
+for i = 1 : num_other
+    if ~isreal(v(:,idxs(i)))
+        pats{i+1} = zeros(length(u),1); continue
+    end
+    pats{i+1} = round(scale * v(:,idxs(i)));
+    if find(pats{1}<0); pats{1} = -1 * pats{1}; end
+end; clear i
+[Y,pat] = trigger_many_avalanches(A_conn,ones(size(A_conn,1),1),...
+    pats, ones(1,length(pats))/length(pats),dur,iter);
 %% duration as function of eigenvalues
 
 %% mutual information as function of eigenvectors

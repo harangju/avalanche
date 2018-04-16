@@ -27,7 +27,7 @@ plot(g,'NodeCData',modal_control(A_conn),...
     'LineWidth',2*g.Edges.Weight/max(g.Edges.Weight))
 colorbar; set(gca,'visible','off'); axis square
 %% using eigenvectors as stimuli
-dur=20; iter=3e2;
+dur=10; iter=3e2;
 idx_idx = length(u);
 num_other = 10; scale = 5; noise_scale = 2;
 pats = cell(1,1+num_other);
@@ -51,8 +51,10 @@ for i = 2 : length(pats)
     bar(pats{i})
 end; clear i; hold off
 %% trigger avalanches
+tic
 [Y,pat] = trigger_many_avalanches(A_conn,ones(size(A_conn,1),1),...
     pats, probs, dur, iter);
+toc
 %% duration as function of eigenvalues
 durs = avalanche_durations(Y);
 histogram(durs,20); axis square; prettify

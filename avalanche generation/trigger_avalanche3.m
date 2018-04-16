@@ -12,7 +12,7 @@ Y_t = zeros(N, max_duration); % firing
 u_t = padarray(u_t, [0 max_duration-size(u_t,2)], 'post');
 % add zero padding to u_t
 
-spikes_u = sum(binornd(u_t(:,1), B));
+spikes_u = binornd(u_t(:,1), B);
 Y_t(:,1) = spikes_u;
 for t = 2 : max_duration
     spikes_u = sum(binornd(u_t(:,t), B));

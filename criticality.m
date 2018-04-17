@@ -2,11 +2,11 @@
 
 %% driven mode
 % given A, B
-iter = 2e4; dur = 14;
+iter = 4e4; dur = 20;
 [Y, pat] = ping_nodes(A, B, iter, dur);
 
 %% spontaneous mode
-p_spont = 0.0003;
+p_spont = 0.0001;
 iter = 1e5;
 Y_cont = spontaneous_avalanches(A, B, p_spont, iter);
 Y = find_avalanches(Y_cont);

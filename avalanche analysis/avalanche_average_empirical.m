@@ -1,5 +1,5 @@
-function [Y_t_avg, Y_t_var] = avalanche_average_empirical(A, B, u_t, num_trials, ...
-    max_duration)
+function [Y_t_avg, Y_t_var] = avalanche_average_empirical(A, B, u_t,...
+    num_trials, max_duration)
 %avalanche_average_empirical
 %   Calls trigger_avalanche T times & averages the spike counts
 %   A: system connectivity, [pre X post]

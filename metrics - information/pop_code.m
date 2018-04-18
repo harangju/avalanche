@@ -1,4 +1,4 @@
-function code = pop_code(Y, nodes)
+function code = pop_code(Y)
 %pop_code(Y) converts population code into a random variable
 %   Y: [N X t X trial]
 %   nodes: subset of neurons to use
@@ -7,7 +7,7 @@ function code = pop_code(Y, nodes)
 
 code = zeros(size(Y,2), size(Y,3));
 for i = 1 : size(Y,2)
-    code(i,:) = joint(squeeze(Y(nodes,i,:))');
+    code(i,:) = joint(squeeze(Y(:,i,:))');
 end
 
 end

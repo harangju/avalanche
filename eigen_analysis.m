@@ -146,14 +146,23 @@ pats = {-1*v(:,idx(end-1)),};
 
 %% WRG
 params = default_network_parameters;
+params.num_nodes = 30;
+params.num_nodes_input = 30;
+params.frac_conn = 0.4;
 A = network_create(params);
+A = scale_weights_to_criticality(A);
+B = ones(params.num_nodes,1);
 [v,d] = eig(A);
 d = diag(d);
+%%
+imagesc(A)
+prettify; axis square; colorbar
 %% eigenvalues
 bar(d); prettify
 %% dominant eigenvector
 bar(v(:,1)); prettify
-%%
+%% make inputs with eigenvectors real, positive, & integers
+scale = 10;
 pats = cell(1,params.num_nodes);
 for i = 1 : params.num_nodes
     pats{i} = v(:,i);
@@ -168,6 +177,7 @@ for i = 1 : params.num_nodes
     if find(pats{i}<0); pats{i} = -1 * pats{i}; end
     pats{i}(pats{i}<0) = 0;
     pats{i} = abs(pats{i});
+    pats{i} = round(scale * pats{i});
 end; clear i
 %%
 clf; hold on
@@ -180,25 +190,70 @@ for i = 1 : length(pats)
         disp('negative')
     end
 end; clear i; hold off
+%% dominant eigenvector
+tic
+dur = 10; iter = 1e2;
+[Y, pat] = trigger_many_avalanches(A, B, pats(1:2), [0.5 0.5],...
+    dur, iter);
+toc
 %%
-dur=5; iter=3e3;
-% mi_pops = zeros();
-for i = 1 %: length(diag(d))
+Y_ = mean(Y(:,:,pat==1),3);
+plot_avalanche(Y_,avalanche_transitions(Y_,A),true);
+%%
+mi_pop = mutual_info_pop(Y,pat');
+plot(mi_pop,'LineWidth',2); prettify; axis([0 dur 0 1])
+%%
+dur=30; iter=3e3;
+mi_pops = zeros(params.num_nodes, dur);
+max_ent = zeros(1,params.num_nodes);
+for i = 1 : params.num_nodes
     probs = 0.5*ones(1,params.num_nodes)/(params.num_nodes-1);
     probs(i) = 0.5;
     tic
-    [Y,pat] = trigger_many_avalanches(A, ones(params.num_nodes,1), pats,...
-        probs, dur, iter);
+    [Y,pat] = trigger_many_avalanches(A, B, pats, probs, dur, iter);
     toc
-    p = pat'; p(p~=1) = 2;
-    mi_pop = mutual_info_pop(Y,p);
+    p = pat';
+    p(pat==i) = 1;
+    p(pat~=i) = 2;
+    mi_pops(i,:) = mutual_info_pop(Y,p);
+    max_ent(i) = h(p);
 end; clear i
 %%
-plot(mi_pop, 'LineWidth', 2)
-hold on; scatter(1,h(p),'filled','r'); hold off
+clf
+surfl(1:dur,sort(abs(d),'descend'),mi_pops)
+prettify; axis([0 dur+1 0 1 0 1]); axis vis3d;
+xlabel('time'); ylabel('\lambda'); zlabel('MI')
+%%
+clf; hold on
+for i = 1 : params.num_nodes
+    plot(mi_pops(i,:), 'LineWidth', 2)
+    scatter(1,max_ent(i),'filled','r')
+end
 prettify; axis square; xlabel('t'); ylabel('MI')
 axis([0 dur+1 0 ceil(h(p))])
-
+%% equal prob
+dur = 30; iter = 3e3;
+probs = ones(1,length(pats)) / length(pats);
+tic
+[Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
+toc
+%%
+for i = 1 : params.num_nodes
+    Y_ = mean(Y(:,:,pat==i),3);
+    plot_avalanche(Y_,avalanche_transitions(Y_,A),true);
+    title(num2str(i))
+%     pause
+end; clear i
+%%
+[mi_pop, code] = mutual_info_pop(Y,pat');
+clf; plot(mi_pop,'LineWidth',2)
+hold on; scatter(1,h(pat'),'filled','r'); hold off
+axis([0 dur+1 0 ceil(max(mi_pop))]); prettify
+%%
+[T,S] = state_mapping(Y);
+g = graph_from_matrix(T);
+plot(g)
+%%
 
 
 

@@ -9,7 +9,8 @@ function Y_t = trigger_avalanche(A, B, u_t, max_duration)
 
 N = size(A,1); % number of neurons
 Y_t = zeros(N, max_duration); % firing
-u_t = padarray(u_t, [0 max_duration-size(u_t,2)], 'post'); % add zero padding to u_t
+u_t = padarray(u_t, [0 max_duration-size(u_t,2)], 'post');
+% add zero padding to u_t
 
 for t = 1 : max_duration
     for j = 1 : N % firing Y, neuron i -> neuron j

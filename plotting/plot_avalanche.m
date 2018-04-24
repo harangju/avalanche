@@ -36,7 +36,7 @@ for t = 1 : duration
     % plot transitions
     for j = 1 : size(trans,1)
         if ~isempty(trans(j,:))
-            plot([t-1 t], trans(j,:), 'k-')
+            plot([t-1 t], trans(j,:), 'k--')
         end
     end
 end

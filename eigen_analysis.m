@@ -4,7 +4,7 @@
 %% create subnetwork
 deg = outdegree(A) + indegree(A);
 A_conn = A(deg>0,deg>0);
-g=graph_from_matrix(A_conn);
+g = graph_from_matrix(A_conn);
 %% eigen analysis
 [v,d] = eig(A_conn);
 d = diag(d);
@@ -143,11 +143,16 @@ pats = {-1*v(:,idx(end-1)),};
 [Yp,pat] = trigger_many_avalanches(A_conn,ones(size(A_conn,1),1),...
     pats, ones(1,length(pats))/length(pats),dur,iter);
 
+
+
+
+
 %% WRG
 params = default_network_parameters;
-params.num_nodes = 30;
-params.num_nodes_input = 30;
-params.frac_conn = 0.4;
+params.num_nodes = 169;
+params.num_nodes_input = 169;
+params.frac_conn = 0.0098;
+params.graph_type = 'RG';
 A = network_create(params);
 A = scale_weights_to_criticality(A);
 B = ones(params.num_nodes,1);
@@ -185,8 +190,10 @@ for i = 1 : params.num_nodes
     pats{i} = round(scale * pats{i});
 end; clear i
 %% remove duplicates
-d_real = [d(1)];
-pats_no_dup = pats(1);%cell(1,params.num_nodes-dups);
+if sum(abs(pats{1} - pats{2})) > 1e-10
+    d_real = d(1);
+    pats_no_dup = pats(1);
+end
 for i = 2 : length(pats)
     if sum(abs(pats{i-1} - pats{i})) > 1e-10
         pats_no_dup = [pats_no_dup pats{i}];
@@ -208,16 +215,16 @@ end; clear i; hold off
 %% dominant eigenvector
 tic
 dur = 30; iter = 1e2;
-[Y, pat] = trigger_many_avalanches(A, B, pats(1:2), [0.5 0.5],...
+[Y, pat] = trigger_many_avalanches(A, B, pats([1 idx(52)]), [0.5 0.5],...
     dur, iter);
 toc
 %%
-Y_ = mean(Y(:,:,pat==1),3);
+Y_ = mean(Y(:,:,pat==2),3);
 plot_avalanche(Y_,avalanche_transitions(Y_,A),true);
 %%
 mi_pop = mutual_info_pop(Y,pat');
 plot(mi_pop,'LineWidth',2); prettify; axis([0 dur 0 1])
-%%
+%% try all eigenvectors
 dur=30; iter=1e3;
 mi_pops = zeros(length(pats), dur);
 max_ent = zeros(1,length(pats));
@@ -233,7 +240,7 @@ for i = 1 : length(pats)
     mi_pops(i,:) = mutual_info_pop(Y,p);
     max_ent(i) = h(p);
 end; clear i
-%%
+%% plot surface
 clf
 % surfl(1:dur,unique(abs(d)),mi_pops)
 [d_real_sort, idx] = sort(d_real,'descend');
@@ -241,9 +248,9 @@ surfl(1:dur,d_real_sort,mi_pops(idx,:))
 % surfl(mi_pops)
 prettify; axis([0 dur+1 0 1 0 1]); axis vis3d;
 xlabel('time'); ylabel('\lambda'); zlabel('MI')
-%%
+%% plot lines
 clf; hold on
-for i = 1 : length(pats)
+for i = idx([5:20 length(pats)-50:length(pats)]) %1 : length(pats)
     plot(mi_pops(i,:), 'LineWidth', 2)
     scatter(1,max_ent(i),'filled','r')
 end

@@ -13,9 +13,9 @@ end
 activity = sum(bins, 1);
 idx_start = strfind(activity > 0, [0 1]);
 idx_end = strfind(activity > 0, [1 0]);
-avalanches = cell(1, length(idx_start));
-for i = 1 : length(idx_start)
-    avalanches{i} = bins(:, idx_start:idx_end);
+avalanches = cell(1, length(idx_end));
+for i = 1 : length(idx_end)
+    avalanches{i} = bins(:, idx_start(i):idx_end(i));
 end
 
 end

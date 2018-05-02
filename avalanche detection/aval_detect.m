@@ -1,6 +1,6 @@
 
 %%
-load('/Users/harangju/Developer/beggs data/DataSet1.mat')
+load('/Users/harangju/Developer/beggs data/DataSet2.mat')
 %% detect avalanches
 bin_size = 4;
 avalanches = detect_avalanches(data.spikes, bin_size);
@@ -16,3 +16,9 @@ for n = 1 : N
         part{n} = [part{n} find(aval(n,:))];
     end; clear a aval
 end; clear n
+%% summarize information
+occur_mean = cellfun(@mean,part);
+bar(occur_mean)
+prettify; xlabel('neurons'); ylabel('mean occurrence in avalanche')
+%%
+

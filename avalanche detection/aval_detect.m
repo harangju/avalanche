@@ -1,6 +1,6 @@
 
 %%
-load('/Users/harangju/Developer/beggs data/DataSet2.mat')
+load('/beggs data/DataSet2.mat')
 %% detect avalanches
 bin_size = 4;
 avalanches = detect_avalanches(data.spikes, bin_size);

@@ -49,15 +49,17 @@ end; clear n
 a8_avg = mean(a(:,:,8,:),4);
 % plot_avalanche(a8_avg, avalanche_transitions(a8_avg, A), true)
 imagesc(a8_avg)
-prettify; colorbar; xlabel('time'); ylabel('neurons')
+prettify; colorbar; %xlabel('time'); ylabel('neurons')
+saveas(gcf,'aval_avg_emp_n8.eps','epsc')
 %%
 n=8;
 a8_lin = avalanche_average_analytical(A,B,inputs(p.num_nodes,{n},1),dur);
 imagesc(a8_avg)
-prettify; colorbar; xlabel('time'); ylabel('neurons')
+prettify; colorbar; %xlabel('time'); ylabel('neurons')
+saveas(gcf,'aval_avg_ana_n8.eps','epsc')
 %% diff
-histogram(a8_lin(:)-a8_avg(:),40)
+histogram(a8_lin(a8_lin>0)-a8_avg(a8_lin>0),40)
 prettify
-axis([-.02 .02 0 100])
-
+axis([-.02 .02 0 15])
+saveas(gcf,'diff_hist_n8.eps','epsc')
 

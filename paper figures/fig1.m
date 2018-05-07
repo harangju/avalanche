@@ -39,9 +39,9 @@ end; clear n
 %% view avalanches - matrix
 for n = 8
     for t = 1 : trials
-        imagesc(-1*a(:,:,n,t))
+        imagesc(a(:,:,n,t))
         prettify; %colorbar;% xlabel('time'); ylabel('neurons')
-        saveas(gcf,['aval_' num2str(t) '.eps'])
+        saveas(gcf,['aval_' num2str(t) '.eps'],'epsc')
 %         pause
     end; clear t
 end; clear n

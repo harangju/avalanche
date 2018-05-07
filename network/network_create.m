@@ -14,7 +14,7 @@ function [A, B, C] = network_create(p)
 %         'hidden nodes.'])
 % end
 % max values
-num_edges_max = p.num_nodes * (p.num_nodes - 1) / 2;
+num_edges_max = p.num_nodes * (p.num_nodes - 1);
 degree_max = num_edges_max / p.num_nodes;
 % network values
 num_edges = ceil(p.frac_conn * num_edges_max);

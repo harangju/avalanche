@@ -250,7 +250,7 @@ prettify; axis([0 dur+1 0 1 0 1]); axis vis3d;
 xlabel('time'); ylabel('\lambda'); zlabel('MI')
 %% plot lines
 clf; hold on
-for i = idx([5:20 length(pats)-50:length(pats)]) %1 : length(pats)
+for i = 6 %idx(52) %1 : length(pats)
     plot(mi_pops(i,:), 'LineWidth', 2)
     scatter(1,max_ent(i),'filled','r')
 end

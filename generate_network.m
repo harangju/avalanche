@@ -1,6 +1,6 @@
 
 %% generate network from data
-load('beggs data/DataSet2.mat')
+load('beggs data/DataSet1.mat')
 A = estimate_network_from_spikes(data, 0.1);
 B = double(outdegree(A)>0);
 A = scale_weights_to_criticality(A);

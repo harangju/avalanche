@@ -70,6 +70,7 @@ ns = 50 : 50 : 300;
 dur = 15;
 trials = 1e3;
 df = cell(1,length(ns));
+nodes_tr = 50;
 for i = 1 : length(ns)
     n = ns(i);
     disp(n)
@@ -85,7 +86,7 @@ for i = 1 : length(ns)
     imagesc(A)
     a_emp = zeros(p.num_nodes, dur, p.num_nodes);
     a_ana = zeros(p.num_nodes, dur, p.num_nodes);
-    for nodes = 1 : p.num_nodes
+    for nodes = randperm(p.num_nodes, nodes_tr) %1 : p.num_nodes
         u = inputs(p.num_nodes,{nodes},1);
         emp = avalanche_average_empirical(A,B,u,trials,dur);
         ana = avalanche_average_analytical(A,B,u,dur);
@@ -98,6 +99,13 @@ for i = 1 : length(ns)
         df{i} = a_emp(a_ana>0) - a_ana(a_ana>0);
     end
 end; clear n
+%% plot diffs
+df_m = cellfun(@mean,df);
+df_se = cellfun(@std,df);% ./ sqrt(cellfun(@length,df));
+errorbar(ns, df_m, df_se, 'k*', 'LineWidth', 2)
+prettify
+% axis([0 max(ns) -0.0005 0.0005])
+axis([0 max(ns) -0.03 0.03])
 
 
 

@@ -67,3 +67,9 @@ set(gca,'FontSize',16);
 scatter(score,occur_mean(deg>0), 'filled')
 prettify
 xlabel('score'); ylabel('occurrence')
+
+
+%% strong eigenvectors
+
+
+

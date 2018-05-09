@@ -20,8 +20,8 @@ end
 Y_t_avg = mean(Y_t_trials, 3);
 Y_t_var = var(Y_t_trials, 0, 3);
 t_last_firing = find(sum(Y_t_avg, 1), 1, 'last');
-Y_t_avg = Y_t_avg(:, 1:t_last_firing);
-Y_t_var = Y_t_var(:, 1:t_last_firing);
+Y_t_avg = Y_t_avg(:, 1:max_duration);
+Y_t_var = Y_t_var(:, 1:max_duration);
 
 end
 

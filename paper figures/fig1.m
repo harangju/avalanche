@@ -37,7 +37,7 @@ for n = 8
         imagesc(a(:,:,n,t))
         caxis([0 max(max(max(a(:,:,n,ts))))])
         prettify; %colorbar;% xlabel('time'); ylabel('neurons')
-        saveas(gcf,['aval_' num2str(t)],'svg')
+        saveas(gcf,['aval_' num2str(t)],'epsc')
 %         pause
     end; clear t
 end; clear n
@@ -47,19 +47,19 @@ imagesc(a(:,:,n,ts(length(ts))))
 caxis([0 max(max(max(a(:,:,n,ts))))])
 colorbar
 prettify
-saveas(gcf,'colorbar','svg')
+saveas(gcf,'colorbar','pdf')
 %% mean avalanche, n = 8
 a8_avg = mean(a(:,:,8,:),4);
 % plot_avalanche(a8_avg, avalanche_transitions(a8_avg, A), true)
 imagesc(a8_avg)
 prettify; %xlabel('time'); ylabel('neurons')
-saveas(gcf,'aval_avg_emp_n8','svg')
+saveas(gcf,'aval_avg_emp_n8','epsc')
 %%
 n=8;
 a8_lin = avalanche_average_analytical(A,B,inputs(p.num_nodes,{n},1),dur);
 imagesc(a8_avg)
 prettify; %xlabel('time'); ylabel('neurons')
-saveas(gcf,'aval_avg_ana_n8','svg')
+saveas(gcf,'aval_avg_ana_n8','epsc')
 %% diff
 histogram(a8_lin(a8_lin>0)-a8_avg(a8_lin>0),30,'FaceColor','k')
 prettify

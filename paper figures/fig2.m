@@ -1,10 +1,10 @@
 
-%% 3-node network
+%% network
 p = default_network_parameters;
-p.num_nodes = 3;
+p.num_nodes = 200;
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
-p.frac_conn = .95;
+p.frac_conn = 0.01;
 p.graph_type = 'WRG';
 p.exp_branching = 1;
 [A, B, C] = network_create(p);
@@ -13,24 +13,11 @@ p.exp_branching = 1;
 imagesc(A)
 colorbar
 prettify
-%% 
-x0 = [0 0 5]';
-T = 30;
-x = zeros(length(x0),T);
-for t = 1 : T
-    x(:,t) = A^t * x0;
-end; clear t
-plot3(x(1,:),x(2,:),x(3,:),'*-')
-axis([0 inf 0 inf 0 inf])
-prettify; axis vis3d; xlabel('x'); ylabel('y'); zlabel('z');
-
-
-
-
 %%
 %% eigendecomposition
 [v,d] = eig(A);
 d = diag(d);
+[~,idx] = sort(d);
 %% check connectivity
 disp(mean(A(:)>0))
 %%
@@ -42,13 +29,13 @@ bar(d); prettify
 bar(v(:,1)); prettify
 %% make inputs with eigenvectors real, positive, & integers
 scale = 5;
-pats = cell(1,params.num_nodes);
+pats = cell(1,p.num_nodes);
 dups = 0;
 % d_real = [];
-for i = 1 : params.num_nodes
+for i = 1 : p.num_nodes
     pats{i} = v(:,i);
     if ~isreal(d(i))
-        if i < params.num_nodes &&...
+        if i < p.num_nodes &&...
                 abs(d(i)) == abs(d(i+1))
             pats{i} = v(:,i) + v(:,i+1);
         elseif abs(d(i)) == abs(d(i-1))
@@ -76,6 +63,8 @@ for i = 2 : length(pats)
     end
 end; clear i
 pats = pats_no_dup;
+%%
+[d_real_sort, idx] = sort(d_real,'descend');
 %% equal prob
 dur = 60; iter = 1e4;
 probs = ones(1,length(pats)) / length(pats);
@@ -99,8 +88,9 @@ for p = 1 : length(pats)
     pers_mean(p) = mean(persistence(pat==p));
 end
 %% persistence as function of eigenvalues
-scatter(d_real,pers_mean,'filled')
+scatter(d_real,pers_mean,'filled','k')
 prettify;
+set(gca,'LineWidth',.75)
 %% correlation b/t eigenvalue & persistence
 c = corrcoef([d_real' pers_mean']);
 disp(c)
@@ -109,13 +99,13 @@ disp(c)
 hold on
 x = 0:1e-2:max(d_real);
 y = x*p(1) + p(2);
-plot(x,y,'LineWidth',2)
+plot(x,y,'r','LineWidth',.75)
 hold off
 %% rmse of linear regression
 rmse = sqrt(mean((pers_mean-d_real*p(1)+p(2)).^2));
 disp(['rmse = ' num2str(rmse)])
 %% examples - average activity
-ns = [1 11 21 31 41 51];
+ns = [1 11 21 31 41 61];
 lineStyles = linspecer(length(ns));
 clf; hold on
 plts = [];
@@ -126,8 +116,8 @@ for i = 1 : length(ns)
     act_se = std(act_p, 0, 1) / sqrt(size(act_p,1));
     act_s = std(act_p, 0, 1);
     act_v = var(act_p, 0, 1);
-    plts = [plts plot(act_m, 'Color', lineStyles(i,:), 'LineWidth', 2)];
-    error_shade(1:dur, act_m, act_se, lineStyles(i,:), 'LineWidth', 2);
+    plts = [plts plot(act_m, 'Color', lineStyles(i,:), 'LineWidth', .75)];
+    error_shade(1:dur, act_m, act_se, lineStyles(i,:), 'LineWidth', .75);
 end; clear i; hold off
 prettify
 legend(plts, {...
@@ -135,7 +125,10 @@ legend(plts, {...
     ['\lambda=' num2str(d_real_sort(ns(2)))],...
     ['\lambda=' num2str(d_real_sort(ns(3)))],...
     ['\lambda=' num2str(d_real_sort(ns(4)))],...
-    ['\lambda=' num2str(d_real_sort(ns(5)))]});
+    ['\lambda=' num2str(d_real_sort(ns(5)))],...
+    ['\lambda=' num2str(d_real_sort(ns(6)))]});
+set(gca,'LineWidth',.75)
 %% example avalanche
-plot(mean(activity(2,:),1), 'Color', lineStyles(2,:), 'LineWidth', 2)
-prettify; axis([0 30 0 20])
+plot(mean(activity(9,:),1), 'k', 'LineWidth', .75)
+prettify; %axis([0 30 0 20])
+set(gca,'LineWidth',.75)

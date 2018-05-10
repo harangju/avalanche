@@ -10,9 +10,9 @@ params.num_nodes = size(A,1);
 B = ones(params.num_nodes,1);
 %% WRG
 params = default_network_parameters;
-params.num_nodes = 169;
-params.num_nodes_input = 169;
-params.frac_conn = 0.0098;
+params.num_nodes = 200;
+params.num_nodes_input = 200;
+params.frac_conn = 0.01;
 params.graph_type = 'WRG';
 %% RG
 params.graph_type = 'RG';
@@ -88,10 +88,30 @@ end; clear i
 %% plot surface
 clf
 [d_real_sort, idx] = sort(d_real,'descend');
-surfl(1:dur,d_real_sort,mi_pops(idx,:))
+surf(1:dur,d_real_sort,mi_pops(idx,:),'LineWidth',0.25)
 % surfl(mi_pops)
 prettify; axis([0 dur+1 0 1 0 1]); axis vis3d;
 xlabel('time'); ylabel('\lambda'); zlabel('MI')
+set(gca,'LineWidth',.75);
+%% plot individual lines
+clf; hold on
+is = [1 40 80];
+lineStyles = linspecer(length(is));
+colormap(linspecer)
+plts = zeros(1,length(is));
+for i = 1 : length(is)
+    j = is(i);
+    plts(i) = plot(mi_pops(idx(j),:),'LineWidth',1);
+end; clear i j
+prettify
+axis([0 35 0 1])
+legend(plts, {...
+    ['\lambda=' num2str(d_real(idx(is(1))))],...
+    ['\lambda=' num2str(d_real(idx(is(2))))],...
+    ['\lambda=' num2str(d_real(idx(is(3))))]},...
+    'FontSize',18);
+set(gca,'LineWidth',.75);
+
 
 
 

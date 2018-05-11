@@ -18,28 +18,45 @@ for n = 1 : N
 end; clear n
 %% summarize information
 occur_mean = cellfun(@mean,part);
-bar(occur_mean)
-prettify; xlabel('neurons'); ylabel('mean occurrence in avalanche')
+histogram(occur_mean,30)
+prettify; xlabel('mean occurrence in avalanche'); ylabel('neurons');
+%% max
+occur_max = cellfun(@max,part);
+histogram(occur_max,30)
+prettify; xlabel('max occurrence in avalanche'); ylabel('neurons'); 
+%% view both
+subplot(2,1,1)
+bar(occur_mean); prettify
+subplot(2,1,2)
+bar(occur_max); prettify
+xlabel('neurons')
 %%
-A_raw = estimate_network_from_spikes(data, 0.1);
-beep
+% A_raw = estimate_network_from_spikes(data, 0.1);
+% beep
+%%
+load('avalanche/example networks/network_beggs2.mat')
+%%
+A_raw = A;
 %%
 deg = outdegree(A_raw) + indegree(A_raw);
 A = A_raw(deg>0,deg>0);
 B = ones(1,size(A,1));
 A = scale_weights_to_criticality(A);
+%%
+N = size(A,1);
 %% check connectivity
 disp(mean(A(:)>0))
 %% eigendecomposition
 [v,d] = eig(A);
 d = diag(d);
+[~,idx] = sort(d);
 %% get real eigenvectors
-v_real = zeros(params.num_nodes,params.num_nodes);
-d_real = zeros(1,params.num_nodes);
-for i = 1 : params.num_nodes
+v_real = zeros(N,N);
+d_real = zeros(1,N);
+for i = 1 : N
     v_real(:,i) = v(:,i);
     if ~isreal(d(i))
-        if i < params.num_nodes &&...
+        if i < N &&...
                 abs(d(i)) == abs(d(i+1))
             v_real(:,i) = v(:,i) + v(:,i+1);
             d_real(i) = d(i) + d(i+1);
@@ -67,9 +84,18 @@ set(gca,'FontSize',16);
 scatter(score,occur_mean(deg>0), 'filled')
 prettify
 xlabel('score'); ylabel('occurrence')
-
-
 %% strong eigenvectors
-
+num_d_top = 10;
+d_top = idx(end-num_d_top:end)';
+n_top = [];
+for i = 1 : num_d_top
+    n_top = [n_top find(abs(v(:,d_top(i)))>1e-3)'];
+end; clear i
+n_top = unique(n_top);
+%% view
+histogram(occur_mean,30)
+prettify; xlabel('mean occurrence in avalanche'); ylabel('neurons');
+disp(occur_mean(n_top))
+mean(occur_mean(n_top))
 
 

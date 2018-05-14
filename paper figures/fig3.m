@@ -86,6 +86,7 @@ for i = 1 : length(pats)
     max_ent(i) = h(p);
 end; clear i
 %% plot surface
+colormap bone
 clf
 [d_real_sort, idx] = sort(d_real,'descend');
 surf(1:dur,d_real_sort,mi_pops(idx,:),'LineWidth',0.25)
@@ -95,7 +96,9 @@ xlabel('time'); ylabel('\lambda'); zlabel('MI')
 set(gca,'LineWidth',.75);
 %% plot individual lines
 clf; hold on
-is = [1 40 80];
+% is = [1 26 80]; % wrg200
+% is = [1 105 180]; % rg200
+is = [1 6 50]; % beggs1
 lineStyles = linspecer(length(is));
 colormap(linspecer)
 plts = zeros(1,length(is));

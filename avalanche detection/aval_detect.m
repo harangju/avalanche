@@ -1,9 +1,21 @@
 
 %%
-load('beggs data/DataSet2.mat')
+load('beggs data/DataSet3.mat')
 %% detect avalanches
 bin_size = 4;
 avalanches = detect_avalanches(data.spikes, bin_size);
+%% power law - duration
+aval_durs = cellfun(@size,avalanches,...
+    num2cell(2*ones(1,length(avalanches))));
+[n,edges] = histcounts(aval_durs);
+scatter(log10(edges(1:end-1)),log10(n)/length(avalanches),'filled')
+prettify; xlabel('avalanche duration log_{10}'); ylabel('avalanches')
+%% power law - size
+size_aval = @(aval) sum(sum(aval,2)>0);
+aval_sizes = cellfun(size_aval,avalanches);
+[n,edges] = histcounts(aval_sizes);
+scatter(log10(edges(1:end-1)),log10(n)/length(avalanches),'filled')
+prettify; xlabel('avalanche size log_{10}'); ylabel('avalanches')
 %% compute node participation
 % how much a node participates in long avalanches
 % per node, per avalanche, activation throughout avalanche
@@ -34,7 +46,7 @@ xlabel('neurons')
 % A_raw = estimate_network_from_spikes(data, 0.1);
 % beep
 %%
-load('avalanche/example networks/network_beggs2.mat')
+load('avalanche/example networks/network_beggs3.mat')
 %%
 A_raw = A;
 %%
@@ -80,10 +92,11 @@ set(gca,'FontSize',16);
 subplot(2,1,1)
 ylabel('mean occurrence')
 set(gca,'FontSize',16);
-%%
+%% score vs mean occurrence
 scatter(score,occur_mean(deg>0), 'filled')
 prettify
 xlabel('score'); ylabel('occurrence')
+
 %% strong eigenvectors
 num_d_top = 10;
 d_top = idx(end-num_d_top:end)';

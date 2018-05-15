@@ -12,9 +12,11 @@ if length(idx_quiescence) > length(idx_activity)
     idx_quiescence(1) = [];
 end
 lengths = idx_quiescence - idx_activity;
-aval = zeros(size(Y,1), max(lengths), length(idx_quiescence));
+% aval = zeros(size(Y,1), max(lengths), length(idx_quiescence));
+aval = cell(1,length(idx_quiescence));
 for i = 1 : length(lengths)
-     aval(:,1:lengths(i),i) = Y(:,idx_activity(i):idx_quiescence(i)-1);
+%      aval(:,1:lengths(i),i) = Y(:,idx_activity(i):idx_quiescence(i)-1);
+    aval{i} = Y(:,idx_activity(i):idx_quiescence(i)-1);
 end
 
 end

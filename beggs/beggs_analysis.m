@@ -3,7 +3,7 @@
 load('te_matlab_0.5/Izhik_100_0.mat')
 
 %% Beggs dataset
-load('beggs data/DataSet2.mat')
+load('beggs data/DataSet6.mat')
 %% format Beggs dataset
 asdf = data.spikes;
 asdf{end+2} = [data.nNeurons data.recordinglength];
@@ -38,7 +38,7 @@ n = histcounts2(log10(te_pk(:)),  ci(:),...
 filt = n_j ./ (n + n_j);
 filt(isnan(filt)) = 0;
 %% filter
-thresh = 0.1;%0.1; %0.37;
+thresh = 0.01;%0.1; %0.37;
 filt_thr = 1 - (filt > thresh);
 keep = zeros(size(ci));
 for i = 1 : asdf{end}(1)

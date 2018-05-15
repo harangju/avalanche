@@ -98,7 +98,7 @@ prettify
 xlabel('score'); ylabel('occurrence')
 
 %% strong eigenvectors
-num_d_top = 10;
+num_d_top = 5;
 d_top = idx(end-num_d_top:end)';
 n_top = [];
 for i = 1 : num_d_top

@@ -34,11 +34,11 @@ aval = find_avalanches(Y);
 subplot(2,1,1)
 aval_durs = cellfun(@size,aval,...
     num2cell(2*ones(1,length(aval))));
-[n,edges] = histcounts(aval_durs);
+[n,edges] = histcounts(aval _durs);
 % scatter(log10(edges(1:end-1)),log10(n)/length(aval),'filled')
 plot(log10(edges(1:end-1)),log10(n)/length(aval),'-*')
 % plot(edges(1:end-1),n,'-*')
-prettify; xlabel('avalanche duration log_{10}'); ylabel('probability')
+prettify; xlabel('avalanche duration log_{10}'); ylabel('avalanches')
 %% power law - size
 subplot(2,1,2)
 size_aval = @(a) sum(sum(a,2)>0);
@@ -47,5 +47,5 @@ aval_sizes = cellfun(size_aval,aval);
 % scatter(log10(edges(1:end-1)),log10(n)/length(aval),'filled')
 plot(log10(edges(1:end-1)),log10(n)/length(aval),'-*')
 % plot(edges(1:end-1),n,'-*')
-prettify; xlabel('avalanche size log_{10}'); ylabel('probability')
+prettify; xlabel('avalanche size log_{10}'); ylabel('avalanches')
 

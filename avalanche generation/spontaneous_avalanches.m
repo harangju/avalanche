@@ -12,6 +12,7 @@ for t = 2 : iter
     Y(:,t) = Y(:,t) + y_spont;
     Y(:,t) = Y(:,t) +...
         stochastic_spike_propagation(A, B, Y(:,t-1), zero_input);
+    Y(:,t) = double(Y(:,t) > 0);
 end
 
 end

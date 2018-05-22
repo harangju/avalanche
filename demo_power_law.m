@@ -4,7 +4,7 @@ param = default_network_parameters;
 param.num_nodes = 100;
 param.num_nodes_input = param.num_nodes;
 param.num_nodes_output = param.num_nodes;
-param.frac_conn = 0.4;
+param.frac_conn = 0.01;
 param.graph_type = 'WRG';
 param.exp_branching = 1;
 [A, B, C] = network_create(param);
@@ -20,9 +20,9 @@ plot(g)
 prettify
 %% generate spontaneous avalanches
 p_spike = 1e-5;
-iter = 1e6;
+iter = 1e4;
 tic
-Y = spontaneous_avalanches(A,B,p_spike,1e5);
+Y = spontaneous_avalanches2(A,B,p_spike,iter);
 toc
 %% view spikes
 clf

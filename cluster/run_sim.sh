@@ -15,5 +15,4 @@ com="$com $sweep_params;"
 com="$com initialize;"
 com="$com simulate;"
 
-echo $com
-#matlab -nodisplay -nodesktop -r "$com"
+matlab -nodisplay -nodesktop -r "$com"

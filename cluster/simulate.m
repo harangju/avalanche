@@ -4,4 +4,3 @@ iter = 1e4;
 tic
 Y = spontaneous_avalanches(A,B,p_spike,iter);
 toc
-save

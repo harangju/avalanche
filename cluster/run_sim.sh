@@ -14,5 +14,7 @@ com="$com set_parameters;"
 com="$com $sweep_params;"
 com="$com initialize;"
 com="$com simulate;"
+dir=`pwd`
+com="$com save $dir/matlab.mat"
 
 matlab -nodisplay -nodesktop -r "$com"

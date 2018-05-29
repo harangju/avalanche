@@ -1,14 +1,14 @@
 
 %% network
 p = default_network_parameters;
-p.num_nodes = 200;
+p.num_nodes = 100;
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
 p.frac_conn = 0.01;
 p.graph_type = 'WRG';
 p.exp_branching = 1;
 [A, B, C] = network_create(p);
-% A = scale_weights_to_criticality(A);
+A = scale_weights_to_criticality(A);
 %% view
 imagesc(A)
 colorbar
@@ -92,7 +92,7 @@ scatter(d_real,pers_mean,'filled','k')
 prettify;
 set(gca,'LineWidth',.75)
 %% correlation b/t eigenvalue & persistence
-c = corrcoef([d_real' pers_mean']);
+c = corrcoef([d_real' pers_mean'],'Type','Pearson');
 disp(c)
 %% linear regression
 [p] = polyfit(d_real,pers_mean,1);
@@ -105,7 +105,7 @@ hold off
 rmse = sqrt(mean((pers_mean-d_real*p(1)+p(2)).^2));
 disp(['rmse = ' num2str(rmse)])
 %% examples - average activity
-ns = [1 11 21 31 41 61];
+ns = [1 3 5 7 8 9];
 lineStyles = linspecer(length(ns));
 clf; hold on
 plts = [];
@@ -129,6 +129,6 @@ legend(plts, {...
     ['\lambda=' num2str(d_real_sort(ns(6)))]});
 set(gca,'LineWidth',.75)
 %% example avalanche
-plot(mean(activity(9,:),1), 'k', 'LineWidth', .75)
+plot(mean(activity(28,:),1), 'k', 'LineWidth', .75)
 prettify; %axis([0 30 0 20])
 set(gca,'LineWidth',.75)

@@ -17,4 +17,5 @@ com="$com simulate;"
 dir=`pwd`
 com="$com save $dir/matlab.mat"
 
+#echo $com
 matlab -nodisplay -nodesktop -r "$com"

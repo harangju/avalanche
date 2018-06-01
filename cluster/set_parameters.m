@@ -6,3 +6,6 @@ param.num_nodes_output = param.num_nodes;
 param.frac_conn = 0.01;
 param.graph_type = 'WRG';
 param.exp_branching = 1;
+
+p_spike = 1e-4;
+iter = 1e6;

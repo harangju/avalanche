@@ -9,6 +9,22 @@ p.graph_type = 'WRG';
 p.exp_branching = 1;
 [A, B, C] = network_create(p);
 A = scale_weights_to_criticality(A);
+% if rank(A) ~= p.num_nodes
+%     error('matrix not full rank')
+% end
+[r,ri_c] = rref(A);
+[r,ri_r] = rref(A');
+imagesc(r); colorbar
+disp(length(ri_c))
+A = A(ri_r,ri_c);
+disp(rank(A))
+
+%%
+p.num_nodes = length(ri_c);
+p.num_nodes_input = p.num_nodes;
+p.num_nodes_output = p.num_nodes;
+B = ones(p.num_nodes,1);
+C = ones(p.num_nodes,1);
 %% view
 imagesc(A)
 colorbar
@@ -28,7 +44,7 @@ bar(d); prettify
 %% dominant eigenvector
 bar(v(:,1)); prettify
 %% make inputs with eigenvectors real, positive, & integers
-scale = 5;
+scale = 10;
 pats = cell(1,p.num_nodes);
 dups = 0;
 % d_real = [];
@@ -55,6 +71,9 @@ end; clear i
 if sum(abs(pats{1} - pats{2})) > 1e-10
     d_real = d(1);
     pats_no_dup = pats(1);
+else
+    d_real = [];
+    pats_no_dup = {};
 end
 for i = 2 : length(pats)
     if sum(abs(pats{i-1} - pats{i})) > 1e-10
@@ -66,46 +85,60 @@ pats = pats_no_dup;
 %%
 [d_real_sort, idx] = sort(d_real,'descend');
 %% equal prob
-dur = 60; iter = 1e4;
+dur = 100; iter = 3e4;
 probs = ones(1,length(pats)) / length(pats);
 tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
 toc
 %%
 activity = squeeze(sum(Y,1))';
-%% measure persistence
-persistence = zeros(1,iter);
+%% measure duration
+duration = zeros(1,iter);
 for i = 1 : iter
     if sum(activity(i,:)) > 0
-        persistence(i) = find(activity(i,:)>0,1,'last');
+        duration(i) = find(activity(i,:)>0,1,'last');
     else
-        persistence(i) = 0;
+        duration(i) = 0;
     end
 end; clear i
-%% mean persistence
-pers_mean = zeros(1,length(pats));
-for p = 1 : length(pats)
-    pers_mean(p) = mean(persistence(pat==p));
+%% mean duration
+dur_mean = zeros(1,length(pats));
+for i = 1 : length(pats)
+    dur_mean(i) = mean(duration(pat==i));
 end
-%% persistence as function of eigenvalues
-scatter(d_real,pers_mean,'filled','k')
+%% calculate eigen-thing
+infl = zeros(1,length(pats));
+for i = 1 : length(pats)
+    infl(i) = norm(diag(d)\v*pats{i}/scale);
+%     bar(inv(v)*pats{i}/scale)
+%     axis([0 p.num_nodes -1 1])
+%     pause
+end
+%% duration as function of eigenvalues
+% scatter(d_real,dur_mean,'filled','k')
+% scatter(infl,dur_mean,'filled','k')
+scatter(infl(dur_mean<100),dur_mean(dur_mean<100),'filled','k')
 prettify;
 set(gca,'LineWidth',.75)
-%% correlation b/t eigenvalue & persistence
-c = corrcoef([d_real' pers_mean'],'Type','Pearson');
+%% correlation b/t eigenvalue & duration
+% c = corrcoef([infl' dur_mean'],'Type','Pearson');
+% c = corrcoef([infl' dur_mean']);
+c = corrcoef([infl(dur_mean<100)' dur_mean(dur_mean<100)']);
 disp(c)
 %% linear regression
-[p] = polyfit(d_real,pers_mean,1);
+% [p] = polyfit(infl,dur_mean,1);
+[p] = polyfit(infl(dur_mean<100),dur_mean(dur_mean<100),1);
 hold on
-x = 0:1e-2:max(d_real);
+% x = 0:1e-2:max(infl);
+x = 0:1e-2:max(infl(dur_mean<100));
 y = x*p(1) + p(2);
 plot(x,y,'r','LineWidth',.75)
 hold off
 %% rmse of linear regression
-rmse = sqrt(mean((pers_mean-d_real*p(1)+p(2)).^2));
+rmse = sqrt(mean((dur_mean-infl*p(1)+p(2)).^2));
 disp(['rmse = ' num2str(rmse)])
 %% examples - average activity
-ns = [1 3 5 7 8 9];
+ns = [1 15 30 45];
 lineStyles = linspecer(length(ns));
 clf; hold on
 plts = [];

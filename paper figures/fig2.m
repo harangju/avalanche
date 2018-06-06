@@ -116,8 +116,8 @@ for i = 1 : length(pats)
 end
 %% duration as function of eigenvalues
 % scatter(d_real,dur_mean,'filled','k')
-% scatter(infl,dur_mean,'filled','k')
-scatter(infl(dur_mean<100),dur_mean(dur_mean<100),'filled','k')
+scatter(infl,dur_mean,'filled','k')
+% scatter(infl(dur_mean<100),dur_mean(dur_mean<100),'filled','k')
 prettify;
 set(gca,'LineWidth',.75)
 %% correlation b/t eigenvalue & duration
@@ -162,6 +162,6 @@ legend(plts, {...
     ['\lambda=' num2str(d_real_sort(ns(6)))]});
 set(gca,'LineWidth',.75)
 %% example avalanche
-plot(mean(activity(28,:),1), 'k', 'LineWidth', .75)
+plot(mean(activity(1,:),1), 'k', 'LineWidth', .75)
 prettify; %axis([0 30 0 20])
 set(gca,'LineWidth',.75)

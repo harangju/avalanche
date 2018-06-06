@@ -23,6 +23,7 @@ disp(rank(A))
 p.num_nodes = length(ri_c);
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
+A = scale_weights_to_criticality(A);
 B = ones(p.num_nodes,1);
 C = ones(p.num_nodes,1);
 %% view
@@ -127,11 +128,11 @@ c = corrcoef([infl(dur_mean<100)' dur_mean(dur_mean<100)']);
 disp(c)
 %% linear regression
 % [p] = polyfit(infl,dur_mean,1);
-[p] = polyfit(infl(dur_mean<100),dur_mean(dur_mean<100),1);
+lin_reg = polyfit(infl(dur_mean<100),dur_mean(dur_mean<100),1);
 hold on
 % x = 0:1e-2:max(infl);
 x = 0:1e-2:max(infl(dur_mean<100));
-y = x*p(1) + p(2);
+y = x*lin_reg(1) + lin_reg(2);
 plot(x,y,'r','LineWidth',.75)
 hold off
 %% rmse of linear regression

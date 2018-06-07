@@ -123,8 +123,8 @@ prettify;
 set(gca,'LineWidth',.75)
 %% correlation b/t eigenvalue & duration
 % c = corrcoef([infl' dur_mean'],'Type','Pearson');
-% c = corrcoef([infl' dur_mean']);
-c = corrcoef([infl(dur_mean<100)' dur_mean(dur_mean<100)']);
+c = corrcoef([infl' dur_mean']);
+% c = corrcoef([infl(dur_mean<100)' dur_mean(dur_mean<100)']);
 disp(c)
 %% linear regression
 % [p] = polyfit(infl,dur_mean,1);
@@ -139,7 +139,7 @@ hold off
 rmse = sqrt(mean((dur_mean-infl*p(1)+p(2)).^2));
 disp(['rmse = ' num2str(rmse)])
 %% examples - average activity
-ns = [1 15 30 45];
+ns = [1 6 11 16 21 26];
 lineStyles = linspecer(length(ns));
 clf; hold on
 plts = [];
@@ -163,6 +163,6 @@ legend(plts, {...
     ['\lambda=' num2str(d_real_sort(ns(6)))]});
 set(gca,'LineWidth',.75)
 %% example avalanche
-plot(mean(activity(1,:),1), 'k', 'LineWidth', .75)
+plot(mean(activity(2,:),1), 'k', 'LineWidth', .75)
 prettify; %axis([0 30 0 20])
 set(gca,'LineWidth',.75)

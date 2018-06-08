@@ -118,8 +118,9 @@ for i = 1 : length(pats)
 %     pause
 end
 %% duration as function of eigenvalues
-% scatter(d_real,dur_mean,'filled','k')
-scatter(infl,dur_mean,'filled','k')
+scatter(d_real,dur_mean,'filled','k')
+% scatter(d_real,log(dur_mean),'filled','k')
+% scatter(infl,dur_mean,'filled','k')
 % scatter(infl(dur_mean<100),dur_mean(dur_mean<100),'filled','k')
 prettify;
 set(gca,'LineWidth',.75)

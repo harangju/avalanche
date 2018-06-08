@@ -1,48 +1,57 @@
-% scratchpad.m
-% Written by Harang Ju. January 29, 2018.
-
-%% Initialize
-disp('Initializing...')
-p = default_network_parameters;
-p.num_nodes = 166;
-p.num_nodes_input = p.num_nodes;
-p.num_nodes_output = p.num_nodes;
-p.frac_conn = 0.0854;
-p.graph_type = 'WRG';
-% p.exp_branching = .6;
-p.exp_branching = 1;
-% p.weighting = 'F';
-[A, B, C] = network_create(p);
-disp('Done initializing.')
-
-%% mutual information - single nodes
-iter = 1e3; dur = 7;
-[Y, pat] = ping_nodes(A, B, iter, dur);
-mi_info = mutual_info(Y,pat,C);
-[mi_max, mi_node, mi_time] = mutual_info_max(mi_info,C,1);
-%% mutual information - delayed pairs
-iter = 3e4; dur = 5;
-[Y, pat] = ping_delayed_pairs(A, B, iter, dur);
-[mi_max, mi_node, mi_time] = mutual_info_max(mi_info,C,1);
-
-%% avalanche intersections
-
 
 %%
-subplot(2,2,1)
-scatter(mi_max,indegree(A),'filled')
-axis square; prettify
-xlabel('I_{max}'); ylabel('indegree')
-subplot(2,2,2)
-scatter(mi_max,convergence(A),'filled');
-axis([0 0.2 0 2]); axis square; prettify
-xlabel('I_{max}'); ylabel('convergence')
-subplot(2,2,3)
-% scatter(mi_info(:,1),sum(A(:,mi_info(:,2)),2),'filled');
-axis([0 0.2 0 2]); axis square; prettify
-xlabel('I(X;Y)'); ylabel('weight')
-% subplot(2,2,4)
-% scatter(mi_info(:,1),mean_sizes,'filled')
-% axis([0 0.2 0 10]); axis square; prettify
-% xlabel('I(X;Y)'); ylabel('avalanche size')
+p = default_network_parameters;
+p.num_nodes
+p.num_nodes = 10;
+p.num_nodes_input = p.num_nodes;
+p.num_nodes_output = p.num_nodes;
+p.frac_conn = 0.3;
+[A,B,C] = network_create(p);
+imagesc(A)
+prettify; colorbar
+[v,d] = eig(A);
+d = diag(d)'
+max(d)
+
+%%
+dur = 10;
+[~,idx] = max(d);
+% x0 = v(:,idx);
+x0 = v(:,1) + v(:,2);
+% x0 = v(:,idx) + v(:,3) + v(:,4);
+
+x0 = 10*(x0 + ones(size(x0)));
+
+xt = zeros(size(A,1), dur);
+xt(:,1) = x0;
+for i = 2 : dur
+    xt(:,i) = A * xt(:,i-1);
+end; clear i
+
+% imagesc(xt); prettify; colorbar
+clf; hold on
+for i = 1 : size(A,1)
+    plot(xt(i,:),'LineWidth',1.5)
+end; clear i; hold off; prettify; colorbar; title('linear')
+
+%%
+
+u = round(x0);
+u(u<0) = 0;
+Y = avalanche_average_empirical(A,B,u,100,dur);
+
+clf; hold on
+C = linspecer(size(A,1));
+for i = 1 : size(A,1)
+    plot(Y(i,:),'LineWidth',1.5,'color',C(i,:))
+end; clear i; hold off; prettify; colorbar; title('random')
+
+%%
+idx_v = 6;
+x0 = v(:,idx_v) + 1e-2*rand(10,1);
+c = v\x0;
+dur_exp = log(inv(diag(c))*inv(v)*(0.5*ones(10,1))) ./ d
+dur_exp = log(v\ones(10,1)) ./ (c.*d)
+[mean(dur_exp) dur_mean(idx_v)]
+
 

@@ -86,7 +86,7 @@ for i = 2 : length(pats)
 end; clear i
 pats = pats_no_dup;
 %% try all eigenvectors
-dur=30; iter=1e3;
+dur=30; iter=3e3;
 mi_pops = zeros(length(pats), dur);
 max_ent = zeros(1,length(pats));
 for i = 1 : length(pats)
@@ -125,7 +125,7 @@ colormap bone
 clf
 [d_real_sort, idx] = sort(d_real,'descend');
 % surf(1:dur,d_real_sort,mi_pops(idx,:),'LineWidth',0.25)
-surf(0:dur-1,sort(infl,'descend'),mi_pops(idx,:),'LineWidth',0.25)
+surf(0:dur-1,log(sort(infl,'descend')),mi_pops(idx,:),'LineWidth',0.25)
 % surfl(mi_pops)
 prettify; axis vis3d; %axis([0 dur+1 0 1 0 1]); 
 xlabel('time'); ylabel('\lambda'); zlabel('MI')
@@ -134,7 +134,8 @@ set(gca,'LineWidth',.75);
 clf; hold on
 % is = [1 26 80]; % wrg200
 % is = [1 105 180]; % rg200
-is = [1 6 50]; % beggs1
+% is = [1 6 50]; % beggs1
+is = 1:p.num_nodes;
 lineStyles = linspecer(length(is));
 colormap(linspecer)
 plts = zeros(1,length(is));

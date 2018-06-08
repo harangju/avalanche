@@ -6,21 +6,34 @@ load('beggs data/DataSet2.mat')
 %% create subnetwork
 deg = outdegree(A) + indegree(A);
 A = A(deg>0,deg>0);
-params.num_nodes = size(A,1);
-B = ones(params.num_nodes,1);
+p.num_nodes = size(A,1);
+B = ones(p.num_nodes,1);
 %% WRG
-params = default_network_parameters;
-params.num_nodes = 200;
-params.num_nodes_input = 200;
-params.frac_conn = 0.01;
-params.graph_type = 'WRG';
+p = default_network_parameters;
+p.num_nodes = 200;
+p.num_nodes_input = 200;
+p.frac_conn = 0.01;
+p.graph_type = 'WRG';
 %% RG
-params.graph_type = 'RG';
+p.graph_type = 'RG';
 %% generate graphs
-A = network_create(params);
+A = network_create(p);
 A = scale_weights_to_criticality(A);
-B = ones(params.num_nodes,1);
-
+B = ones(p.num_nodes,1);
+%% make full rank
+[r,ri_c] = rref(A);
+[r,ri_r] = rref(A');
+imagesc(r); colorbar
+disp(length(ri_c))
+A = A(ri_r,ri_c);
+disp(rank(A))
+%% reset params
+p.num_nodes = length(ri_c);
+p.num_nodes_input = p.num_nodes;
+p.num_nodes_output = p.num_nodes;
+A = scale_weights_to_criticality(A);
+B = ones(p.num_nodes,1);
+C = ones(p.num_nodes,1);
 %% eigendecomposition
 [v,d] = eig(A);
 d = diag(d);
@@ -34,14 +47,14 @@ bar(d); prettify
 %% dominant eigenvector
 bar(v(:,1)); prettify
 %% make inputs with eigenvectors real, positive, & integers
-scale = 5;
-pats = cell(1,params.num_nodes);
+scale = 10;
+pats = cell(1,p.num_nodes);
 dups = 0;
 % d_real = [];
-for i = 1 : params.num_nodes
+for i = 1 : p.num_nodes
     pats{i} = v(:,i);
     if ~isreal(d(i))
-        if i < params.num_nodes &&...
+        if i < p.num_nodes &&...
                 abs(d(i)) == abs(d(i+1))
             pats{i} = v(:,i) + v(:,i+1);
         elseif abs(d(i)) == abs(d(i-1))
@@ -61,6 +74,9 @@ end; clear i
 if sum(abs(pats{1} - pats{2})) > 1e-10
     d_real = d(1);
     pats_no_dup = pats(1);
+else
+    d_real = [];
+    pats_no_dup = {};
 end
 for i = 2 : length(pats)
     if sum(abs(pats{i-1} - pats{i})) > 1e-10
@@ -79,19 +95,39 @@ for i = 1 : length(pats)
     tic
     [Y,pat] = trigger_many_avalanches(A, B, pats, probs, dur, iter);
     toc
-    p = pat';
-    p(pat==i) = 1;
-    p(pat~=i) = 2;
-    mi_pops(i,:) = mutual_info_pop(Y,p);
-    max_ent(i) = h(p);
+    pa = pat';
+    pa(pat==i) = 1;
+    pa(pat~=i) = 2;
+    mi_pops(i,:) = mutual_info_pop(Y,pa);
+    max_ent(i) = h(pa);
 end; clear i
+%% calculate eigen-thing
+infl = zeros(1,length(pats));
+for i = 1 : length(pats)
+    infl(i) = norm(diag(d)*v\(pats{i}/scale));
+%     bar(inv(v)*pats{i}/scale)
+%     axis([0 p.num_nodes -1 1])
+%     pause
+end
+%% eigenspace
+v_eig = zeros(size(A,1),length(pats));
+v_eig_sc = zeros(size(A,1),length(pats));
+for i = 1 : length(pats)
+    v_eig(:,i) = v\(pats{i}/scale);
+    v_eig_sc(:,i) = diag(d)*v\pats{i}/scale;
+end
+subplot(2,1,1)
+imagesc(abs(v_eig)); prettify; colorbar
+subplot(2,1,2)
+imagesc(abs(v_eig_sc)); prettify; colorbar
 %% plot surface
 colormap bone
 clf
 [d_real_sort, idx] = sort(d_real,'descend');
-surf(1:dur,d_real_sort,mi_pops(idx,:),'LineWidth',0.25)
+% surf(1:dur,d_real_sort,mi_pops(idx,:),'LineWidth',0.25)
+surf(0:dur-1,sort(infl,'descend'),mi_pops(idx,:),'LineWidth',0.25)
 % surfl(mi_pops)
-prettify; axis([0 dur+1 0 1 0 1]); axis vis3d;
+prettify; axis vis3d; %axis([0 dur+1 0 1 0 1]); 
 xlabel('time'); ylabel('\lambda'); zlabel('MI')
 set(gca,'LineWidth',.75);
 %% plot individual lines

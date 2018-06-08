@@ -110,7 +110,9 @@ end
 %% calculate eigen-thing
 infl = zeros(1,length(pats));
 for i = 1 : length(pats)
-    infl(i) = norm(diag(d)\v*pats{i}/scale);
+    infl(i) = norm(diag(d)*v\pats{i}/scale);
+%     infl(i) = norm(diag(d)\v*pats{i}/scale);
+%     infl(i) = norm(diag(d)*inv(v)*pats{i}/scale);
 %     bar(inv(v)*pats{i}/scale)
 %     axis([0 p.num_nodes -1 1])
 %     pause

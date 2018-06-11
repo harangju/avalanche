@@ -86,7 +86,7 @@ pats = pats_no_dup;
 %%
 [d_real_sort, idx] = sort(d_real,'descend');
 %% equal prob
-dur = 100; iter = 3e4;
+dur = 250; iter = 3e4;
 probs = ones(1,length(pats)) / length(pats);
 tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);

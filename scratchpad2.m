@@ -96,8 +96,8 @@ hold off
 prettify
 
 %% plot individual
-n = 90;
-t = 0:80;
+n = 80;
+t = 0:40;
 clf; hold on
 % read data
 [c,e] = histcounts(duration(pat==n),length(t)-1);
@@ -112,7 +112,7 @@ dead_frac = scale*(1-d(n).^t(2:end)).^(scale-1)...
     .*-1.*d(n).^t(2:end).*log(d(n));
 plot(t(2:end),dead_frac,'LineWidth',1.5)
 legend({'durations', 'fraction dead', 'fraction dying'},'Location',...
-    'southeast')
+    'east')
 hold off; prettify
 sum(dead_frac .* t(2:end))
 

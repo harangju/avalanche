@@ -75,7 +75,7 @@ for i = 1 : length(pats)
 end
 
 
-%%
+%% plot distributions
 thresh = 0.35;
 clf; hold on
 scatter(d(pat),duration,'.')
@@ -85,26 +85,19 @@ exp_dur = zeros(1,N);
 for i = 1 : N
 exp_dur(i) = find(lin(:,i)<thresh,1);
 end
-scatter(d,exp_dur,'g')
 prettify; hold off
-%%
-[d'; dur_mean; exp_dur; d'.^dur_mean]
 
-%%
-t = 40;
+%% plot exp
+t = 50;
 clf; hold on
 plot(d.^(0:t)','LineWidth',1.5)
 plot(1:t,thresh*ones(1,t),'LineWidth',1.5)
 hold off 
 prettify
 
-%%
-scatter(d,d'.^dur_mean,'filled')
-prettify
-
-%%
+%% plot individual
 n = 20;
-t = 1:n/2;
+t = 0:n/2;
 clf; hold on
 % read data
 [c,e] = histcounts(duration(pat==n));
@@ -113,17 +106,22 @@ bar(mean([e(1:end-1)' e(2:end)'],2),c/sum(c))
 dead = 1-d(n).^t';
 plot(t,dead,'LineWidth',1.5)
 % derivative
-dead_pr = -2*d(n).^t'.*log(d(n));
-plot(t,dead_pr,'LineWidth',1.5)
-% derivative X duration
-r = t' .* dead_pr;
-plot(t,r,'LineWidth',1.5)
-legend({'durations', 'fraction dead', 'fraction dying', ...
-    'fraction w/ duration t'})
+% dead_frac = -1*d(n).^t'.*log(d(n));
+dead_frac = -1*diff(d(n).^t');
+plot(t(2:end),dead_frac,'LineWidth',1.5)
+legend({'durations', 'fraction dead', 'fraction dying'})
 hold off; prettify
+sum(dead_frac .* t(2:end)')
 
-%%
-sections = 0;
+%% predictions
+pred = zeros(1,N);
 for i = 1 : N
-    
+    pred(i) = sum(-1*diff(d(n).^t).*t(2:end));
 end; clear i
+
+%% plot predictions
+hold on
+scatter(d,pred,'g')
+hold off
+
+

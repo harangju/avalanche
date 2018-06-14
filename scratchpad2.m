@@ -14,7 +14,7 @@ plot(g)
 [v,d] = eig(A);
 d = diag(d);
 %% make inputs with eigenvectors real, positive, & integers
-scale = 1;
+scale = 10;
 pats = cell(1,p.num_nodes);
 dups = 0;
 for i = 1 : p.num_nodes
@@ -96,27 +96,33 @@ hold off
 prettify
 
 %% plot individual
-n = 20;
-t = 0:n/2;
+n = 90;
+t = 0:80;
 clf; hold on
 % read data
-[c,e] = histcounts(duration(pat==n));
+[c,e] = histcounts(duration(pat==n),length(t)-1);
 bar(mean([e(1:end-1)' e(2:end)'],2),c/sum(c))
 % plot((0:t)'.*(1-d(100).^(0:t)'),'LineWidth',1.5)
 dead = 1-d(n).^t';
 plot(t,dead,'LineWidth',1.5)
 % derivative
-% dead_frac = -1*d(n).^t'.*log(d(n));
-dead_frac = -1*diff(d(n).^t');
+% dead_frac = -1*d(n).^t(2:end)'.*log(d(n));
+% dead_frac = -1*diff(d(n).^t');
+dead_frac = scale*(1-d(n).^t(2:end)).^(scale-1)...
+    .*-1.*d(n).^t(2:end).*log(d(n));
 plot(t(2:end),dead_frac,'LineWidth',1.5)
-legend({'durations', 'fraction dead', 'fraction dying'})
+legend({'durations', 'fraction dead', 'fraction dying'},'Location',...
+    'southeast')
 hold off; prettify
-sum(dead_frac .* t(2:end)')
+sum(dead_frac .* t(2:end))
 
 %% predictions
 pred = zeros(1,N);
+t = 0:100;
 for i = 1 : N
-    pred(i) = sum(-1*diff(d(n).^t).*t(2:end));
+%     pred(i) = sum(-1*diff(d(n).^t).*t(2:end));
+    pred(i) = sum(scale .* (1-d(i).^t).^(scale-1) .* -1 .* d(i).^t .* log(d(i)) ...
+        .* t);
 end; clear i
 
 %% plot predictions

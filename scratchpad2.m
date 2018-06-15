@@ -1,6 +1,6 @@
 
 %%
-N = 100;
+N = 10;
 A = diag(rand(1,N)*0.9);
 B = ones(N,1);
 p.num_nodes = N;
@@ -48,13 +48,20 @@ for i = 2 : length(pats)
     end
 end; clear i
 pats = pats_no_dup;
+%% add patterns together
+pats_dub = cell(size(pats));
+pats_dub{1} = pats{1};
+for i = 2 : length(pats)
+    pats_dub{i} = pats{i-1} + pats{i};
+end
 %%
 [d_real_sort, idx] = sort(d_real,'descend');
 %% equal prob
 dur = 100; iter = 3e4;
 probs = ones(1,length(pats)) / length(pats);
 tic
-[Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
+% [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
+[Y,pat] = trigger_many_avalanches(A,B,pats_dub,probs,dur,iter);
 toc
 beep
 %%
@@ -96,33 +103,44 @@ hold off
 prettify
 
 %% plot individual
-n = 80;
-t = 0:40;
+n = 10;
+t = 0:59;
 clf; hold on
 % read data
 [c,e] = histcounts(duration(pat==n),length(t)-1);
 bar(mean([e(1:end-1)' e(2:end)'],2),c/sum(c))
 % plot((0:t)'.*(1-d(100).^(0:t)'),'LineWidth',1.5)
-dead = 1-d(n).^t';
+dead = (1-d(n).^t').^scale;
+dead2 = (1-d(n-1).^t').^scale;
+% dead = (1-d(n).^t').^scale .* (1-d(n-1).^t').^scale;
 plot(t,dead,'LineWidth',1.5)
 % derivative
 % dead_frac = -1*d(n).^t(2:end)'.*log(d(n));
 % dead_frac = -1*diff(d(n).^t');
-dead_frac = scale*(1-d(n).^t(2:end)).^(scale-1)...
-    .*-1.*d(n).^t(2:end).*log(d(n));
+% dead_frac = scale*(1-d(n).^t(2:end)).^(scale-1)...
+%     .*-1.*d(n).^t(2:end).*log(d(n));
+dead_frac = diff(dead .* dead2);
 plot(t(2:end),dead_frac,'LineWidth',1.5)
 legend({'durations', 'fraction dead', 'fraction dying'},'Location',...
     'east')
 hold off; prettify
-sum(dead_frac .* t(2:end))
+sum(dead_frac' .* t(2:end))
 
 %% predictions
 pred = zeros(1,N);
 t = 0:100;
 for i = 1 : N
-%     pred(i) = sum(-1*diff(d(n).^t).*t(2:end));
-    pred(i) = sum(scale .* (1-d(i).^t).^(scale-1) .* -1 .* d(i).^t .* log(d(i)) ...
-        .* t);
+    y = (1-d(i).^t).^scale .* (1-d(i-1).^t).^scale;
+    s = scale;
+    l1 = d(i);
+    l2 = d(i-1);
+    yp = (1-l1.^t).^s.*s.*(1-l2.^t).^(s-1).*-1.*l2.^t.*log(l2) ...
+        + (1-l2.^t).^s.*s.*(1-l1.^t).^(s-1).*-1.*l1.^t.*log(l1);
+%     pred(i) = sum(yp .* t);
+%     pred(i) = sum(scale .* (1-d(i).^t).^(scale-1) .* -1 .* d(i).^t .* ...
+%         log(d(i)) .* t);
+    dead = (1-d(i).^t').^scale;
+    pred(i) = sum(diff(dead) .* t(2:end));
 end; clear i
 
 %% plot predictions

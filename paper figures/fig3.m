@@ -124,8 +124,8 @@ imagesc(abs(v_eig_sc)); prettify; colorbar
 colormap bone
 clf
 [d_real_sort, idx] = sort(d_real,'descend');
-% surf(1:dur,d_real_sort,mi_pops(idx,:),'LineWidth',0.25)
-surf(0:dur-1,log(sort(infl,'descend')),mi_pops(idx,:),'LineWidth',0.25)
+surf(1:dur,d_real_sort,mi_pops(idx,:),'LineWidth',0.25)
+% surf(0:dur-1,log(sort(infl,'descend')),mi_pops(idx,:),'LineWidth',0.25)
 % surfl(mi_pops)
 prettify; axis vis3d; %axis([0 dur+1 0 1 0 1]); 
 xlabel('time'); ylabel('\lambda'); zlabel('MI')

@@ -12,7 +12,7 @@ p = default_network_parameters;
 p.num_nodes = N;
 p.num_nodes_input = N;
 p.num_nodes_output = N;
-p.frac_conn = 0.1;
+p.frac_conn = 0.05;
 p.graph_type = 'RG';
 [A,B,C] = network_create(p);
 A = scale_weights_to_criticality(A);
@@ -24,7 +24,7 @@ p = default_network_parameters;
 p.num_nodes = N;
 p.num_nodes_input = N;
 p.num_nodes_output = N;
-p.frac_conn = 0.1;
+p.frac_conn = 0.03;
 p.graph_type = 'WRG';
 [A,B,C] = network_create(p);
 A = scale_weights_to_criticality(A);
@@ -65,7 +65,7 @@ for i = 2 : length(pats)
     end
 end; clear i
 pats = pats_no_dup;
-clear pats_no_dup d_real
+clear pats_no_dup
 
 %% 1. network
 figure(1)
@@ -102,19 +102,20 @@ figure(2)
 clf; hold on
 [c_d,e_d] = histcounts(durations,100);
 % plot(log10(e_d(2:end)), log10(c_d/sum(c_d)), '-*')
-scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), '.')
+scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), 32, d, 'filled')
 % plot(e_d(2:end), c_d/sum(c_d), '-*')
+colorbar()
 hold off; prettify
 
 %% 2.d power law distribution - size
 figure(3)
 clf; hold on
 [c_s,e_s] = histcounts(sizes,100);
-plot(log10(e_s(1:end-1)), log10(c_s/sum(c_s)), '-*')
+scatter(log10(e_s(1:end-1)), log10(c_s/sum(c_s)), 'filled')
 hold off; prettify
 
 %% 3.a mutual information - simulation
-dur = 1e2; iter = 1e3;
+dur = 30; iter = 1e3;
 mi_pops = zeros(length(pats), dur);
 for i = 1 : length(pats)
     probs = 0.5*ones(1,length(pats)) / (length(pats)-1);
@@ -130,9 +131,10 @@ end; clear i pa
 %% 3.b mutual information - plot
 figure(4)
 clf; colormap hsv
-[d_real_sort,idx] = sort(d,'descend');
-surf(0:dur-1, d_real_sort, mi_pops(idx,:), 'LineWidth', 0.25);
-prettify; axis vis3d
+[d_real_sort,idx] = sort(d_real,'descend');
+surf(0:dur-1, d_real_sort([1:6 8:end]),...
+    mi_pops(idx([1:6 8:end]),:), 'LineWidth', 0.25);
+prettify; axis([0 dur 0 1 0 1]); axis vis3d
 
 
 

@@ -1,6 +1,6 @@
 
 %%
-N = 10;
+N = 50;
 A = diag(rand(1,N)*0.9);
 B = ones(N,1);
 p.num_nodes = N;
@@ -49,11 +49,11 @@ for i = 2 : length(pats)
 end; clear i
 pats = pats_no_dup;
 %% add patterns together
-pats_dub = cell(size(pats));
-pats_dub{1} = pats{1};
-for i = 2 : length(pats)
-    pats_dub{i} = pats{i-1} + pats{i};
-end
+% pats_dub = cell(size(pats));
+% pats_dub{1} = pats{1};
+% for i = 2 : length(pats)
+%     pats_dub{i} = pats{i-1} + pats{i};
+% end
 %%
 [d_real_sort, idx] = sort(d_real,'descend');
 %% equal prob
@@ -103,7 +103,7 @@ hold off
 prettify
 
 %% plot individual
-n = 10;
+n = 41;
 t = 0:59;
 clf; hold on
 % read data
@@ -119,28 +119,29 @@ plot(t,dead,'LineWidth',1.5)
 % dead_frac = -1*diff(d(n).^t');
 % dead_frac = scale*(1-d(n).^t(2:end)).^(scale-1)...
 %     .*-1.*d(n).^t(2:end).*log(d(n));
-dead_frac = diff(dead .* dead2);
+% dead_frac = diff(dead .* dead2);
+dead_frac = diff(dead);
 plot(t(2:end),dead_frac,'LineWidth',1.5)
-legend({'durations', 'fraction dead', 'fraction dying'},'Location',...
+legend({'simulated durations', 'fraction dead', 'fraction dying'},'Location',...
     'east')
-hold off; prettify
+hold off; prettify; title(['\lambda = ' num2str(d(n))])
 sum(dead_frac' .* t(2:end))
 
 %% predictions
 pred = zeros(1,N);
 t = 0:100;
 for i = 1 : N
-    y = (1-d(i).^t).^scale .* (1-d(i-1).^t).^scale;
-    s = scale;
-    l1 = d(i);
-    l2 = d(i-1);
-    yp = (1-l1.^t).^s.*s.*(1-l2.^t).^(s-1).*-1.*l2.^t.*log(l2) ...
-        + (1-l2.^t).^s.*s.*(1-l1.^t).^(s-1).*-1.*l1.^t.*log(l1);
+%     y = (1-d(i).^t).^scale .* (1-d(i-1).^t).^scale;
+%     s = scale;
+%     l1 = d(i);
+%     l2 = d(i-1);
+%     yp = (1-l1.^t).^s.*s.*(1-l2.^t).^(s-1).*-1.*l2.^t.*log(l2) ...
+%         + (1-l2.^t).^s.*s.*(1-l1.^t).^(s-1).*-1.*l1.^t.*log(l1);
 %     pred(i) = sum(yp .* t);
 %     pred(i) = sum(scale .* (1-d(i).^t).^(scale-1) .* -1 .* d(i).^t .* ...
 %         log(d(i)) .* t);
     dead = (1-d(i).^t').^scale;
-    pred(i) = sum(diff(dead) .* t(2:end));
+    pred(i) = sum(diff(dead) .* t(2:end)');
 end; clear i
 
 %% plot predictions

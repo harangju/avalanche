@@ -1,13 +1,14 @@
 
 %%
-N = 10;
+N = 100;
 p = default_network_parameters;
-p.num_nodes = 10;
-p.num_nodes_input = 10;
-p.num_nodes_output = 10;
-p.frac_conn = 0.5;
+p.num_nodes = N;
+p.num_nodes_input = N;
+p.num_nodes_output = N;
+p.frac_conn = 0.08;
 [A,B,C] = network_create(p);
 imagesc(A); colorbar; prettify
+rank(A)
 %%
 [v,d] = eig(A);
 d = diag(d);
@@ -47,7 +48,7 @@ for i = 2 : length(pats)
 end; clear i
 pats = pats_no_dup;
 %% equal prob
-dur = 100; iter = 3e4;
+dur = 150; iter = 3e4;
 probs = ones(1,length(pats)) / length(pats);
 tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
@@ -70,11 +71,19 @@ for i = 1 : length(pats)
     dur_mean(i) = mean(duration(pat==i));
 end
 
+%% constants
+c = zeros(size(pats));
+for i = 1 : length(c)
+    c(i) = sum(diag(d)*(v\pats{i}));
+end; clear i
+
 %% plot distributions
 thresh = 0.35;
 clf; hold on
-scatter(d(pat),duration,'.')
-scatter(d,dur_mean,'filled','r')
+scatter(c(pat),duration,'.')
+scatter(c,dur_mean,'.','r')
+% scatter(d(pat),duration,'.')
+% scatter(d,dur_mean,'filled','r')
 lin = d.^(1:100)';
 exp_dur = zeros(1,N);
 for i = 1 : N

@@ -2,8 +2,12 @@
 
 %% 0.a autaptic 
 N = 100;
-limit = 0.95;
-A = diag(rand(1,N));
+bound = [0 0.99];
+% k = rand(1,N);
+% alpha = 1.5;
+% A = diag((1-k).^(1/(-alpha+1)));
+% x = rand(1,N) * (bound(2) - bound(1)) + bound(1);
+A = diag([rand(1,N/4)/2 rand(1,N*3/4)/2+0.5]);
 B = ones(N,1);
 
 %% 0.a random geometric
@@ -97,15 +101,33 @@ for i = 1 : iter
     sizes(i) = sum(sum(Y(:,:,i),2)>0);
 end; clear i
 
-%% 2.c power law distribution - duration
+%% 2.c.1 power law distribution - duration
+% calculate average eigenvalue for bin
+[c_d,e_d,bin_idx] = histcounts(durations,100);
+d_pat = d(pat)';
+d_bin = zeros(1,length(c_d));
+for i = 1 : length(d_bin)
+    d_bin(i) = mean(d_pat(bin_idx==i));
+    if isnan(d_bin(i)); d_bin(i) = 0; end
+end; clear i
+%% 2.c.2 
 figure(2)
 clf; hold on
-[c_d,e_d] = histcounts(durations,100);
 % plot(log10(e_d(2:end)), log10(c_d/sum(c_d)), '-*')
-scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), 32, d, 'filled')
+scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), 32, d_bin, 'filled')
 % plot(e_d(2:end), c_d/sum(c_d), '-*')
-colorbar()
+colorbar
 hold off; prettify
+%% 2.c.3 - linear fit
+x = log10(e_d(2:end));
+y = log10(c_d/sum(c_d));
+x(isinf(y)) = [];
+y(isinf(y)) = [];
+p = polyfit(x,y,1)
+pts = min(x) : 1e-2 : max(x);
+hold on
+plot(pts, p(2) + pts*p(1), 'k')
+hold off
 
 %% 2.d power law distribution - size
 figure(3)
@@ -133,8 +155,9 @@ figure(4)
 clf; colormap hsv
 [d_real_sort,idx] = sort(d_real,'descend');
 surf(0:dur-1, d_real_sort([1:6 8:end]),...
-    mi_pops(idx([1:6 8:end]),:), 'LineWidth', 0.25);
+    mi_pops(idx([1:6 8:end]),:), 'LineWidth', 0.1);
 prettify; axis([0 dur 0 1 0 1]); axis vis3d
+set(gca,'FontSize',14);
 
 
 

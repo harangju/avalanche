@@ -6,8 +6,8 @@ bound = [0 0.99];
 % k = rand(1,N);
 % alpha = 1.5;
 % A = diag((1-k).^(1/(-alpha+1)));
-% x = rand(1,N) * (bound(2) - bound(1)) + bound(1);
-A = diag([rand(1,N/4)/2 rand(1,N*3/4)/2+0.5]);
+x = rand(1,N) * (bound(2) - bound(1)) + bound(1);
+% A = diag([rand(1,N/4)/2 rand(1,N*3/4)/2+0.5]);
 B = ones(N,1);
 
 %% 0.a random geometric
@@ -16,7 +16,7 @@ p = default_network_parameters;
 p.num_nodes = N;
 p.num_nodes_input = N;
 p.num_nodes_output = N;
-p.frac_conn = 0.05;
+p.frac_conn = 0.1;
 p.graph_type = 'RG';
 [A,B,C] = network_create(p);
 A = scale_weights_to_criticality(A);
@@ -75,6 +75,7 @@ clear pats_no_dup
 figure(1)
 imagesc(A)
 prettify; colorbar
+set(gca,'FontSize',14);
 
 %% 2.a power law - simulation
 dur = 1e3; iter = 1e4;
@@ -104,10 +105,10 @@ end; clear i
 %% 2.c.1 power law distribution - duration
 % calculate average eigenvalue for bin
 [c_d,e_d,bin_idx] = histcounts(durations,100);
-d_pat = d(pat)';
+d_pat = d_real(pat)';
 d_bin = zeros(1,length(c_d));
 for i = 1 : length(d_bin)
-    d_bin(i) = mean(d_pat(bin_idx==i));
+    d_bin(i) = mean(abs(d_pat(bin_idx==i)));
     if isnan(d_bin(i)); d_bin(i) = 0; end
 end; clear i
 %% 2.c.2 
@@ -123,10 +124,10 @@ x = log10(e_d(2:end));
 y = log10(c_d/sum(c_d));
 x(isinf(y)) = [];
 y(isinf(y)) = [];
-p = polyfit(x,y,1)
+f = polyfit(x,y,1)
 pts = min(x) : 1e-2 : max(x);
 hold on
-plot(pts, p(2) + pts*p(1), 'k')
+plot(pts, f(2) + pts*f(1), 'k')
 hold off
 
 %% 2.d power law distribution - size
@@ -152,7 +153,7 @@ end; clear i pa
 
 %% 3.b mutual information - plot
 figure(4)
-clf; colormap hsv
+clf; colormap parula
 [d_real_sort,idx] = sort(d_real,'descend');
 surf(0:dur-1, d_real_sort([1:6 8:end]),...
     mi_pops(idx([1:6 8:end]),:), 'LineWidth', 0.1);

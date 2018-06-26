@@ -155,11 +155,14 @@ end; clear i pa
 figure(4)
 clf; colormap parula
 [d_real_sort,idx] = sort(d_real,'descend');
-surf(0:dur-1, d_real_sort([1:6 8:end]),...
-    mi_pops(idx([1:6 8:end]),:), 'LineWidth', 0.1);
+range = [1:2 4:length(d_real_sort)];
+surf(0:dur-1, d_real_sort(range),...
+    mi_pops(idx(range),:), 'LineWidth', 0.1);
+% surf(0:dur-1, d_real_sort,...
+%     mi_pops(idx,:), 'LineWidth', 0.1);
 prettify; axis([0 dur 0 1 0 1]); axis vis3d
 set(gca,'FontSize',14);
-
+ 
 
 
 

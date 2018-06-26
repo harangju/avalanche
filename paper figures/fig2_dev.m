@@ -4,22 +4,19 @@ p = default_network_parameters;
 p.num_nodes = 30;
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
-% p.frac_conn = 0.01;
 p.frac_conn = 0.1;
-p.graph_type = 'WRG';
+% p.frac_conn = 0.1;
+p.graph_type = 'RG';
 p.exp_branching = 1;
 [A, B, C] = network_create(p);
 A = scale_weights_to_criticality(A);
-% if rank(A) ~= p.num_nodes
-%     error('matrix not full rank')
-% end
+%%
 [r,ri_c] = rref(A);
 [r,ri_r] = rref(A');
 imagesc(r); colorbar
 disp(length(ri_c))
 A = A(ri_r,ri_c);
 disp(rank(A))
-
 %%
 p.num_nodes = length(ri_c);
 p.num_nodes_input = p.num_nodes;
@@ -31,7 +28,6 @@ C = ones(p.num_nodes,1);
 imagesc(A)
 colorbar
 prettify
-%%
 %% eigendecomposition
 [v,d] = eig(A);
 d = diag(d);
@@ -41,57 +37,19 @@ disp(mean(A(:)>0))
 %%
 imagesc(A)
 prettify; axis square; colorbar
-%% eigenvalues
-bar(d); prettify
-%% dominant eigenvector
-bar(v(:,1)); prettify
-%% make inputs with eigenvectors real, positive, & integers
-scale = 10;
-pats = cell(1,p.num_nodes);
-dups = 0;
-% d_real = [];
-for i = 1 : p.num_nodes
-    pats{i} = v(:,i);
-    if ~isreal(d(i))
-        if i < p.num_nodes &&...
-                abs(d(i)) == abs(d(i+1))
-            pats{i} = v(:,i) + v(:,i+1);
-        elseif abs(d(i)) == abs(d(i-1))
-            pats{i} = v(:,i) + v(:,i-1);
-            dups = dups + 1;
-%             d_real = [d_real d(i)+d(i-1)];
-        end
-    else
-%         d_real = [d_real d(i)];
-    end
-    if find(pats{i}<0); pats{i} = -1 * pats{i}; end
-    pats{i}(pats{i}<0) = 0;
-    pats{i} = abs(pats{i});
-    pats{i} = round(scale * pats{i});
-end; clear i
-%% remove duplicates
-if sum(abs(pats{1} - pats{2})) > 1e-10
-    d_real = d(1);
-    pats_no_dup = pats(1);
-else
-    d_real = [];
-    pats_no_dup = {};
-end
-for i = 2 : length(pats)
-    if sum(abs(pats{i-1} - pats{i})) > 1e-10
-        pats_no_dup = [pats_no_dup pats{i}];
-        d_real = [d_real abs(d(i))];
-    end
-end; clear i
-pats = pats_no_dup;
 %%
-[d_real_sort, idx] = sort(d_real,'descend');
-%% equal prob
-dur = 1e3; iter = 3e4;
+dur = 1e3; iter = 1e3;
+%% 
+input_activity = 0.1;
+pats = cell(1,iter);
+for i = 1 : iter
+    pats{i} = rand(p.num_nodes,1) < input_activity;
+end
+%% simulation
 probs = ones(1,length(pats)) / length(pats);
 tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
-toc
+toc; beep
 %%
 activity = squeeze(sum(Y,1))';
 %% measure duration
@@ -111,22 +69,17 @@ end
 %% calculate eigen-thing
 infl = zeros(1,length(pats));
 for i = 1 : length(pats)
-    infl(i) = norm(diag(d)*(v\pats{i}/scale));
-%     infl(i) = norm(diag(d)\v*pats{i}/scale);
-%     infl(i) = norm(diag(d)*inv(v)*pats{i}/scale);
-%     bar(inv(v)*pats{i}/scale)
-%     axis([0 p.num_nodes -1 1])
-%     pause
+    infl(i) = norm(diag(d)*(v\pats{i}));
 end
 %% duration as function of eigenvalues
 % scatter(d_real,dur_mean,'filled','k')
 % scatter(d_real,log(dur_mean),'filled','k')
 scatter(infl,dur_mean,'filled','k')
 % scatter(infl(dur_mean<100),dur_mean(dur_mean<100),'filled','k')
-prettify;
+prettify
 set(gca,'LineWidth',.75)
 %% plot individual durations
-scatter(d_real(pat),duration,'.')
+scatter(infl,duration,'.')
 prettify
 %% correlation b/t eigenvalue & duration
 % c = corrcoef([infl' dur_mean'],'Type','Pearson');

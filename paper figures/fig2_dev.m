@@ -4,9 +4,9 @@ p = default_network_parameters;
 p.num_nodes = 30;
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
-p.frac_conn = 0.1;
+p.frac_conn = 0.15;
 % p.frac_conn = 0.1;
-p.graph_type = 'RG';
+p.graph_type = 'WRG';
 p.exp_branching = 1;
 [A, B, C] = network_create(p);
 A = scale_weights_to_criticality(A);
@@ -68,9 +68,19 @@ for i = 1 : length(pats)
 end
 %% calculate eigen-thing
 infl = zeros(1,length(pats));
+d_ = diag(d);
+d_(2:end) = 0;
+d_ = diag(d_);
 for i = 1 : length(pats)
-    infl(i) = norm(diag(d)*(v\pats{i}));
+%     infl(i) = norm(diag(d)*(v\pats{i}));
+    infl(i) = norm(diag(d)*(v\pats{i})) / norm(v\pats{i});
+%     infl(i) = sum(modal_control(A) .* pats{i});
+%     infl(i) = sum(arrayfun(@norm,d) .* arrayfun(@norm,v\pats{i}));
+%     infl(i) = norm(d_*(v\pats{i}));
 end
+%% plot individual durations
+scatter(infl,duration,'.')
+prettify
 %% duration as function of eigenvalues
 % scatter(d_real,dur_mean,'filled','k')
 % scatter(d_real,log(dur_mean),'filled','k')
@@ -78,9 +88,6 @@ scatter(infl,dur_mean,'filled','k')
 % scatter(infl(dur_mean<100),dur_mean(dur_mean<100),'filled','k')
 prettify
 set(gca,'LineWidth',.75)
-%% plot individual durations
-scatter(infl,duration,'.')
-prettify
 %% correlation b/t eigenvalue & duration
 % c = corrcoef([infl' dur_mean'],'Type','Pearson');
 c = corrcoef([infl' dur_mean']);

@@ -3,7 +3,7 @@ clear; clc;
 
 
 %% Parameters
-n = 20;                     % Number Neurons
+n = 100;                     % Number Neurons
 m = 1;                      % 
 A = rand(n).^3;             % Adjacency Matrix
 A = A ./ sum(A);            % Normalize to get out-strength = 1
@@ -17,7 +17,7 @@ A = A ./ sum(A);            % Normalize to get out-strength = 1
 
 %% Simulation
 NT = 10000;                 % Number Trials
-T = 100;                    % Number Time Steps
+T = 1000;                   % Number Time Steps
 xInd = 1;                   % Not important, keep at 1
 a = zeros([n,1]); 
 a([1 2 3]) = 1;             % Stimulus vector
@@ -64,6 +64,7 @@ subplot(2,2,3);
 % plot(1-p(1,:), pIndA/NT);
 subplot(2,2,4);
 plot(H, pIndA/NT);
+axis([0 1 0 1]);
 xlabel('Structural Predictor');
 ylabel('Simulated Fraction Alive');
 

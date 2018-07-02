@@ -24,6 +24,7 @@ pattern_order = zeros(1, iterations);
 sizes = zeros(1, iterations);
 
 for i = 1 : iterations
+    disp([num2str(i) '/' num2str(iterations)])
     pat = sum(int8(prob_cumsum < rand)) + 1;
     pattern_order(i) = pat;
 %     u_t = inputs(N, patterns{pat}, 2);

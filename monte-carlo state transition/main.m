@@ -20,7 +20,7 @@ NT = 10000;                 % Number Trials
 T = 1000;                   % Number Time Steps
 xInd = 1;                   % Not important, keep at 1
 a = zeros([n,1]); 
-a([1 2 3]) = 1;             % Stimulus vector
+a([1 2 3]) = 2;             % Stimulus vector
 
 % Simulate
 x0 = repmat(a(:,xInd), [1, NT])';
@@ -63,7 +63,7 @@ ylabel('Number Dead at Time Step');
 subplot(2,2,3);
 % plot(1-p(1,:), pIndA/NT);
 subplot(2,2,4);
-plot(H, pIndA/NT);
+scatter(H, pIndA/NT, '.');
 axis([0 1 0 1]);
 xlabel('Structural Predictor');
 ylabel('Simulated Fraction Alive');

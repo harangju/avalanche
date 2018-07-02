@@ -20,7 +20,7 @@ switch type
     case 'RG' % random geometric
         A = Thresholded_RG_cube(num_nodes, frac_conn);
     case 'BA' % Barabasi-Albert
-        A = make_BA_edges_weighted(num_nodes, num_edges, 0);
+        A = make_BA_edges(num_nodes, num_edges, 0);
     otherwise
         A = 0;
         warning('create_network(): undefined graph_type')

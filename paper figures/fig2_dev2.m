@@ -1,6 +1,6 @@
 % many graph topologies
 graphs = {'WRG','RG','MD4','WS'};
-trials = 1; %30;
+trials = 30;
 % variables
 H_m = cell(length(graphs),trials);
 dur_mean = cell(length(graphs),trials);
@@ -8,14 +8,15 @@ r = zeros(length(graphs),trials);
 % stimulus patterns
 input_activity = 0.1;
 pat_num = 100;
+num_nodes = 100;
 pats = cell(1,pat_num);
 for i = 1 : pat_num
-    pats{i} = rand(p.num_nodes,1) < input_activity;
+    pats{i} = double(rand(num_nodes,1) < input_activity);
 end; clear i
 % simulation parameters
 dur = 300; iter = 3e3;
 % loop
-for g = 1 : length(graphs)
+parfor g = 1 : length(graphs)
     for t = 1 : trials
         disp([graphs{g} ' ' num2str(t)])
         % generate graph
@@ -36,7 +37,7 @@ for g = 1 : length(graphs)
         Yp = zeros(p.num_nodes,dur,length(pats));
         for i = 1 : length(pats)
             Yp(:,:,i) = avalanche_average_analytical(A,B,pats{i},dur);
-        end; clear i
+        end
         % measure duration
         durs = zeros(1,iter);
         for i = 1 : iter
@@ -45,19 +46,33 @@ for g = 1 : length(graphs)
             else
                 durs(i) = 0;
             end
-        end; clear i
+        end
         % mean duration
         dur_mean{g,t} = zeros(1,length(pats));
         for i = 1 : length(pats)
             dur_mean{g,t}(i) = mean(durs(pat==i));
-        end; clear i
+        end
         % predictor
         H = zeros(length(pats),dur);
         for i = 1 : length(pats)
             H(i,:) = avalanche_predictor(A,pats{i},dur);
-        end; clear i
+        end
         H_m{g,t} = mean(H.*(1:dur),2);
         H_m{g,t}(isnan(H_m{g,t})) = 0;
         r(g,t) = corr(H_m{g,t},dur_mean{g,t}');
+        % get p values
     end
 end
+
+%% plot
+boxplot(r','Colors','k')
+prettify
+axis fill
+axis([0.5 4.5 0 1])
+h = findobj(gcf,'tag','Outliers');
+for iH = 1:length(h)
+    h(iH).MarkerEdgeColor = [0 0 0];
+end
+
+
+

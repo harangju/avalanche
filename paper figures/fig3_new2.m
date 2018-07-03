@@ -89,8 +89,42 @@ parfor g = 1 : length(graphs)
     end
 end
 
+%% plot individual surface plots
+g = 1;
+t = 1;
+[H_m_sort,idx] = sort(H_m{g,t});
+surf(1:dur,H_m_sort,mi_pops{g,t}(idx,:),'LineWidth',0.25)
+prettify; axis vis3d;
+% xlabel('time'); ylabel('H'); zlabel('MI')
+set(gca,'LineWidth',.75);
+clear H_m_sort idx g t
 
+%% 
+decay_mi = cell(size(H_m));
+decay_h = zeros(size(H_m));
+for g = 1 : length(graphs)
+    for t = 1 : trials
+        num_pats = size(mi_pops{g,t},1);
+        decay_mi{g,t} = zeros(1,num_pats);
+        for p = 1 : num_pats
+            f = polyfit(1:dur,mi_pops{g,t}(p,:),1);
+            decay_mi{g,t}(p) = f(1);
+        end
+        [H_m_sort,idx] = sort(H_m{g,t});
+%         f = polyfit(H_m_sort',decay_mi{g,t}(idx),1);
+        r = corr(H_m_sort,decay_mi{g,t}(idx)');
+        decay_h(g,t) = r;
+    end
+end
+clear g t p num_pats H_m_sort idx fr
 
-
-
+%% plot
+boxplot(decay_h','Colors','k')
+prettify; axis fill
+h = findobj(gcf,'tag','Outliers');
+for iH = 1:length(h)
+    h(iH).MarkerEdgeColor = [0 0 0];
+end
+clear h iH
+axis([.5 4.5 0 1])
 

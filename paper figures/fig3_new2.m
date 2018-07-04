@@ -128,3 +128,15 @@ end
 clear h iH
 axis([.5 4.5 0 1])
 
+
+%% plot methods
+g = 1;
+t = 1;
+scatter(H_m{g,t},decay_mi{g,t},'.k')
+f = polyfit(H_m{g,t},decay_mi{g,t}',1);
+hold on
+x = min(H_m{g,t}) : 1e-2 : max(H_m{g,t});
+plot(x,polyval(f,x),'r')
+hold off
+prettify
+clear g t x

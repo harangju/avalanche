@@ -84,7 +84,7 @@ x = 10:0.1:max(H_m);
 plot(x,polyval(f,x),'r')
 hold off
 %% pearson correlation
-r = corr(H_m,dur_mean'); disp(r)
+[r,p] = corr(H_m,dur_mean'); disp(r)
 
 
 

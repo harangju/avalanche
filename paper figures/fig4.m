@@ -7,7 +7,7 @@ bound = [0 0.99];
 % alpha = 1.5;
 % A = diag((1-k).^(1/(-alpha+1)));
 x = rand(1,N) * (bound(2) - bound(1)) + bound(1);
-A = diag([rand(1,40)/10 rand(1,60)*(1-.98)+.98]);
+A = diag([rand(1,80)/10 rand(1,20)*(1-.99)+.99]);
 B = ones(N,1);
 
 %% 0.a random geometric
@@ -34,7 +34,7 @@ p.graph_type = 'WRG';
 A = scale_weights_to_criticality(A);
 
 %% 0.b stimulus
-scale = 1;
+scale = 5;
 [v,d] = eig(A);
 d = diag(d);
 pats = cell(1,N);
@@ -70,6 +70,13 @@ for i = 2 : length(pats)
 end; clear i
 pats = pats_no_dup;
 clear pats_no_dup
+
+%%
+pats = cell(1,N);
+for i = 1 : N
+    pats{i} = zeros(N,1);
+    pats{i}(i) = 1;
+end
 
 %% 1. network
 figure(1)
@@ -108,7 +115,7 @@ end; clear i
 d_pat = d_real(pat)';
 d_bin = zeros(1,length(c_d));
 for i = 1 : length(d_bin)
-    d_bin(i) = mean(abs(d_pat(bin_idx==i)));
+    d_bin(i) = mean(norm(d_pat(bin_idx==i)));
     if isnan(d_bin(i)); d_bin(i) = 0; end
 end; clear i
 %% 2.c.2 
@@ -162,7 +169,4 @@ surf(0:dur-1, d_real_sort(range),...
 %     mi_pops(idx,:), 'LineWidth', 0.1);
 prettify; axis([0 dur 0 1 0 1]); axis vis3d
 set(gca,'FontSize',14);
- 
-
-
 

@@ -16,8 +16,8 @@ end; clear i
 % simulation parameters
 dur = 300; iter = 3e3;
 % loop
-parfor g = 1 : length(graphs)
-    for t = 1 : trials
+for g = 1 %: length(graphs)
+    for t = 1 %: trials
         disp([graphs{g} ' ' num2str(t)])
         % generate graph
         p = default_network_parameters;

@@ -102,6 +102,7 @@ clear H_m_sort idx g t
 %% 
 decay_mi = cell(size(H_m));
 decay_h = zeros(size(H_m));
+p_val = zeros(size(H_m));
 for g = 1 : length(graphs)
     for t = 1 : trials
         num_pats = size(mi_pops{g,t},1);
@@ -112,8 +113,7 @@ for g = 1 : length(graphs)
         end
         [H_m_sort,idx] = sort(H_m{g,t});
 %         f = polyfit(H_m_sort',decay_mi{g,t}(idx),1);
-        r = corr(H_m_sort,decay_mi{g,t}(idx)');
-        decay_h(g,t) = r;
+        [decay_h(g,t), p_val(g,t)] = corr(H_m_sort,decay_mi{g,t}(idx)');
     end
 end
 clear g t p num_pats H_m_sort idx fr

@@ -7,7 +7,7 @@ bound = [0 0.99];
 % alpha = 1.5;
 % A = diag((1-k).^(1/(-alpha+1)));
 x = rand(1,N) * (bound(2) - bound(1)) + bound(1);
-% A = diag([rand(1,N/4)/2 rand(1,N*3/4)/2+0.5]);
+A = diag([rand(1,40)/10 rand(1,60)*(1-.98)+.98]);
 B = ones(N,1);
 
 %% 0.a random geometric
@@ -34,7 +34,7 @@ p.graph_type = 'WRG';
 A = scale_weights_to_criticality(A);
 
 %% 0.b stimulus
-scale = 10;
+scale = 1;
 [v,d] = eig(A);
 d = diag(d);
 pats = cell(1,N);

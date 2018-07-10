@@ -113,6 +113,7 @@ end; clear i
 %% 2.c.1 power law distribution - duration
 % calculate average eigenvalue for bin
 [c_d,e_d,bin_idx] = histcounts(durations,100);
+%%
 d_pat = d_real(pat)';
 d_bin = zeros(1,length(c_d));
 for i = 1 : length(d_bin)
@@ -120,7 +121,7 @@ for i = 1 : length(d_bin)
     if isnan(d_bin(i)); d_bin(i) = 0; end
 end; clear i
 %% 2.c.2
-figure(2)
+% figure(2)
 clf; hold on
 scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), '.')
 % scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), 32, d_bin, '.')

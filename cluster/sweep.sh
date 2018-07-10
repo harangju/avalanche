@@ -12,6 +12,6 @@ do
     dir_name="p_rewire={$i}"
     mkdir $dir_name
     cd $dir_name
-    qsub ~/matlab/avalanche/cluster/run_sim.sh "param.p_rewire = $i;"
+    qsub -l h_vmem=16.5G,s_vmem=16G ~/matlab/avalanche/cluster/run_sim.sh "param.p_rewire = $i;" 
     cd ..
 done

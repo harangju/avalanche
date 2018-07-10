@@ -9,5 +9,5 @@ param.p_rewire = 0;
 
 % p_spike = 1e-4;
 dur = 1e3;
-%iter = 1e4;
-iter = 10;
+iter = 1e4;
+

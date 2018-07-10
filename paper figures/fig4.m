@@ -2,12 +2,13 @@
 
 %% 0.a autaptic 
 N = 100;
-bound = [0 0.99];
+bound = [0 1];
 % k = rand(1,N);
 % alpha = 1.5;
 % A = diag((1-k).^(1/(-alpha+1)));
 x = rand(1,N) * (bound(2) - bound(1)) + bound(1);
-A = diag([rand(1,80)/10 rand(1,20)*(1-.99)+.99]);
+A = diag([rand(1,94) rand(1,6)*(1-.9)+.9]);
+% A = diag(rand(1,N));
 B = ones(N,1);
 
 %% 0.a random geometric
@@ -34,7 +35,7 @@ p.graph_type = 'WRG';
 A = scale_weights_to_criticality(A);
 
 %% 0.b stimulus
-scale = 5;
+scale = 1;
 [v,d] = eig(A);
 d = diag(d);
 pats = cell(1,N);
@@ -85,7 +86,7 @@ prettify; colorbar
 set(gca,'FontSize',14);
 
 %% 2.a power law - simulation
-dur = 1e3; iter = 1e4;
+dur = 1e3; iter = 3e3;
 probs = ones(1,length(pats)) / length(pats);
 tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
@@ -118,20 +119,20 @@ for i = 1 : length(d_bin)
     d_bin(i) = mean(norm(d_pat(bin_idx==i)));
     if isnan(d_bin(i)); d_bin(i) = 0; end
 end; clear i
-%% 2.c.2 
+%% 2.c.2
 figure(2)
 clf; hold on
-% plot(log10(e_d(2:end)), log10(c_d/sum(c_d)), '-*')
-scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), 32, d_bin, 'filled')
+scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), '.')
+% scatter(log10(e_d(2:end)), log10(c_d/sum(c_d)), 32, d_bin, '.')
 % plot(e_d(2:end), c_d/sum(c_d), '-*')
-colorbar
+colorbar; colormap parula
 hold off; prettify
 %% 2.c.3 - linear fit
 x = log10(e_d(2:end));
 y = log10(c_d/sum(c_d));
 x(isinf(y)) = [];
 y(isinf(y)) = [];
-f = polyfit(x,y,1)
+f = polyfit(x(1:end),y(1:end),1)
 pts = min(x) : 1e-2 : max(x);
 hold on
 plot(pts, f(2) + pts*f(1), 'k')

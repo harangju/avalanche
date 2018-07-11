@@ -182,7 +182,23 @@ d \\ d \\ \vdots \\ d
 \end{bmatrix}
 \right),
 \end{align*}
-and the probability of transitioning from any state $\bm{x}_m$ and $\bm{x}_p$ is given simply as the product of sums of binomial distributions.
+and the probability of transitioning from any state $\bm{x}_m$ and $\bm{x}_p$ is given simply as the product of sums of binomial distributions. From this system, we can construct infinite-dimensional Markov system
+\begin{align*}
+\bm{p}(k) = \mathbb{T}\bm{p}(k-1),
+\end{align*}
+where $A \rightarrow \mathbb{T}$ is a map determined by the binomial evolution, and $\mathbb{T} = PDP^{-1}$. From $\bm{p}(0)$, we can decompose
+\begin{align*}
+\bm{p}(0) = \bm{e}_1 + c_2\bm{e}_2 + c_3\bm{e}_3 + \dotsm = P\bm{c},
+\end{align*}
+to yield
+\begin{align*}
+\bm{p}(t) = \bm{e}_1 + c_2\lambda_2^t\bm{e}_2 + c_3\lambda_3^t\bm{e}_3 + \dotsm = PD^tP^{-1}\bm{p}(0),
+\end{align*}
+where avalanche durations are given simply by the first entry of $\bm{p}(t)$. We find coefficients
+\begin{align*}
+\bm{c} = P^{-1}\bm{p}(0). 
+\end{align*}
+
 
 
 	

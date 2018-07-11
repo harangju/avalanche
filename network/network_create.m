@@ -23,9 +23,9 @@ degree = ceil(p.frac_conn * degree_max);
 % network connectivity
 A = network_connect(p.graph_type, p.num_nodes, p.frac_conn, num_edges,...
     degree, p.p_rewire);
-A = network_weigh(A, p.weighting, p.weighting_params, p.exp_branching,...
-    degree);
-A = weights_bound(A, p.weight_min, p.weight_max);
+% A = network_weigh(A, p.weighting, p.weighting_params, p.exp_branching,...
+%     degree);
+% A = weights_bound(A, p.weight_min, p.weight_max);
 if ~p.allow_autapses
     A = A .* ~diag(ones(p.num_nodes,1));
 end

@@ -7,12 +7,6 @@ function [A, B, C] = network_create(p)
 %   B: input connectivity/weight vector, [N X 1]
 %   C: output connectivity/weight vector, [N X 1]
 
-% check node number
-% if p.num_nodes ~= p.num_nodes_input + p.num_nodes_output + ...
-%         p.num_nodes_hidden
-%     error(['Number of nodes should equal number of input, output, and '...
-%         'hidden nodes.'])
-% end
 % max values
 num_edges_max = p.num_nodes * (p.num_nodes - 1);
 degree_max = num_edges_max / p.num_nodes;

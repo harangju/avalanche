@@ -1,6 +1,6 @@
 %% network parameters
-N = [10 10 10];
-frac_conn = [1 1 1];
+N = [10 10];
+frac_conn = [1 1];
 param.num_nodes = sum(N);
 p_rewire = 0;
 

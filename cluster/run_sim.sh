@@ -12,6 +12,7 @@ com="$com addpath(genpath('avalanche'));"
 com="$com load_libs;"
 com="$com set_parameters;"
 com="$com $sweep_params;"
+com="$com disp(param);"
 com="$com initialize;"
 com="$com simulate;"
 dir=`pwd`

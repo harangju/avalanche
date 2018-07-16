@@ -1,57 +1,65 @@
 
-%%
-p = default_network_parameters;
-p.num_nodes
-p.num_nodes = 10;
-p.num_nodes_input = p.num_nodes;
-p.num_nodes_output = p.num_nodes;
-p.frac_conn = 0.3;
-[A,B,C] = network_create(p);
-imagesc(A)
-prettify; colorbar
-[v,d] = eig(A);
-d = diag(d)'
-max(d)
-
-%%
-dur = 10;
-[~,idx] = max(d);
-% x0 = v(:,idx);
-x0 = v(:,1) + v(:,2);
-% x0 = v(:,idx) + v(:,3) + v(:,4);
-
-x0 = 10*(x0 + ones(size(x0)));
-
-xt = zeros(size(A,1), dur);
-xt(:,1) = x0;
-for i = 2 : dur
-    xt(:,i) = A * xt(:,i-1);
-end; clear i
-
-% imagesc(xt); prettify; colorbar
-clf; hold on
-for i = 1 : size(A,1)
-    plot(xt(i,:),'LineWidth',1.5)
-end; clear i; hold off; prettify; colorbar; title('linear')
-
-%%
-
-u = round(x0);
-u(u<0) = 0;
-Y = avalanche_average_empirical(A,B,u,100,dur);
-
-clf; hold on
-C = linspecer(size(A,1));
-for i = 1 : size(A,1)
-    plot(Y(i,:),'LineWidth',1.5,'color',C(i,:))
-end; clear i; hold off; prettify; colorbar; title('random')
-
-%%
-idx_v = 6;
-x0 = v(:,idx_v) + 1e-2*rand(10,1);
-c = v\x0;
-dur_exp = log(inv(diag(c))*inv(v)*(0.5*ones(10,1))) ./ d
-dur_exp = log(v\ones(10,1)) ./ (c.*d)
-[mean(dur_exp) dur_mean(idx_v)]
 
 
+% set parameters
+A0 = [0 1; 1 0]';
+B = [1 1]';
+N = 2;
+
+% patterns
+pats = cell(1,N);
+for i = 1 : N
+    pats{i} = zeros(N,1);
+    pats{i}(i) = 1;
+end
+
+transitions = 0.05 : 0.05 : 0.95;
+slopes = zeros(size(transitions));
+shifts = zeros(size(transitions));
+xs = cell(size(slopes));
+ys = cell(size(slopes));
+As = cell(size(slopes));
+
+parfor i = 1 : length(transitions)
+    disp(num2str(transitions(i)))
+    A = A0;
+    A(1,2) = A(1,2) - transitions(i);
+    A(1,1) = transitions(i);
+    As{i} = A;
+    % simulate
+    dur = 1e3; iter = 1e4;
+    probs = ones(1,length(pats)) / length(pats);
+    tic
+    [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
+    toc; beep
+    % analyze
+    activity = squeeze(sum(Y,1))';
+    durations = zeros(1,iter);
+    for j = 1 : iter
+        if sum(activity(j,:)) > 0
+            durations(j) = find(activity(j,:)>0,1,'last');
+        else
+            durations(j) = 0;
+        end
+    end
+    [c_d,e_d,bin_idx] = histcounts(durations,100);
+    x = log10(e_d(2:end));
+    y = log10(c_d/(sum(c_d)));
+    x(isinf(y)) = [];
+    y(isinf(y)) = [];
+    x(y==0) = [];
+    y(y==0) = [];
+    xs{i} = x;
+    ys{i} = y;
+    f = polyfit(x,y,1);
+    slopes(i) = f(1);
+    shifts(i) = f(2);
+end
+
+%% plot
+for i = 1 : length(transitions)
+    scatter(xs{i}, ys{i}, '.')
+    axis([0 3 -4 0])
+    prettify; title(num2str(transitions(i)))
+    pause
+end

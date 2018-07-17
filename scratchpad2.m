@@ -1,10 +1,10 @@
 
 %%
 p = default_network_parameters;
-p.graph_type = 'WRG';
+p.graph_type = 'RG';
 p.num_nodes = 30;
 p.num_nodes_input = p.num_nodes;
-p.frac_conn = 0.3;
+p.frac_conn = 0.05;
 [A,B] = network_create(p);
 A = scale_weights_to_criticality(A);
 %% normal weighting
@@ -48,7 +48,8 @@ x = log10(e_d(2:end));
 y = log10(c_d/sum(c_d));
 x(isinf(y)) = [];
 y(isinf(y)) = [];
-f = polyfit(x(1:10),y(1:10),1);
+f = polyfit(x(1:20),y(1:20),1);
+% f = polyfit(x,y,1);
 disp(f)
 %%
 scatter(x,y,'.')

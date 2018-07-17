@@ -13,9 +13,9 @@ for i = 1 : N
     pats{i}(i) = 1;
 end
 
-% transitions = 0.05 : 0.05 : 0.95;
-% transitions = 0.01 : 0.01 : 0.1;
-transitions = 0.02 : 0.02 : 0.1;
+% transitions = 0.02 : 0.02 : 0.2;
+% transitions = 1 - (0.02 : 0.02 : 0.2);
+transitions = [0.4 0.6];
 slopes = zeros(size(transitions));
 shifts = zeros(size(transitions));
 xs = cell(size(slopes));
@@ -61,14 +61,15 @@ parfor i = 1 : length(transitions)
 end
 
 %% plot
+clf
 scatter(transitions, shifts, 'filled')
 xlabel('autapse strength')
 ylabel('shifts')
-axis([0 1 1 2])
+% axis([0 0.22 0 2])
 yyaxis right
 scatter(transitions, slopes, 'filled')
 ylabel('slopes')
-axis([0 1 -2 -1])
+% axis([0 0.22 -2.2 -.8])
 prettify
 
 %% plot
@@ -79,5 +80,6 @@ for i = 1 : length(transitions)
     hold on
     plot(xs{i},polyval([slopes(i) shifts(i)], xs{i}))
     hold off
+    saveas(gcf, ['distr_' num2str(transitions(i)) '.png'])
     pause
 end

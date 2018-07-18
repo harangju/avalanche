@@ -19,6 +19,6 @@ N = 2;
 redistr = 0.1;
 
 % p_spike = 1e-4;
-dur = 1e3;
+dur = 3e3;
 % iter = 1e4;
 iter = 3e3;

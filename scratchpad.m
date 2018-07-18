@@ -60,6 +60,13 @@ parfor i = 1 : length(transitions)
     shifts(i) = f(2);
 end
 
+%% find slopes
+for i = 1 : length(transitions)
+    f = polyfit(xs{i}(5:15),ys{i}(5:15),1);
+    slopes(i) = f(1);
+    shifts(i) = f(2);
+end; clear i
+
 %% plot
 clf
 scatter(transitions, shifts, 'filled')

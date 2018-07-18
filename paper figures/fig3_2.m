@@ -1,6 +1,7 @@
 
 %% load distributions
-result_dir = 'avalanche/paper figures/20180717_140743';
+result_dir = 'avalanche/paper data/20180717_140743';
+% result_dir = 'avalanche/paper data/20180718_130604';
 subdirs = dir(result_dir);
 
 xs = cell(1,length(subdirs)-2);
@@ -64,7 +65,7 @@ for i = 1 : length(idx_distr)
     lgnd{i} = ['\Deltaw=' num2str(distr(idx))];
 end
 prettify
-axis([0 3.1 -5 0])
+% axis([0 3.1 -5 0])
 legend(plts,lgnd,'Location','Southwest')
 clear idx_distr colors plts lgnd i idx
 

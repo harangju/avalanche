@@ -42,5 +42,11 @@ y(isinf(y)) = [];
 f = polyfit(x,y,1);
 disp(f)
 %%
-scatter(x,y,'filled')
+colors = linspecer(2);
+%%
+c = 2;
+scatter(x,y,'filled','MarkerEdgeColor',colors(c,:),...
+    'MarkerFaceColor',colors(c,:))
 prettify
+%%
+legend({'acyclic','cyclic'})

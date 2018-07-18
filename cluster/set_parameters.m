@@ -13,10 +13,11 @@
 % p_rewire = 0;
 
 % set parameters
-A0 = [0 1; 1 0]';
-B = [1 1]';
-N = 2;
+A0 = [0 1 0 0; 0 0 1 0; 0 0 0 1; 1 0 0 0];
+N = 4;
+B = ones(N,1);
 redistr = 0.1;
+seed = 1;
 
 % p_spike = 1e-4;
 dur = 1e3;

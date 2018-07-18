@@ -6,12 +6,13 @@ time=`date +%Y%m%d_%H%M%S`
 mkdir $time
 cd $time
 
-# p_rewire
-for i in 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1
+for i in `seq 2 2 98`
 do
-    dir_name="p_rewire={$i}"
+    redistr=`echo "scale=2; $i/100" | bc -l`
+    dir_name="redistr=$redistr"
+#    echo $dir_name
     mkdir $dir_name
     cd $dir_name
-    qsub -l h_vmem=16.5G,s_vmem=16G ~/matlab/avalanche/cluster/run_sim.sh "param.p_rewire = $i;" 
+    qsub -l h_vmem=16.5G,s_vmem=16G ~/matlab/avalanche/cluster/run_sim.sh "redistr = $redistr;" 
     cd ..
 done

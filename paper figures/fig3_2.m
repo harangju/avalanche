@@ -1,7 +1,7 @@
 
 %% load distributions
-result_dir = 'avalanche/paper data/20180717_140743';
-% result_dir = 'avalanche/paper data/20180718_130604';
+% result_dir = 'avalanche/paper data/20180717_140743';
+result_dir = 'avalanche/paper data/20180718_130604';
 subdirs = dir(result_dir);
 
 xs = cell(1,length(subdirs)-2);
@@ -52,7 +52,8 @@ end
 clear i f
 
 %% plots - example distribution
-idx_distr = 1 : 7 : length(xs)/2+1;
+% idx_distr = 1 : 7 : length(xs)/2+1;
+idx_distr = 1;
 colors = linspecer(length(idx_distr));
 plts = zeros(1,length(idx_distr));
 lgnd = cell(1,length(idx_distr));

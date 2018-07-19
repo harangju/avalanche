@@ -12,6 +12,8 @@ Y_t = zeros(N, max_duration); % firing
 u_t = padarray(u_t, [0 max_duration-size(u_t,2)], 'post');
 % add zero padding to u_t
 
+ceiling = 5;
+
 spikes_u = binornd(u_t(:,1), B);
 Y_t(:,1) = spikes_u;
 for t = 2 : max_duration
@@ -19,6 +21,7 @@ for t = 2 : max_duration
 %     spikes_Y = sum(binornd(repmat(Y_t(:,t-1),[1 N]), A), 1);
 %     Y_t(:,t) = spikes_u + spikes_Y;
     Y_t(:,t) = stochastic_spike_propagation(A,B,Y_t(:,t-1),u_t(:,t));
+%     Y_t(Y_t(:,t)>ceiling,t) = ceiling;
     if sum(Y_t(:,t)) == 0 && t >= size(u_t,2); break; end
 end
 Y_t = Y_t(:,1:t);

@@ -20,5 +20,7 @@ redistr = 0.1;
 seed = 1;
 
 % p_spike = 1e-4;
-dur = 1e3;
-iter = 1e4;
+% dur = 1e3;
+dur = 2e4;
+% iter = 1e4;
+iter = 1e5;

@@ -23,4 +23,4 @@ seed = 1;
 % dur = 1e3;
 dur = 2e4;
 % iter = 1e4;
-iter = 1e5;
+iter = 2e4;

@@ -13,6 +13,8 @@ do
 #    echo $dir_name
     mkdir $dir_name
     cd $dir_name
+    mkdir code
+    cp ~/matlab/avalanche/cluster/* code
     qsub -l h_vmem=16.5G,s_vmem=16G ~/matlab/avalanche/cluster/run_sim.sh "redistr = $redistr;" 
     cd ..
 done

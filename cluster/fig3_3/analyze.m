@@ -8,7 +8,7 @@ for j = 1 : iter
         durations(j) = 0;
     end
 end
-[c_d,e_d,bin_idx] = histcounts(durations,100);
+[c_d,e_d,bin_idx] = histcounts(durations,3e3);
 x = log10(e_d(2:end));
 y = log10(c_d/(sum(c_d)));
 x(isinf(y)) = [];

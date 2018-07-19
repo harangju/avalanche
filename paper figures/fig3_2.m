@@ -52,9 +52,12 @@ end
 clear i f
 
 %% plots - example distribution
-% idx_distr = 1 : 7 : length(xs)/2+1;
-idx_distr = 1;
-colors = linspecer(length(idx_distr));
+idx_distr = 1 : 7 : length(xs)/2+1;
+% colors = linspecer(length(idx_distr));
+colors = [3.1, 18.8, 42;...
+    2, 43.9, 69;...
+    45.5, 66.3, 81.2;...
+    81.6, 82, 90.2] ./ 100;
 plts = zeros(1,length(idx_distr));
 lgnd = cell(1,length(idx_distr));
 clf; hold on
@@ -71,7 +74,7 @@ legend(plts,lgnd,'Location','Southwest')
 clear idx_distr colors plts lgnd i idx
 
 %% plots - delta w vs slopes
-scatter(distr,slopes,'filled')
+scatter(distr,slopes,20,[3.1, 18.8, 42]./100,'filled')
 prettify
 axis([-.1 1.1 -3 0])
 

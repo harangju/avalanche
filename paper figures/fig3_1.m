@@ -45,8 +45,9 @@ disp(f)
 colors = linspecer(2);
 %%
 c = 2;
-scatter(x,y,'filled','MarkerEdgeColor',colors(c,:),...
-    'MarkerFaceColor',colors(c,:))
+% scatter(x,y,'filled','MarkerEdgeColor',colors(c,:),...
+%     'MarkerFaceColor',colors(c,:))
+scatter(x,y,20,'filled')
 prettify
 %%
 legend({'acyclic','cyclic'})

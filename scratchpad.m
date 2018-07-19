@@ -38,15 +38,16 @@ parfor i = 1 : length(transitions)
     toc; beep
     % analyze
     activity = squeeze(sum(Y,1))';
-    durations = zeros(1,iter);
-    for j = 1 : iter
+%     activity(max(activity,[],2)>20,:) = [];
+    durations = zeros(1,size(activity,1));
+    for j = 1 : length(durations)
         if sum(activity(j,:)) > 0
             durations(j) = find(activity(j,:)>0,1,'last');
         else
             durations(j) = 0;
         end
     end
-    [c_d,e_d,bin_idx] = histcounts(durations,100);
+    [c_d,e_d,bin_idx] = histcounts(durations,3e3);
     x = log10(e_d(2:end));
     y = log10(c_d/(sum(c_d)));
     x(isinf(y)) = [];
@@ -55,7 +56,8 @@ parfor i = 1 : length(transitions)
     y(y==0) = [];
     xs{i} = x;
     ys{i} = y;
-    f = polyfit(x(1:15),y(1:15),1);
+%     f = polyfit(x(1:15),y(1:15),1);
+    f = polyfit(x(1:20),y(1:20),1);
     slopes(i) = f(1);
     shifts(i) = f(2);
 end

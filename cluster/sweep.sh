@@ -6,7 +6,7 @@ time=`date +%Y%m%d_%H%M%S`
 mkdir $time
 cd $time
 
-for i in `seq 2 2 98`
+for i in `seq 5 5 95`
 do
     redistr=`echo "scale=2; $i/100" | bc -l`
     dir_name="redistr=$redistr"

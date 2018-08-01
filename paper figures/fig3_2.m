@@ -57,8 +57,12 @@ slopes = zeros(1,length(xs));
 y_int = zeros(1,length(xs));
 x_int = zeros(1,length(xs));
 % pts = 10:30;
-pts = 20:40;
 for i = 1 : length(distr)
+    if i == 1 || i == length(distr)
+        pts = 20:40;
+    else
+        pts = 10:30;
+    end
     f = polyfit(xs{i}(pts), ys{i}(pts), 1);
     slopes(i) = f(1);
     y_int(i) = f(2);
@@ -67,12 +71,12 @@ end
 clear i f
 
 %% plots - example distribution
-% idx_distr = 1 : 3 : length(xs)/2+1;
-idx_distr = 1 : 7 : length(xs)/2+1;
+idx_distr = 1 : 4 : length(xs)/2+1;
+% idx_distr = 1 : 11 : length(xs)/2+1;
 % colors = linspecer(length(idx_distr));
 colors = [3.1, 18.8, 42;...
     2, 43.9, 69;...
-    45.5, 66.3, 81.2;...
+%     45.5, 66.3, 81.2;...
     81.6, 82, 90.2] ./ 100;
 plts = zeros(1,length(idx_distr));
 lgnd = cell(1,length(idx_distr));
@@ -128,3 +132,4 @@ axis([-.1 1.1 0 .3])
 hold on
 f_var = polyfit(distr,slopes_var,2);
 plot(distr,polyval(f_var,distr),'Color',[2 43.9 69]./100)
+disp([2 43.9 69]./100.*255)

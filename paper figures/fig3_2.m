@@ -1,17 +1,18 @@
 
 %% load distributions
 % result_dir = 'avalanche/paper data/20180717_140743';
-% result_dir = 'avalanche/paper data/20180718_130604';
-result_dir = '20180720_104516';
+result_dir = 'avalanche/paper data/20180718_130604';
+% result_dir = 'avalanche/paper data/20180730_174425';
 subdirs = dir(result_dir);
 
-xs = cell(1,length(subdirs)-2);
-ys = cell(1,length(subdirs)-2);
+durs = cell(1,length(subdirs)-2);
 distr = zeros(1,length(subdirs)-2);
 vars = cell(1,length(subdirs)-2);
 
 for d = 3 : length(subdirs)
     load([result_dir '/' subdirs(d).name '/matlab.mat'])
+    disp(subdirs(d).name)
+    distr(d-2) = redistr;
     % duration
     activity = squeeze(sum(Y,1))';
     durations = zeros(1,iter);
@@ -22,13 +23,7 @@ for d = 3 : length(subdirs)
             durations(j) = 0;
         end
     end
-    [c_d,e_d,bin_idx] = histcounts(durations,100);
-    x = log10(e_d(2:end));
-    y = log10(c_d/sum(c_d));
-    x(isinf(y)) = [];
-    y(isinf(y)) = [];
-    xs{d-2} = x; ys{d-2} = y;
-    distr(d-2) = redistr;
+    durs{d-2} = durations;
     % variance
     v = zeros(size(Y,1), dur);
     for t = 1 : dur
@@ -37,13 +32,32 @@ for d = 3 : length(subdirs)
     vars{d-2} = v;
 end
 
-clearvars -except xs ys distr vars
+clearvars -except durs distr vars
+
+%% calculate histogram counts
+
+xs = cell(1,length(durs));
+ys = cell(1,length(durs));
+
+bin_count = 1e4;
+
+for i = 1 : length(xs)
+    [c_d,e_d] = histcounts(durs{i},bin_count);
+    x = log10(e_d(2:end));
+    y = log10(c_d/sum(c_d));
+    x(isinf(y)) = [];
+    y(isinf(y)) = [];
+    xs{i} = x;
+    ys{i} = y;
+end
+clear bin_count c_d e_d x y i
 
 %% calculate - slope, intercepts of dur distr
 slopes = zeros(1,length(xs));
 y_int = zeros(1,length(xs));
 x_int = zeros(1,length(xs));
-pts = 3:15;
+% pts = 10:30;
+pts = 20:40;
 for i = 1 : length(distr)
     f = polyfit(xs{i}(pts), ys{i}(pts), 1);
     slopes(i) = f(1);
@@ -53,6 +67,7 @@ end
 clear i f
 
 %% plots - example distribution
+% idx_distr = 1 : 3 : length(xs)/2+1;
 idx_distr = 1 : 7 : length(xs)/2+1;
 % colors = linspecer(length(idx_distr));
 colors = [3.1, 18.8, 42;...
@@ -75,9 +90,13 @@ legend(plts,lgnd,'Location','Southwest')
 clear idx_distr colors plts lgnd i idx
 
 %% plots - delta w vs slopes
+clf
 scatter(distr,slopes,20,[3.1, 18.8, 42]./100,'filled')
 prettify
 axis([-.1 1.1 -3 0])
+hold on
+f_dur = polyfit(distr,slopes,2);
+plot(distr,polyval(f_dur,distr),'Color',[3.1 18.8 42]./100)
 
 %% calculate - slope of var
 slopes_var = zeros(1,length(xs));
@@ -89,7 +108,7 @@ clear i f
 
 %% plots - example var
 clf; hold on
-idx_var = 1 : 7 : length(xs)/2;
+idx_var = 1 : 3 : length(xs)/2;
 colors = linspecer(length(idx_var));
 lgnd = cell(1,length(idx_var));
 for i = 1 : length(idx_var)
@@ -103,7 +122,9 @@ prettify
 legend(lgnd,'Location','Northwest')
 
 %% plots - delta w vs slopes var
-scatter(distr, slopes_var, 'filled')
+scatter(distr, slopes_var, 20, [2 43.9 69]./100, 'filled')
 prettify
 axis([-.1 1.1 0 .3])
-
+hold on
+f_var = polyfit(distr,slopes_var,2);
+plot(distr,polyval(f_var,distr),'Color',[2 43.9 69]./100)

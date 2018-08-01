@@ -16,7 +16,7 @@ for i = 1 : N
     pats{i}(i) = 1;
 end
 %%
-dur = 1e3; iter = 1e4;
+dur = 1e3; iter = 5e4;
 probs = ones(1,length(pats)) / length(pats);
 tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);

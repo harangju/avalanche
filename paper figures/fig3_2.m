@@ -1,7 +1,8 @@
 
 %% load distributions
 % result_dir = 'avalanche/paper data/20180717_140743';
-result_dir = 'avalanche/paper data/20180718_130604';
+% result_dir = 'avalanche/paper data/20180718_130604';
+result_dir = '20180720_104516';
 subdirs = dir(result_dir);
 
 xs = cell(1,length(subdirs)-2);

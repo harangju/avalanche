@@ -28,9 +28,8 @@ for i = 1 : iterations
     disp([num2str(i) '/' num2str(iterations)])
     pat = sum(int8(prob_cumsum < rand)) + 1;
     pattern_order(i) = pat;
-%     u_t = inputs(N, patterns{pat}, 2);
     u_t = patterns{pat};
-    Y_t = trigger_avalanche3(A, B, u_t, max_duration);
+    Y_t = trigger_avalanche(A, B, u_t, max_duration);
     sizes(i) = avalanche_size(Y_t);
     Y{i} = Y_t;
 end

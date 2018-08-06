@@ -4,7 +4,8 @@ p = default_network_parameters;
 p.num_nodes = 100;
 p.num_nodes_input = p.num_nodes;
 p.num_nodes_output = p.num_nodes;
-p.frac_conn = 0.1;
+% p.frac_conn = 0.1;
+p.frac_conn = 0.33;
 p.graph_type = 'WRG';
 [A, B, C] = network_create(p);
 A = scale_weights_to_criticality(A);
@@ -41,7 +42,7 @@ beep
 activity = squeeze(sum(Y,1))';
 %% fig 1a
 figure(1)
-plot(mean(activity(6,:),1), 'k', 'LineWidth', .75)
+plot(mean(activity(1,:),1), 'k', 'LineWidth', .75)
 prettify;
 set(gca,'LineWidth',.75)
 %% measure duration

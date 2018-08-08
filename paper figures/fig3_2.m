@@ -2,19 +2,25 @@
 %% load distributions
 % result_dir = 'avalanche/paper data/20180717_140743';
 % result_dir = 'avalanche/paper data/20180718_130604';
-% result_dir = 'avalanche/paper data/20180730_174425';
-result_dir = '~/Desktop/20180804_003109';
+result_dir = 'avalanche/paper data/20180730_174425';
+% result_dir = '~/Desktop/20180804_003109';
 % result_dir = '~/Desktop/20180804_141931';
 subdirs = dir(result_dir);
 
 durs = cell(1,length(subdirs)-2);
+dur_max = zeros(1,length(subdirs)-2);
 distr = zeros(1,length(subdirs)-2);
 vars = cell(1,length(subdirs)-2);
+As = cell(1,length(subdirs)-2);
+patses = cell(1,length(subdirs)-2);
 
 for d = 3 : length(subdirs)
     load([result_dir '/' subdirs(d).name '/matlab.mat'])
     disp(subdirs(d).name)
     distr(d-2) = redistr;
+    As{d-2} = A;
+    dur_max(d-2) = dur;
+    patses{d-2} = pats;
     % duration
 %     activity = squeeze(sum(Y,1))';
 %     durations = zeros(1,iter);
@@ -26,7 +32,7 @@ for d = 3 : length(subdirs)
 %         end
 %     end
 %     durs{d-2} = durations;
-    durs{d-2} = cellfun(@length,Y) - 1;
+%     durs{d-2} = cellfun(@length,Y) - 1;
     % variance
 %     v = zeros(size(Y,1), dur);
 %     for t = 1 : dur
@@ -35,7 +41,7 @@ for d = 3 : length(subdirs)
 %     vars{d-2} = v;
 end
 
-clearvars -except durs distr vars
+clearvars -except durs dur_max distr vars As patses
 
 %% calculate histogram counts
 
@@ -136,3 +142,25 @@ hold on
 f_var = polyfit(distr,slopes_var,2);
 plot(distr,polyval(f_var,distr),'Color',[2 43.9 69]./100)
 disp([2 43.9 69]./100.*255)
+
+%% calculate - avalanche predictor
+
+pred = zeros(length(As),length(patses{1}));
+for i = 1 : length(As)
+    for p = 1 : length(patses{i})
+        H = avalanche_predictor(As{i},patses{i}{p},dur_max(i));
+        pred(i,p) = mean(H.*(1:dur_max(i)),2);
+    end
+end
+clear i p H
+
+%% plots - delta w vs pred
+scatter(distr,mean(pred,2)',20,[2 43.9 69]./100,'filled')
+prettify
+hold on
+f_pred = polyfit(distr,mean(pred,2)',2);
+plot(distr,polyval(f_pred,distr),'Color',[2 43.9 69]./100)
+disp([2 43.9 69]./100.*255)
+hold off
+
+

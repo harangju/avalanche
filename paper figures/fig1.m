@@ -31,14 +31,16 @@ end; clear n
 %%
 colormap(flipud(gray))
 %% view avalanches - matrix
-ts = 1:10;
+ts = [1 2 4 9];
 for n = 8
     for t = ts %1 : trials
-        imagesc(a(:,:,n,t))
+        imagesc(1-a(:,:,n,t))
         caxis([0 max(max(max(a(:,:,n,ts))))])
-        prettify; %colorbar;% xlabel('time'); ylabel('neurons')
+        prettify; colormap gray
+        yticklabels(cell(1,p.num_nodes))
+        xticklabels(cell(1,dur))
+        axis([.5 12.5 0.5 10.5])
         saveas(gcf,['aval_' num2str(t)],'epsc')
-%         pause
     end; clear t
 end; clear n
 %% get colorbar
@@ -49,16 +51,22 @@ colorbar
 prettify
 saveas(gcf,'colorbar','pdf')
 %% mean avalanche, n = 8
-a8_avg = mean(a(:,:,8,:),4);
+a8_avg = mean(1-a(:,:,8,:),4);
 % plot_avalanche(a8_avg, avalanche_transitions(a8_avg, A), true)
 imagesc(a8_avg)
 prettify; %xlabel('time'); ylabel('neurons')
+yticklabels(cell(1,p.num_nodes))
+xticklabels(cell(1,dur))
+axis([.5 12.5 0.5 10.5])
 saveas(gcf,'aval_avg_emp_n8','epsc')
 %%
 n=8;
 a8_lin = avalanche_average_analytical(A,B,inputs(p.num_nodes,{n},1),dur);
 imagesc(a8_avg)
 prettify; %xlabel('time'); ylabel('neurons')
+yticklabels(cell(1,p.num_nodes))
+xticklabels(cell(1,dur))
+axis([.5 12.5 0.5 10.5])
 saveas(gcf,'aval_avg_ana_n8','epsc')
 %% diff
 histogram(a8_lin(a8_lin>0)-a8_avg(a8_lin>0),30,'FaceColor','k')

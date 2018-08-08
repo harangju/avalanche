@@ -3,18 +3,23 @@
 % result_dir = 'avalanche/paper data/20180717_140743';
 % result_dir = 'avalanche/paper data/20180718_130604';
 % result_dir = 'avalanche/paper data/20180730_174425';
-result_dir = '20180806_124849';
+result_dir = '~/Desktop/20180806_124849';
 subdirs = dir(result_dir);
 
 durs = cell(1,length(subdirs)-2);
+dur_max = zeros(1,length(subdirs)-2);
 distr = zeros(1,length(subdirs)-2);
 vars = cell(1,length(subdirs)-2);
+As = cell(1,length(subdirs)-2);
+patses = cell(1,length(subdirs)-2);
 
 for d = 3 : length(subdirs)
     load([result_dir '/' subdirs(d).name '/matlab.mat'])
     disp(subdirs(d).name)
     distr(d-2) = redistr;
-    % duration
+    As{d-2} = A;
+    dur_max(d-2) = dur;
+    patses{d-2} = pats;
     durations = cellfun(@length,Y) - 1;
     durs{d-2} = durations;
     % variance
@@ -25,14 +30,14 @@ for d = 3 : length(subdirs)
 %     vars{d-2} = v;
 end
 
-clearvars -except durs distr vars
+clearvars -except durs dur_max distr vars As patses
 
 %% calculate histogram counts
 
 xs = cell(1,length(durs));
 ys = cell(1,length(durs));
 
-bin_count = 1e4;
+bin_count = 1e5;
 
 for i = 1 : length(xs)
     [c_d,e_d] = histcounts(durs{i},bin_count);
@@ -53,6 +58,7 @@ x_int = zeros(1,length(xs));
 for i = 1 : length(distr)
     if i == 1 || i == length(distr)
         pts = 20:40;
+        pts = 30:50;
     else
         pts = 10:30;
     end

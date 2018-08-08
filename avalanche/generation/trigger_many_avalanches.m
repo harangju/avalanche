@@ -29,7 +29,7 @@ for i = 1 : iterations
     pattern_order(i) = pat;
 %     u_t = inputs(N, patterns{pat}, 2);
     u_t = patterns{pat};
-    Y_t = trigger_avalanche3(A, B, u_t, max_duration);
+    Y_t = trigger_avalanche(A, B, u_t, max_duration);
     sizes(i) = avalanche_size(Y_t);
     Y(:, 1:size(Y_t,2), i) = Y_t;
 end

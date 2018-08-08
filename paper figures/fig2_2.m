@@ -16,15 +16,15 @@ end; clear i
 % simulation parameters
 dur = 300; iter = 3e3;
 % loop
-for g = 1 %: length(graphs)
-    for t = 1 %: trials
+for g = 1 : length(graphs)
+    for t = 1 : trials
         disp([graphs{g} ' ' num2str(t)])
         % generate graph
         p = default_network_parameters;
         p.num_nodes = 100;
         p.num_nodes_input = p.num_nodes;
         p.num_nodes_output = p.num_nodes;
-        p.frac_conn = 0.1;
+        p.frac_conn = 0.33;
         p.graph_type = graphs{g};
         [A, B, C] = network_create(p);
         A = scale_weights_to_criticality(A);
@@ -67,7 +67,8 @@ end
 %% plot
 boxplot(r','Colors','k')
 prettify
-axis fill
+% axis fill
+axis square
 axis([0.5 4.5 0 1])
 h = findobj(gcf,'tag','Outliers');
 for iH = 1:length(h)

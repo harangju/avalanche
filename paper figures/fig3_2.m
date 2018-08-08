@@ -1,8 +1,10 @@
 
 %% load distributions
 % result_dir = 'avalanche/paper data/20180717_140743';
-result_dir = 'avalanche/paper data/20180718_130604';
+% result_dir = 'avalanche/paper data/20180718_130604';
 % result_dir = 'avalanche/paper data/20180730_174425';
+result_dir = '~/Desktop/20180804_003109';
+% result_dir = '~/Desktop/20180804_141931';
 subdirs = dir(result_dir);
 
 durs = cell(1,length(subdirs)-2);
@@ -14,22 +16,23 @@ for d = 3 : length(subdirs)
     disp(subdirs(d).name)
     distr(d-2) = redistr;
     % duration
-    activity = squeeze(sum(Y,1))';
-    durations = zeros(1,iter);
-    for j = 1 : iter
-        if sum(activity(j,:)) > 0
-            durations(j) = find(activity(j,:)>0,1,'last');
-        else
-            durations(j) = 0;
-        end
-    end
-    durs{d-2} = durations;
+%     activity = squeeze(sum(Y,1))';
+%     durations = zeros(1,iter);
+%     for j = 1 : iter
+%         if sum(activity(j,:)) > 0
+%             durations(j) = find(activity(j,:)>0,1,'last');
+%         else
+%             durations(j) = 0;
+%         end
+%     end
+%     durs{d-2} = durations;
+    durs{d-2} = cellfun(@length,Y) - 1;
     % variance
-    v = zeros(size(Y,1), dur);
-    for t = 1 : dur
-        v(:,t) = var(Y(:,t,:),0,3);
-    end
-    vars{d-2} = v;
+%     v = zeros(size(Y,1), dur);
+%     for t = 1 : dur
+%         v(:,t) = var(Y(:,t,:),0,3);
+%     end
+%     vars{d-2} = v;
 end
 
 clearvars -except durs distr vars

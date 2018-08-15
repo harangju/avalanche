@@ -1,94 +1,96 @@
 
-
-
-% set parameters
-A0 = [0 1; 1 0]';
-B = [1 1]';
-N = 2;
-
-% patterns
-pats = cell(1,N);
-for i = 1 : N
-    pats{i} = zeros(N,1);
-    pats{i}(i) = 1;
-end
-
-% transitions = 0.02 : 0.02 : 0.2;
-% transitions = 1 - (0.02 : 0.02 : 0.2);
-transitions = [0.4 0.6];
-slopes = zeros(size(transitions));
-shifts = zeros(size(transitions));
-xs = cell(size(slopes));
-ys = cell(size(slopes));
-As = cell(size(slopes));
-
-parfor i = 1 : length(transitions)
-    disp(num2str(transitions(i)))
-    A = A0;
-    A(1,2) = A(1,2) - transitions(i);
-    A(1,1) = transitions(i);
-    A(2,1) = A(2,1) - transitions(i);
-    A(2,2) = transitions(i);
-    As{i} = A;
-    % simulate
-    dur = 1e3; iter = 6e3;
-    probs = ones(1,length(pats)) / length(pats);
-    tic
-    [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
-    toc; beep
-    % analyze
-    activity = squeeze(sum(Y,1))';
-%     activity(max(activity,[],2)>20,:) = [];
-    durations = zeros(1,size(activity,1));
-    for j = 1 : length(durations)
-        if sum(activity(j,:)) > 0
-            durations(j) = find(activity(j,:)>0,1,'last');
-        else
-            durations(j) = 0;
-        end
-    end
-    [c_d,e_d,bin_idx] = histcounts(durations,3e3);
-    x = log10(e_d(2:end));
-    y = log10(c_d/(sum(c_d)));
-    x(isinf(y)) = [];
-    y(isinf(y)) = [];
-    x(y==0) = [];
-    y(y==0) = [];
-    xs{i} = x;
-    ys{i} = y;
-%     f = polyfit(x(1:15),y(1:15),1);
-    f = polyfit(x(1:20),y(1:20),1);
-    slopes(i) = f(1);
-    shifts(i) = f(2);
-end
-
-%% find slopes
-for i = 1 : length(transitions)
-    f = polyfit(xs{i}(5:15),ys{i}(5:15),1);
-    slopes(i) = f(1);
-    shifts(i) = f(2);
+%% network
+p = default_network_parameters;
+p.num_nodes = 100;
+p.num_nodes_input = p.num_nodes;
+p.num_nodes_output = p.num_nodes;
+% p.frac_conn = 0.1;
+p.frac_conn = 0.33;
+p.graph_type = 'WRG';
+[A, B, C] = network_create(p);
+A = scale_weights_to_criticality(A);
+%% view
+figure(1)
+imagesc(A)
+colorbar
+prettify
+%% check connectivity
+disp(mean(A(:)>0))
+%%
+imagesc(A)
+prettify; axis square; colorbar
+%%
+dur = 300; iter = 3e3;
+%% 
+input_activity = 0.1;
+pat_num = 100;
+pats = cell(1,pat_num);
+for i = 1 : pat_num
+    pats{i} = rand(p.num_nodes,1) < input_activity;
 end; clear i
-
-%% plot
-clf
-scatter(transitions, shifts, 'filled')
-xlabel('autapse strength')
-ylabel('shifts')
-% axis([0 0.22 0 2])
-yyaxis right
-scatter(transitions, slopes, 'filled')
-ylabel('slopes')
-% axis([0 0.22 -2.2 -.8])
+%% simulation
+probs = ones(1,length(pats)) / length(pats);
+tic
+[Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
+toc; beep
+%% predicted simulation
+Yp = zeros(p.num_nodes,dur,length(pats));
+for i = 1 : length(pats)
+    Yp(:,:,i) = avalanche_average_analytical(A,B,pats{i},dur);
+end; clear i
+beep
+%%
+activity = squeeze(sum(Y,1))';
+%% fig 1a
+figure(1)
+plot(mean(activity(1,:),1), 'k', 'LineWidth', .75)
+prettify;
+set(gca,'LineWidth',.75)
+%% measure duration
+duration = zeros(1,iter);
+for i = 1 : iter
+    if sum(activity(i,:)) > 0
+        duration(i) = find(activity(i,:)>0,1,'last');
+    else
+        duration(i) = 0;
+    end
+end; clear i
+%% mean duration
+dur_mean = zeros(1,length(pats));
+for i = 1 : length(pats)
+    dur_mean(i) = mean(duration(pat==i));
+end; clear i
+%% predictor
+H = zeros(length(pats),dur);
+for i = 1 : length(pats)
+    H(i,:) = avalanche_predictor(A,pats{i},dur);
+end; clear i
+H_m = mean(H.*(1:dur),2);
+H_m(isnan(H_m)) = 0;
+%% fig 2c
+% plot individual durations
+figure(2)
+scatter(H_m,dur_mean,'.k')
+prettify
+%% linear fit
+f = polyfit(H_m,dur_mean',1);
+hold on
+x = 10:0.1:max(H_m);
+plot(x,polyval(f,x),'r')
+hold off
+%% pearson correlation
+[r,p] = corr(H_m,dur_mean'); disp(r)
+%%
+mc = control_modal(A);
+figure(3)
+scatter(mc,dur_mean,'.k')
+prettify
+%%
+ac = ave_control(A);
+figure(4)
+scatter(ac,dur_mean,'.k')
 prettify
 
-%% plot
-for i = 1 : length(transitions)
-    scatter(xs{i}, ys{i}, '.')
-    axis([0 3 -4 0])
-    prettify; title(num2str(transitions(i)))
-    hold on
-    plot(xs{i},polyval([slopes(i) shifts(i)], xs{i}))
-    hold off
-    saveas(gcf, ['distr_' num2str(transitions(i)) '.png'])
-    pause
-end
+
+
+

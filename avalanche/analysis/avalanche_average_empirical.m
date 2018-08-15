@@ -14,7 +14,7 @@ N = size(A,1);
 Y_t_trials = zeros(N, max_duration, num_trials);
 
 for trial = 1 : num_trials
-    Y_t = trigger_avalanche3(A, B, u_t, max_duration);
+    Y_t = trigger_avalanche(A, B, u_t, max_duration);
     Y_t_trials(:, 1:size(Y_t,2), trial) = Y_t;
 end
 Y_t_avg = mean(Y_t_trials, 3);

@@ -1,10 +1,7 @@
 
 %% load distributions
-% result_dir = 'avalanche/paper data/20180717_140743';
-% result_dir = 'avalanche/paper data/20180718_130604';
-% result_dir = 'avalanche/paper data/20180730_174425';
-% result_dir = '~/Desktop/20180804_003109';
 result_dir = '~/Desktop/20180806_124849';
+% result_dir = '~/Desktop/20180808_135704';
 subdirs = dir(result_dir);
 
 durs = cell(1,length(subdirs)-2);

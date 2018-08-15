@@ -58,7 +58,8 @@ prettify; %xlabel('time'); ylabel('neurons')
 yticklabels(cell(1,p.num_nodes))
 xticklabels(cell(1,dur))
 axis([.5 12.5 0.5 10.5])
-saveas(gcf,'aval_avg_emp_n8','epsc')
+%%
+saveas(gcf,'aval_avg_emp_n8','pdf')
 %%
 n=8;
 a8_lin = avalanche_average_analytical(A,B,inputs(p.num_nodes,{n},1),dur);
@@ -67,17 +68,28 @@ prettify; %xlabel('time'); ylabel('neurons')
 yticklabels(cell(1,p.num_nodes))
 xticklabels(cell(1,dur))
 axis([.5 12.5 0.5 10.5])
-saveas(gcf,'aval_avg_ana_n8','epsc')
+%%
+saveas(gcf,'aval_avg_ana_n8','pdf')
 %% diff
 histogram(a8_lin(a8_lin>0)-a8_avg(a8_lin>0),30,'FaceColor','k')
 prettify
-axis([-.07 .07 0 15])
+x = -.07 : 0.0001 : .07;
+axis([x(1) x(end) 0 20])
+%% norm fit
+[c,e] = histcounts(a8_lin(a8_lin>0)-a8_avg(a8_lin>0),30);
+[muHat, sigmaHat] = normfit(a8_lin(a8_lin>0)-a8_avg(a8_lin>0));
+hold on
+plot(x,normpdf(x,muHat,sigmaHat)*sum(c.*abs(e(1:end-1))),'k')
+hold off
+%%
 saveas(gcf,'diff_hist_n8','svg')
 %% diffs for # nodes
 ns = 50 : 50 : 300;
 dur = 15;
 trials = 1e3;
 df = cell(1,length(ns));
+a_emp_t = cell(1,length(ns));
+a_ana_t = cell(1,length(ns));
 nodes_tr = 50;
 for i = 1 : length(ns)
     n = ns(i);
@@ -101,19 +113,26 @@ for i = 1 : length(ns)
         a_emp(:,:,nodes) = emp;
         a_ana(:,:,nodes) = ana;
     end; clear nodes emp ana u
-    if sum(a_emp>0) < sum(a_emp>0)
-        df{i} = a_emp(a_emp>0) - a_ana(a_emp>0);
-    else
-        df{i} = a_emp(a_ana>0) - a_ana(a_ana>0);
-    end
+    a_emp_t{i} = a_emp;
+    a_ana_t{i} = a_ana;
+%     if sum(a_emp>0) < sum(a_emp>0)
+%         df{i} = a_emp(a_emp>0) - a_ana(a_emp>0);
+%     else
+%         df{i} = a_emp(a_ana>0) - a_ana(a_ana>0);
+%     end
 end; clear n
+%%
+for i = 1 : length(ns)
+%     df{i} = a_emp_t{i}(a_ana_t{i}>0) - a_ana_t{i}(a_ana_t{i}>0);
+    df{i} = a_ana_t{i}(a_ana_t{i}>0) - a_emp_t{i}(a_ana_t{i}>0);
+end
 %% plot diffs
-df_m = cellfun(@mean,df);
+df_m = cellfun(@mean,df)
 df_se = cellfun(@std,df);% ./ sqrt(cellfun(@length,df));
-errorbar(ns, df_m, df_se, 'k*', 'LineWidth', 2)
+errorbar(ns, df_m, df_se, 'ks')
 prettify
 % axis([0 max(ns) -0.0005 0.0005])
-axis([0 max(ns) -0.03 0.03])
+axis([0 max(ns) -0.02 0.02])
 
 
 

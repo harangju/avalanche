@@ -26,7 +26,7 @@ input_activity = 0.1;
 pat_num = 100;
 pats = cell(1,pat_num);
 for i = 1 : pat_num
-    pats{i} = rand(p.num_nodes,1) < input_activity;
+    pats{i} = double(rand(p.num_nodes,1) < input_activity);
 end; clear i
 %% simulation
 probs = ones(1,length(pats)) / length(pats);
@@ -86,10 +86,14 @@ figure(3)
 scatter(mc,dur_mean,'.k')
 prettify
 %%
-ac = ave_control(A);
+[r,p] = corr(mc,dur_mean')
+%%
+fir = finite_impulse_responses(A,dur);
 figure(4)
-scatter(ac,dur_mean,'.k')
+scatter(fir,dur_mean,'.k')
 prettify
+%%
+[r,p] = corr(fir,dur_mean')
 
 
 

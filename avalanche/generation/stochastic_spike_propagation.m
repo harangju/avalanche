@@ -7,6 +7,7 @@ function Y_next = stochastic_spike_propagation(A, B, Y, u)
 
 N = length(Y);
 Y_next = binornd(u, B) + sum(binornd(repmat(Y,[1 N]),A), 1)';
+Y_next = double(Y_next);
 
 end
 

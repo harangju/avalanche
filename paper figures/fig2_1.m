@@ -32,28 +32,13 @@ probs = ones(1,length(pats)) / length(pats);
 tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
 toc; beep
-%% predicted simulation
-Yp = zeros(p.num_nodes,dur,length(pats));
-for i = 1 : length(pats)
-    Yp(:,:,i) = avalanche_average_analytical(A,B,pats{i},dur);
-end; clear i
-beep
-%%
-activity = squeeze(sum(Y,1))';
 %% fig 1a
 figure(1)
-plot(mean(activity(1,:),1), 'k', 'LineWidth', .75)
+plot(mean(sum(Y{1},1),1), 'k', 'LineWidth', .75)
 prettify;
 set(gca,'LineWidth',.75)
 %% measure duration
-duration = zeros(1,iter);
-for i = 1 : iter
-    if sum(activity(i,:)) > 0
-        duration(i) = find(activity(i,:)>0,1,'last');
-    else
-        duration(i) = 0;
-    end
-end; clear i
+duration = avalanche_durations_cell(Y);
 %% mean duration
 dur_mean = zeros(1,length(pats));
 for i = 1 : length(pats)

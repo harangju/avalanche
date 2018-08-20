@@ -40,21 +40,21 @@ for i = 1 : length(ps)
 end
 
 %%
+fits = zeros(length(ps),trials,2);
 for i = 1 : length(ps)
     for j = 1 : trials
         % durations
-        [c_d,e_d,bin_idx] = histcounts(durations{i},iter);
+        [c_d,e_d,bin_idx] = histcounts(durations{i,j},iter);
         x = log10(e_d(2:end));
         y = log10(c_d/sum(c_d));
         x(isinf(y)) = [];
         y(isinf(y)) = [];
-        % f = polyfit(x(1:20),y(1:20),1);
-        f = polyfit(x,y,1);
-        disp(f)
+        fits(i,j,:) = polyfit(x,y,1);
         % plot
         scatter(x,y,10,[3.1, 18.8, 42]./100,'filled')
+        axis([0 3 -5 0])
         prettify; drawnow
-        pause
+        pause(0.1)
     end
 end
 

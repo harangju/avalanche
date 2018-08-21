@@ -17,7 +17,9 @@ for i = 2 : T
     x(:,i) = A*x(:,i-1);
     v(:,i) = (A - A.^2)*x(:,i-1) + A*v(:,i-1);
 end
+% H = mean(x./v, 'omitnan');
 H = mean(x./v, 'omitnan').^(1/sum(x0));
+% H = mean(x.^(1/sum(x0))./v, 'omitnan');
 % H = prod(1-(x./v), 'omitnan').^(1/sum(x0));
 H(isinf(H)) = 0;
 

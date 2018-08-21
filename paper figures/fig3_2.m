@@ -66,9 +66,12 @@ end
 
 %% compare slopes to cycle counts
 slopes = fits(:,:,1)';
-scatter(cycle_count/sum(sum(A0>0)),slopes(:),200,[3.1 18.8 42]./100,'.')
+scatter(log10(cycle_count/sum(sum(A0>0))),...
+    slopes(:),...
+    200, [3.1 18.8 42]./100, '.')
 prettify
-axis([-2 15 -15 0])
+% axis([-2 15 -15 0])
+% axis()
 
 
 

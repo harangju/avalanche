@@ -4,9 +4,9 @@ prm = default_network_parameters;
 N = 100;
 prm.num_nodes = N;
 prm.num_nodes_input = N;
-prm.frac_conn = 0.1;
+prm.frac_conn = 0.01;
 % prm.p_rewire = 0.4;
-prm.graph_type = 'WRG';
+prm.graph_type = 'RG';
 [A, B, C] = network_create(prm);
 A = scale_weights_to_criticality(A);
 %% view
@@ -44,16 +44,20 @@ tic
 [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
 toc; beep
 %% calculate duration
-duration = avalanche_durations_cell(Y);
+duration = avl_durations_cell(Y);
 dur_mean = zeros(1,length(pats));
 for i = 1 : length(pats)
     dur_mean(i) = mean(duration(pat==i));
+end; clear i
+dur_med = zeros(1,length(pats));
+for i = 1 : length(pats)
+    dur_med(i) = median(duration(pat==i));
 end; clear i
 %% predictor
 T = 100;
 H = zeros(length(pats),T);
 for i = 1 : length(pats)
-    H(i,:) = avalanche_predictor(A,pats{i},T);
+    H(i,:) = avl_predictor(A,pats{i},T);
 end; clear i
 H_m = mean(H.*(1:T),2);
 H_m(isnan(H_m)) = 0;
@@ -114,9 +118,32 @@ end; clear i
 plot(activity')
 
 
+%%
+[c,e] = histcounts(duration,iter);
+scatter(log10(e(1:end-1)),log10(c),'.'); prettify
+mean(A(A>0))
+x = log10(e(1:end-1));
+y = log10(c);
+x(isinf(y)) = [];
+y(isinf(y)) = [];
+y(isinf(x)) = [];
+x(isinf(x)) = [];
+% f = polyfit(x,y,1)
+f = polyfit(x(10:20),y(10:20),1)
 
 
 
 
+%%
+for i = 1 : N
+    figure(3)
+    histogram(duration(pat==i),30); axis([0 1e3 0 100])
+    for j = 1 : N
+        figure(4)
+        imagesc(squeeze(Ym(j,:,pat==i))')
+        colorbar; prettify; title([num2str(i) ' ' num2str(fir(i))])
+        pause(0.01)
+    end
+end
 
 

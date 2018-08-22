@@ -66,12 +66,24 @@ end
 
 %% compare slopes to cycle counts
 slopes = fits(:,:,1)';
-scatter(log10(cycle_count/sum(sum(A0>0))),...
-    slopes(:),...
-    200, [3.1 18.8 42]./100, '.')
+x = log10(cycle_count/sum(sum(A0>0)));
+y = slopes(:);
+y(isinf(x)) = 0;
+x(isinf(x)) = 0;
+scatter(x, y, 200, [3.1 18.8 42]./100, '.')
 prettify
 % axis([-2 15 -15 0])
 % axis()
+
+%% log
+f = polyfit(x, y, 1);
+p = min(x) : 0.01 : max(x);
+hold on
+plot(p,polyval(f,p),'r')
+hold off
+
+
+
 
 
 

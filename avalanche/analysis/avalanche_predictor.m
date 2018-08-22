@@ -22,5 +22,6 @@ H = mean(x./v, 'omitnan').^(1/sum(x0));
 % H = mean(x.^(1/sum(x0))./v, 'omitnan');
 % H = prod(1-(x./v), 'omitnan').^(1/sum(x0));
 H(isinf(H)) = 0;
+H(isnan(H)) = 0;
 
 end

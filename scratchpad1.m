@@ -4,9 +4,9 @@ prm = default_network_parameters;
 N = 100;
 prm.num_nodes = N;
 prm.num_nodes_input = N;
-prm.frac_conn = 0.02;
+prm.frac_conn = 0.01;
 % prm.p_rewire = 0.4;
-prm.graph_type = 'RG';
+prm.graph_type = 'WRG';
 [A, B, C] = network_create(prm);
 A = scale_weights_to_criticality(A);
 %% view
@@ -67,12 +67,11 @@ prettify
 f = polyfit(H_m(dur_mean<100),dur_mean(dur_mean<100)',1);
 % f = polyfit(H_m,dur_mean',1);
 hold on
-% x = 10:0.1:max(H_m);
 x = min(H_m):0.001:max(H_m);
 plot(x,polyval(f,x),'r')
 hold off
 %% pearson correlation
-[r,p] = corr(H_m(dur_mean<100),dur_mean(dur_mean<100)'); disp(r)
+[r,p] = corr(H_m(dur_mean<100),dur_mean(dur_mean<100)')
 % [r,p] = corr(H_m,dur_mean'); disp(r)
 %%
 mc = control_modal(A);
@@ -90,6 +89,7 @@ hold off
 % [r,p] = corr(mc,dur_mean')
 %%
 fir = finite_impulse_responses(A,T);
+%%
 figure(4)
 scatter(fir(dur_mean<100),dur_mean(dur_mean<100),'.k')
 % scatter(fir,dur_mean,'.k')

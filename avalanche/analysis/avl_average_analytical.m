@@ -1,4 +1,4 @@
-function X_t = avalanche_average_analytical(A, B, u_t, max_duration)
+function X_t = avl_average_analytical(A, B, u_t, max_duration)
 %avalanche_average_analytical
 %   Analytically calculates the expected average avalanche
 %   max_iter - maximum duration of avalanche

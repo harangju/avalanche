@@ -1,4 +1,4 @@
-function transitions = avalanche_transitions(X_t, A)
+function transitions = avl_transitions(X_t, A)
 %avalanche_transitions Calculates transitions given activations &
 %connectivity
 %   X_t: activation over time

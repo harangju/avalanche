@@ -1,4 +1,4 @@
-function durations = avalanche_durations(Y)
+function durations = avl_durations(Y)
 %avalanche_duration
 %   Y: avalanches, [neurons by duration by trials]
 

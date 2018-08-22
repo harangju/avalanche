@@ -1,4 +1,4 @@
-function durations = avalanche_durations_cell(Y)
+function durations = avl_durations_cell(Y)
 %avalanche_duration
 %   Y: avalanches, {iter} x [neurons x duration]
 

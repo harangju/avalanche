@@ -1,4 +1,4 @@
-function p = avalanche_size_distr_fit_power(edges, prob)
+function p = avl_size_distr_fit_power(edges, prob)
 %avalanche_size_distr_power_fit(N, edges) returns fitted exponential
 %curve
 %   prob: probability of number of avalanches with size given in edges

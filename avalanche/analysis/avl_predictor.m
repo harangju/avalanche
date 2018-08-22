@@ -1,4 +1,4 @@
-function [H,x,v] = avalanche_predictor(A, x0, T)
+function [H,x,v] = avl_predictor(A, x0, T)
 % A: [post- by pre-] !!! ATTENTION !!!
 % x0: [N by 1]
 % T: max duration

@@ -4,7 +4,7 @@ prm = default_network_parameters;
 N = 100;
 prm.num_nodes = N;
 prm.num_nodes_input = N;
-prm.frac_conn = 0.01;
+prm.frac_conn = 0.3;
 % prm.p_rewire = 0.4;
 prm.graph_type = 'RG';
 [A, B, C] = network_create(prm);
@@ -117,6 +117,9 @@ for i = 1 : length(pats)
 end; clear i
 plot(activity')
 
+%%
+histogram(A(A>0),20); prettify
+
 
 %%
 [c,e] = histcounts(duration,iter);
@@ -129,8 +132,10 @@ y(isinf(y)) = [];
 y(isinf(x)) = [];
 x(isinf(x)) = [];
 % f = polyfit(x,y,1)
-f = polyfit(x(10:20),y(10:20),1)
-
+f = polyfit(x(5:15),y(5:15),1)
+hold on
+plot(min(x):(1e-2):max(x), polyval(f,min(x):(1e-2):max(x)))
+hold off
 
 
 

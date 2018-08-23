@@ -4,9 +4,9 @@ prm = default_network_parameters;
 N = 100;
 prm.num_nodes = N;
 prm.num_nodes_input = N;
-prm.frac_conn = 0.3;
+prm.frac_conn = 0.1;
 % prm.p_rewire = 0.4;
-prm.graph_type = 'RG';
+prm.graph_type = 'WRG';
 [A, B, C] = network_create(prm);
 A = scale_weights_to_criticality(A);
 %% view

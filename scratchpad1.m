@@ -154,3 +154,21 @@ end
 plplot(duration, xmin, alpha)
 prettify
 
+
+
+
+%%
+main_dir = '~/Desktop/20180823_214129';
+dirs = dir(main_dir);
+alphas = zeros(1,length(dirs)-2);
+xmins = zeros(1,length(dirs)-2);
+for k = 3 : length(dirs)
+    load([main_dir '/' dirs(k).name '/matlab.mat'])
+    duration = avl_durations_cell(Y);
+    [alphas(k-2), xmins(k-2)] = plfit(duration);
+end
+
+
+
+
+

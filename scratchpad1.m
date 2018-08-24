@@ -16,7 +16,7 @@ dur = 1e3; iter = 1e4;
 %% 
 pats = cell(1,prm.N);
 for i = 1 : prm.N
-    x = zeros(N,1);
+    x = zeros(prm.N,1);
     x(i) = 1;
     pats{i} = x;
 end; clear i x
@@ -148,4 +148,9 @@ for i = 1 : prm.N
     end
 end
 
+
+%%
+[alpha, xmin] = plfit(duration);
+plplot(duration, xmin, alpha)
+prettify
 

@@ -5,9 +5,9 @@ function param = default_network_parameters
 %   Pass param as argument to create_network
 
 param = struct;
-param.num_nodes = 100; % num_nodes = sum of num_nodes_{input|output|hidden}
-param.num_nodes_input = param.num_nodes;
-param.num_nodes_output = 0;
+param.N = 10;
+param.N_in = 10;
+param.N_out = 0;
 param.num_nodes_hidden = 0;
 param.frac_conn = 1e-1; % fractional connectivity
 param.weight_max = 20;

@@ -9,7 +9,7 @@ function s = avl_sizes_cell(Y)
 num_trials = length(Y);
 s = zeros(1,num_trials);
 for i = 1 : num_trials
-    s(i) = avl_sizes(Y{i});
+    s(i) = avl_size(Y{i});
 end
 
 end

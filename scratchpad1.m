@@ -1,13 +1,10 @@
 
 %% network
 prm = default_network_parameters;
-N = 100;
-prm.num_nodes = N;
-prm.num_nodes_input = N;
+prm.N = 100;
 prm.frac_conn = 0.1;
-% prm.p_rewire = 0.4;
 prm.graph_type = 'WRG';
-[A, B, C] = network_create(prm);
+[A, B] = network_create(prm);
 A = scale_weights_to_criticality(A);
 %% view
 figure(1)
@@ -17,8 +14,8 @@ prettify
 %%
 dur = 1e3; iter = 1e4;
 %% 
-pats = cell(1,N);
-for i = 1 : N
+pats = cell(1,prm.N);
+for i = 1 : prm.N
     x = zeros(N,1);
     x(i) = 1;
     pats{i} = x;
@@ -28,15 +25,15 @@ input_activity = 0.02;
 pat_num = 100;
 pats = cell(1,pat_num);
 for i = 1 : pat_num
-    pats{i} = double(rand(prm.num_nodes,1) < input_activity);
+    pats{i} = double(rand(prm.N,1) < input_activity);
 end; clear i
 %%
-pats = cell(1,N);
+pats = cell(1,prm.N);
 pat_num = 100;
 num_on = 10;
 for i = 1 : pat_num
-    pats{i} = zeros(N,1);
-    pats{i}(randperm(N,num_on)) = 1;
+    pats{i} = zeros(prm.N,1);
+    pats{i}(randperm(prm.N,num_on)) = 1;
 end; clear i
 %% simulation
 probs = ones(1,length(pats)) / length(pats);
@@ -140,10 +137,10 @@ hold off
 
 
 %%
-for i = 1 : N
+for i = 1 : prm.N
     figure(3)
     histogram(duration(pat==i),30); axis([0 1e3 0 100])
-    for j = 1 : N
+    for j = 1 : prm.N
         figure(4)
         imagesc(squeeze(Ym(j,:,pat==i))')
         colorbar; prettify; title([num2str(i) ' ' num2str(fir(i))])

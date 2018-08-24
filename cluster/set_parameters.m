@@ -13,11 +13,17 @@
 % p_rewire = 0;
 
 % set parameters
-A0 = [0 1 0 0; 0 0 1 0; 0 0 0 1; 1 0 0 0];
-N = 4;
-B = ones(N,1);
-redistr = 0.1;
-seed = 1;
+% A0 = [0 1 0 0; 0 0 1 0; 0 0 0 1; 1 0 0 0];
+% N = 4;
+% B = ones(N,1);
+% redistr = 0.1;
+% seed = 1;
+% 
 
-dur = 3e4;
-iter = 3e4;
+prm = default_network_parameters;
+prm.N = 100;
+prm.frac_conn = 0.1;
+prm.graph_type = 'WRG';
+
+dur = 1e3;
+iter = 1e4;

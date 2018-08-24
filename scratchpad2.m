@@ -8,4 +8,3 @@ A = scale_weights_to_criticality(A);
 
 %%
 
-

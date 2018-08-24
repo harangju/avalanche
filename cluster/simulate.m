@@ -1,8 +1,8 @@
 
 %% stimulus
-pats = cell(1,N);
-for i = 1 : N
-    pats{i} = zeros(N,1);
+pats = cell(1,prm.N);
+for i = 1 : prm.N
+    pats{i} = zeros(prm.N,1);
     pats{i}(i) = 1;
 end
 

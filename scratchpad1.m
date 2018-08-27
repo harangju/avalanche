@@ -14,12 +14,7 @@ prettify
 %%
 dur = 1e3; iter = 1e4;
 %% 
-pats = cell(1,prm.N);
-for i = 1 : prm.N
-    x = zeros(prm.N,1);
-    x(i) = 1;
-    pats{i} = x;
-end; clear i x
+pats = pings_single(prn.N);
 %%
 input_activity = 0.02;
 pat_num = 100;

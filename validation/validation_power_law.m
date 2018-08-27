@@ -1,13 +1,12 @@
 
 %% generate network
-param = default_network_parameters;
-param.num_nodes = 100;
-param.num_nodes_input = param.num_nodes;
-param.num_nodes_output = param.num_nodes;
-param.frac_conn = 0.4;
-param.graph_type = 'WRG';
-param.exp_branching = 1;
-[A, B, C] = network_create(param);
+p = default_network_parameters;
+p.N = 100;
+p.N_in = p.N;
+p.frac_conn = 0.3;
+p.graph_type = 'WRG';
+p.exp_branching = 1;
+[A, B, C] = network_create(p);
 A = scale_weights_to_criticality(A);
 %% view network
 colormap(flipud(gray))
@@ -18,34 +17,26 @@ subplot(2,1,2)
 g = graph_from_matrix(A);
 plot(g)
 prettify
-%% generate spontaneous avalanches
-p_spike = 1e-5;
-iter = 1e6;
-tic
-Y = spontaneous_avalanches(A,B,p_spike,1e5);
-toc
-%% view spikes
-clf
-imagesc(Y)
-colorbar; prettify; xlabel('time bins'); ylabel('neurons')
-%% find avalanches
-aval = find_avalanches(Y);
+%% drive spontaneous activity
+dur = 1e3; iter = 1e4;
+[pats, probs] = pings_single(p.N);
+tic; [Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
+toc; beep
 %% power law - duration
-subplot(2,1,1)
-aval_durs = cellfun(@size,aval,...
-    num2cell(2*ones(1,length(aval))));
-[n,edges] = histcounts(aval _durs);
-% scatter(log10(edges(1:end-1)),log10(n)/length(aval),'filled')
-plot(log10(edges(1:end-1)),log10(n)/length(aval),'-*')
-% plot(edges(1:end-1),n,'-*')
-prettify; xlabel('avalanche duration log_{10}'); ylabel('avalanches')
+duration = avl_durations_cell(Y);
+[alpha_d, xmin_d] = plfit(duration);
+plplot(duration, xmin_d, alpha_d)
+prettify
+%% gof
+[p_val_d, gof_d] = plpva(duration, xmin_d);
+disp([p_val_d gof_d])
 %% power law - size
-subplot(2,1,2)
-size_aval = @(a) sum(sum(a,2)>0);
-aval_sizes = cellfun(size_aval,aval);
-[n,edges] = histcounts(aval_sizes);
-% scatter(log10(edges(1:end-1)),log10(n)/length(aval),'filled')
-plot(log10(edges(1:end-1)),log10(n)/length(aval),'-*')
-% plot(edges(1:end-1),n,'-*')
-prettify; xlabel('avalanche size log_{10}'); ylabel('avalanches')
+sizes = avl_sizes_cell(Y);
+[alpha_s, xmin_s] = plfit(sizes);
+plplot(sizes, xmin_s, alpha_s);
+prettify
+%% gof
+[p_val_s, gof_s] = plpva(sizes, xmin_s);
+disp([p_val_s gof_s])
+prettify
 

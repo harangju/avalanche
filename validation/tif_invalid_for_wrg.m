@@ -61,6 +61,11 @@ end
 hold off
 prettify
 xlabel('T_{IF}'); ylabel('mean duration')
+legs = cell(1,length(uniq_counts));
+for i = 1 : length(uniq_counts)
+    legs{i} = num2str(uniq_counts(i));
+end
+legend(legs)
 %% fit
 f = polyfit(H_m,dur_mean',1);
 hold on

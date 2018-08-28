@@ -17,11 +17,13 @@ degree = ceil(p.frac_conn * degree_max);
 % network connectivity
 A = network_connect(p.graph_type, p.N, p.frac_conn, num_edges,...
     degree, p.p_rewire);
-% A = network_weigh(A, p.weighting, p.weighting_params, p.exp_branching,...
-%     degree);
+A = network_weigh(A, p.weighting, p.weighting_params);
 % A = weights_bound(A, p.weight_min, p.weight_max);
 if ~p.allow_autapses
     A = A .* ~diag(ones(p.N,1));
+end
+if p.critical_branching
+    A = scale_weights_to_criticality(A);
 end
 % input output connectivity
 idx_io = randperm(p.N, p.N);

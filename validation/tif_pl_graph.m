@@ -6,7 +6,8 @@ p.N = 100;
 p.N_in = p.N;
 p.frac_conn = 0.1;
 p.graph_type = 'weightedrandom';
-p.weighting = ;
+p.weighting = 'powerlaw';
+p.weighting_params = 3;
 [A, B, C] = network_create(p);
 %% 
 dur = 1e3; iter = 1e4;

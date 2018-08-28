@@ -18,7 +18,7 @@ else
     
 end
 
-if type == 'none'
+if strcmp(type, 'none')
     return
 end
 

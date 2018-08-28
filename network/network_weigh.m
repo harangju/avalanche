@@ -22,7 +22,6 @@ weights = A(:);
 [~,idx_sort] = sort(weights(weights>0));
 
 new_weights = 0;
-
 switch type
     case 'uniform'
         weight = params(1);
@@ -42,6 +41,7 @@ switch type
     case 'powerlaw'
         alpha = params(1);
         new_weights = randht(length(idx_sort), 'powerlaw', alpha);
+        % function from Clauset's powerlaws package
 %     case 'SC' % streamline counts
 %         warning('create_network(): streamline counts not implemented')
 %     case 'FA' % fractional anistropy

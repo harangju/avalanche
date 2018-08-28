@@ -9,11 +9,12 @@ p = default_network_parameters;
 p.N = 100;
 p.graph_type = 'RL';
 A = network_create(p);
-%% graph 3, WRG
+%% graph 3, WRG, gaussian
 p = default_network_parameters;
 p.N = 100;
-p.weighting = 'G';
-% how do you weigh edges and maintain critical branching?
+p.weighting = 'gaussian';
+p.critical_branching = false;
+A = network_create(p);
 
 %% view graph
 figure(1)
@@ -21,6 +22,8 @@ imagesc(A); prettify; colorbar
 figure(2)
 histogram(A(A>0),30); prettify
 xlabel('weights'); ylabel('# edges')
+figure(3)
+histogram()
 
 %% network verification
 disp(['Fractional connectivity: ' ...

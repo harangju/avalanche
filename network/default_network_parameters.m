@@ -13,8 +13,10 @@ param.frac_conn = 0.1; % fractional connectivity
 param.weight_max = 20;
 param.weight_min = 0;
 param.allow_autapses = false;
-param.graph_type = 'WRG'; % see wu-yan-2018-code > functions > graph generation
-param.weighting = 'G'; % see wu-yan-2018-code > functions > edge weighting
+% see wu-yan-2018-code > functions > graph generation
+param.graph_type = 'weightedrandom';
+% see wu-yan-2018-code > functions > edge weighting
+param.weighting = 'gaussian';
 param.weighting_params = [0.5, 0.12]; % parameters for weighting scheme
 param.p_rewire = 1e-2; % Pr(rewiring) in Watts-Strogatz network
 param.critical_branching = true;

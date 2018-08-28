@@ -16,8 +16,8 @@ param.allow_autapses = false;
 % see wu-yan-2018-code > functions > graph generation
 param.graph_type = 'weightedrandom';
 % see wu-yan-2018-code > functions > edge weighting
-param.weighting = 'gaussian';
-param.weighting_params = [0.5, 0.12]; % parameters for weighting scheme
+param.weighting = 'none';
+param.weighting_params = [0.5 0.12]; % parameters for weighting scheme
 param.p_rewire = 1e-2; % Pr(rewiring) in Watts-Strogatz network
 param.critical_branching = true;
 

@@ -1,10 +1,12 @@
 
+
 %% network
 p = default_network_parameters;
 p.N = 100;
 p.N_in = p.N;
-p.frac_conn = 0.3;
+p.frac_conn = 0.1;
 p.graph_type = 'weightedrandom';
+p.weighting = ;
 [A, B, C] = network_create(p);
 %% 
 dur = 1e3; iter = 1e4;

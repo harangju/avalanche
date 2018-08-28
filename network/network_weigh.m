@@ -18,6 +18,10 @@ else
     
 end
 
+if type == 'none'
+    return
+end
+
 weights = A(:);
 [~,idx_sort] = sort(weights(weights>0));
 

@@ -5,14 +5,14 @@ p = default_network_parameters;
 p.N = 100;
 p.N_in = p.N;
 p.frac_conn = 0.1;
-p.graph_type = 'weightedrandom';
+p.graph_type = 'randomgeometric';
 p.weighting = 'bimodalgaussian';
-p.weighting_params = [0.1 0.9 0.99 0.01 0.01];
+p.weighting_params = [0.1 0.9 0.9 0.1 0.01];
 [A, B, C] = network_create(p);
 %% 
 imagesc(A); prettify; colorbar
 %% 
-dur = 1e3; iter = 1e4;
+dur = 1e3; iter = 3e4;
 %% generate patterns
 pats = cell(1,p.N);
 for i = 1 : p.N
@@ -61,8 +61,30 @@ scatter(fir,dur_mean,'.')
 hold off
 prettify
 
-%% calculate
-alphas = 
+%% calculate alphas
+alphas = zeros(1,p.N);
+xmins = zeros(1,p.N);
+for i = 1 : p.N
+    [alphas(i), xmins(i)] = plfit(duration(pat==i));
+end
+clear i
+
+%% show alphas
+for i = 1 : p.N
+    plplot(duration(pat==i), xmins(i), alphas(i));
+    prettify; axis([1 1e3 1e-3 1])
+    title(i)
+    pause
+end
+clear i
+
+%% alphas vs. measures
+clf; hold on
+scatter(H_m,alphas,'.')
+scatter(mc,alphas,'.')
+scatter(fir,alphas,'.')
+hold off
+prettify
 
 %% plot individual durations
 scatter(H_m,dur_mean,'.k')

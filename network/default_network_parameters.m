@@ -22,6 +22,7 @@ p.p_rewire = 1e-2; % Pr(rewiring) in Watts-Strogatz network
 p.critical_branching = true;
 p.add_noise = true;
 p.noise_ampl = 1e-7;
+p.weigh_by_neuron = false;
 
 end
 

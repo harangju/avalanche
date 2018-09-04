@@ -7,3 +7,6 @@ addpath(genpath('te_matlab_0.5'))
 % https://code.google.com/archive/p/transfer-entropy-toolbox/downloads
 addpath('linspecer')
 addpath('powerlaws_full_v0.0.10-2012-01-17')
+% http://tuvalu.santafe.edu/~aaronc/powerlaws/powerlaws_full_v0.0.10-2012-01-17.zip
+addpath('dijkstra')
+% https://www.mathworks.com/matlabcentral/fileexchange/36140-dijkstra-algorithm

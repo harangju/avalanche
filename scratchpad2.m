@@ -6,18 +6,18 @@ p.N = 100;
 p.N_in = p.N;
 p.graph_type = 'weightedrandom';
 p.frac_conn = 0.1;
-p.p_rewire = 0.3;
 p.weighting = 'bimodalgaussian';
-p.weighting_params = [0.1 0.9 0.99 0.01 0.01];
-p.critical_branching = true;
-p.add_noise = false;
+p.weighting_params = [0.1 0.9 0.9 0.1 0.05 0.05];
+p.critical_branching = false;
+p.add_noise = true;
 p.allow_autapses = false;
+p.weigh_by_neuron = true;
 [A, B] = network_create(p);
 %% 
 figure(1)
 imagesc(A); prettify; colorbar
 %% 
-dur = 1e3; iter = 4e4;
+dur = 1e3; iter = 1e4;
 %% generate patterns, 1
 pats = cell(1,p.N);
 for i = 1 : p.N

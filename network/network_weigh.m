@@ -1,4 +1,4 @@
-function A = network_weigh(A, type, params)
+function A = network_weigh(A, type, params, weigh_by_neuron)
 %network_weigh Returns a weighted network
 %   called by network_create
 %
@@ -11,56 +11,25 @@ function A = network_weigh(A, type, params)
 %
 %   See also network_create, network_connect
 
-by_neuron = true;
-
-if by_neuron
-    
-else
-    
-end
-
 if strcmp(type, 'none')
     return
 end
 
-weights = A(:);
-[~,idx_sort] = sort(weights(weights>0));
-
-new_weights = 0;
-switch type
-    case 'uniform'
-        weight = params(1);
-        new_weights = weight * ones(size(idx_sort));
-    case 'gaussian'
-        mu = params(1);
-        sigma = params(2);
-        new_weights = normrnd(mu, sigma, size(idx_sort));
-        new_weights = sort(new_weights);
-    case 'bimodalgaussian'
-        mu1 = params(1);
-        mu2 = params(2);
-        frac1 = params(3);
-        frac2 = params(4);
-        sigma = params(5);
-        new_weights = [normrnd(mu1, sigma, ...
-            [ceil(frac1 * length(idx_sort)) 1]); ...
-            normrnd(mu2, sigma, ...
-            [floor(frac2 * length(idx_sort)) 1])];
-        new_weights = sort(new_weights);
-    case 'powerlaw'
-        alpha = params(1);
-        new_weights = randht(length(idx_sort), 'powerlaw', alpha);
-        % function from Clauset's powerlaws package
-%     case 'SC' % streamline counts
-%         warning('create_network(): streamline counts not implemented')
-%     case 'FA' % fractional anistropy
-%         warning('create_network(): fractional anistropy not implemented')
-    otherwise
-        warning('create_network() undefined weighting')
+if weigh_by_neuron
+    N = size(A,1);
+    for n = 1 : N
+        weights = A(n,:);
+        [~,idx_sort] = sort(weights(weights>0));
+        new_weights = distribution(type, length(idx_sort), params);
+        idx_pos = find(weights);
+        A(n,idx_pos(idx_sort)) = new_weights;
+    end
+else
+    weights = A(:);
+    [~,idx_sort] = sort(weights(weights>0));
+    new_weights = distribution(type, length(idx_sort), params);
+    idx_pos = find(weights);
+    A(idx_pos(idx_sort)) = new_weights;
 end
 
-idx_pos = find(weights);
-A(idx_pos(idx_sort)) = new_weights;
-
 end
-

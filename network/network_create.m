@@ -18,7 +18,7 @@ A = network_weigh(A, p.weighting, p.weighting_params, p.weigh_by_neuron);
 if p.add_noise
     A(A>0) = A(A>0) + 2*p.noise_ampl*rand(size(A(A>0))) - p.noise_ampl;
 end
-% A = weights_bound(A, p.weight_min, p.weight_max);
+A = weights_bound(A, p.weight_min, p.weight_max);
 if ~p.allow_autapses
     A = A .* ~diag(ones(p.N,1));
 end

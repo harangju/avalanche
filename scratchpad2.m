@@ -7,9 +7,9 @@ p.N_in = p.N;
 p.graph_type = 'weightedrandom';
 p.frac_conn = 0.1;
 p.weighting = 'bimodalgaussian';
-p.weighting_params = [0.1 0.9 0.9 0.1 0.05 0.05];
-p.critical_branching = false;
-p.add_noise = true;
+p.weighting_params = [0.03 0.8 0.9 0.1 0.05 0.01];
+p.critical_branching = true;
+p.add_noise = false;
 p.allow_autapses = false;
 p.weigh_by_neuron = true;
 [A, B] = network_create(p);
@@ -85,18 +85,30 @@ hold off
 %% spike count per pattern
 spike_counts = sum(cell2mat(pats),1);
 
-%%
-alphas = zeros(1,length(pats));
-for i = 1 : length(pats)
-%     [x,y] = hist_log10(duration(pat==i),30);
-%     scatter(x,y,100,'.')
-    [alphas(i), xmin] = plfit(duration(pat==i));
-    plplot(duration(pat==i),xmin,alphas(i));
-    prettify; %axis([0 3 0 4.3])
-    title(['alpha: ' num2str(alphas(i))])% '; xmin: ' num2str(xmin)])
-    pause
-end; clear i x y
+%% calculate alphas
+alphas = zeros(1,p.N);
+xmins = zeros(1,p.N);
+for i = 1 : p.N
+    [alphas(i), xmins(i)] = plfit(duration(pat==i));
+end
+clear i
 
+%% show alphas
+for i = 1 : p.N
+    plplot(duration(pat==i), xmins(i), alphas(i));
+    prettify; axis([1 1e3 1e-3 1])
+    title(i)
+    pause
+end
+clear i
+
+%% alphas vs. measures
+clf; hold on
+scatter(H_m,alphas,'.')
+scatter(mc,alphas,'.')
+scatter(fir,alphas,'.')
+hold off
+prettify
 
 
 

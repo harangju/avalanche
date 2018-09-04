@@ -6,25 +6,20 @@ p.N = 100;
 p.N_in = p.N;
 p.frac_conn = 0.1;
 p.graph_type = 'weightedrandom';
-p.weighting = 'powerlaw';
-p.weighting_params = 4;
+p.weighting = 'bimodalgaussian';
+p.weighting_params = [0.1 0.9 0.99 0.01 0.01];
 [A, B, C] = network_create(p);
 %% 
+imagesc(A); prettify; colorbar
+%% 
 dur = 1e3; iter = 1e4;
-%% generate patterns, 1
+%% generate patterns
 pats = cell(1,p.N);
 for i = 1 : p.N
     x = zeros(p.N,1);
     x(i) = 1;
     pats{i} = x;
 end; clear i x
-%% generate patterns, 2
-input_activity = 0.1;
-pat_num = 100;
-pats = cell(1,pat_num);
-for i = 1 : pat_num
-    pats{i} = double(rand(p.N,1) < input_activity);
-end; clear i
 %% simulation
 probs = ones(1,length(pats)) / length(pats);
 tic
@@ -48,6 +43,27 @@ for i = 1 : length(pats)
 end; clear i
 H_m = mean(H.*(1:T),2);
 H_m(isnan(H_m)) = 0;
+%% histogram - predictor
+histogram(H_m)
+%% modal controllability
+mc = control_modal(A);
+histogram(mc,30)
+prettify
+%% finite impulse response
+fir = finite_impulse_responses(A,100);
+histogram(fir,30)
+prettify
+%% means
+clf; hold on
+scatter(H_m,dur_mean,'.')
+scatter(mc,dur_mean,'.')
+scatter(fir,dur_mean,'.')
+hold off
+prettify
+
+%% calculate
+alphas = 
+
 %% plot individual durations
 scatter(H_m,dur_mean,'.k')
 prettify
@@ -77,7 +93,6 @@ hold off
 [r,pval] = corr(H_m,dur_mean')
 %% spike count per pattern
 spike_counts = sum(cell2mat(pats),1);
-
 
 
 

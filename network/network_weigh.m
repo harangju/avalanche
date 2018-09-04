@@ -5,7 +5,8 @@ function A = network_weigh(A, type, params)
 %   Example:
 %       A = network_weigh(A, 'uniform', 1);
 %       A = network_weigh(A, 'gaussian', [0.5 0.15]);
-%       A = network_weigh(A, 'bimodalgaussian', [0.1 0.9 0.1]);
+%       A = network_weigh(A, 'bimodalgaussian', ...
+%           [0.1 0.9 0.9 0.1 0.1]);
 %       A = network_weigh(A, 'powerlaw', 3);
 %
 %   See also network_create, network_connect
@@ -38,9 +39,13 @@ switch type
     case 'bimodalgaussian'
         mu1 = params(1);
         mu2 = params(2);
-        sigma = params(3);
-        new_weights = [normrnd(mu1, sigma, [length(idx_sort)/2 1]) ...
-            normrnd(mu2, sigma, [length(idx_sort)/2 1])];
+        frac1 = params(3);
+        frac2 = params(4);
+        sigma = params(5);
+        new_weights = [normrnd(mu1, sigma, ...
+            [ceil(frac1 * length(idx_sort)) 1]); ...
+            normrnd(mu2, sigma, ...
+            [floor(frac2 * length(idx_sort)) 1])];
         new_weights = sort(new_weights);
     case 'powerlaw'
         alpha = params(1);
@@ -51,7 +56,7 @@ switch type
 %     case 'FA' % fractional anistropy
 %         warning('create_network(): fractional anistropy not implemented')
     otherwise
-        warning('create_network(): undefined weighting')
+        warning('create_network() undefined weighting')
 end
 
 idx_pos = find(weights);

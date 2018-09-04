@@ -7,17 +7,17 @@ function [A, B, C] = network_create(p)
 %   B: input connectivity/weight vector, [N X 1]
 %   C: output connectivity/weight vector, [N X 1]
 
-% max values
 num_edges_max = p.N * (p.N - 1);
 degree_max = num_edges_max / p.N;
-% network values
 num_edges = ceil(p.frac_conn * num_edges_max);
 % degree = 2*ceil(p.frac_conn * degree_max);
 degree = ceil(p.frac_conn * degree_max);
-% network connectivity
 A = network_connect(p.graph_type, p.N, p.frac_conn, num_edges,...
     degree, p.p_rewire);
 A = network_weigh(A, p.weighting, p.weighting_params);
+if p.add_noise
+    A(A>0) = A(A>0) + 2*p.noise_ampl*rand(size(A(A>0))) - p.noise_ampl;
+end
 % A = weights_bound(A, p.weight_min, p.weight_max);
 if ~p.allow_autapses
     A = A .* ~diag(ones(p.N,1));

@@ -4,8 +4,7 @@ p = default_network_parameters;
 p.N = 100;
 p.N_in = p.N;
 p.frac_conn = 0.3;
-p.graph_type = 'WRG';
-p.exp_branching = 1;
+p.graph_type = 'weightedrandom';
 [A, B, C] = network_create(p);
 A = scale_weights_to_criticality(A);
 %% view network

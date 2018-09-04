@@ -4,13 +4,20 @@
 p = default_network_parameters;
 p.N = 100;
 p.N_in = p.N;
-p.frac_conn = 0.1;
 p.graph_type = 'weightedrandom';
-p.weighting = 'powerlaw';
-p.weighting_params = 4;
-[A, B, C] = network_create(p);
+p.frac_conn = 0.1;
+p.p_rewire = 0.3;
+p.weighting = 'bimodalgaussian';
+p.weighting_params = [0.1 0.9 0.99 0.01 0.01];
+p.critical_branching = true;
+p.add_noise = false;
+p.allow_autapses = false;
+[A, B] = network_create(p);
 %% 
-dur = 1e3; iter = 1e4;
+figure(1)
+imagesc(A); prettify; colorbar
+%% 
+dur = 1e3; iter = 4e4;
 %% generate patterns, 1
 pats = cell(1,p.N);
 for i = 1 : p.N
@@ -19,12 +26,12 @@ for i = 1 : p.N
     pats{i} = x;
 end; clear i x
 %% generate patterns, 2
-input_activity = 0.1;
-pat_num = 100;
-pats = cell(1,pat_num);
-for i = 1 : pat_num
-    pats{i} = double(rand(p.N,1) < input_activity);
-end; clear i
+% input_activity = 0.1;
+% pat_num = 100;
+% pats = cell(1,pat_num);
+% for i = 1 : pat_num
+%     pats{i} = double(rand(p.N,1) < input_activity);
+% end; clear i
 %% simulation
 probs = ones(1,length(pats)) / length(pats);
 tic
@@ -77,6 +84,18 @@ hold off
 [r,pval] = corr(H_m,dur_mean')
 %% spike count per pattern
 spike_counts = sum(cell2mat(pats),1);
+
+%%
+alphas = zeros(1,length(pats));
+for i = 1 : length(pats)
+%     [x,y] = hist_log10(duration(pat==i),30);
+%     scatter(x,y,100,'.')
+    [alphas(i), xmin] = plfit(duration(pat==i));
+    plplot(duration(pat==i),xmin,alphas(i));
+    prettify; %axis([0 3 0 4.3])
+    title(['alpha: ' num2str(alphas(i))])% '; xmin: ' num2str(xmin)])
+    pause
+end; clear i x y
 
 
 

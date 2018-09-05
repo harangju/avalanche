@@ -9,4 +9,4 @@ addpath('linspecer')
 addpath('powerlaws_full_v0.0.10-2012-01-17')
 % http://tuvalu.santafe.edu/~aaronc/powerlaws/powerlaws_full_v0.0.10-2012-01-17.zip
 addpath('dijkstra')
-% https://www.mathworks.com/matlabcentral/fileexchange/36140-dijkstra-algorithm
+% https://www.mathworks.com/matlabcentral/fileexchange/20025-dijkstra-s-minimum-cost-path-algorithm

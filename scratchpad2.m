@@ -102,11 +102,22 @@ for i = 1 : p.N
 end
 clear i
 
+%% modal controllability
+mc = control_modal(A);
+histogram(mc,30)
+prettify
+%% finite impulse response
+fir = finite_impulse_responses(A,100);
+histogram(fir,30)
+prettify
+
+
 %% alphas vs. measures
 clf; hold on
 scatter(H_m,alphas,'.')
 scatter(mc,alphas,'.')
 scatter(fir,alphas,'.')
+scatter(prob_tot,alphas,'.')
 hold off
 prettify
 

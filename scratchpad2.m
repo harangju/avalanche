@@ -4,8 +4,9 @@
 p = default_network_parameters;
 p.N = 100;
 p.N_in = p.N;
-p.graph_type = 'weightedrandom';
-p.frac_conn = 0.05;
+p.graph_type = 'wattsstrogatz';
+p.frac_conn = 0.1;
+p.p_rewire = 0.1;
 p.weighting = 'bimodalgaussian';
 p.weighting_params = [0.03 0.8 0.9 0.1 0.05 0.01];
 p.critical_branching = true;
@@ -89,16 +90,19 @@ spike_counts = sum(cell2mat(pats),1);
 alphas = zeros(1,p.N);
 xmins = zeros(1,p.N);
 for i = 1 : p.N
+%     [alphas(i), xmins(i)] = plfit(duration(pat==i),'xmin',1);
     [alphas(i), xmins(i)] = plfit(duration(pat==i));
 end
 clear i
 
-%% show alphas
+%% show alphas 
 for i = 1 : p.N
     plplot(duration(pat==i), xmins(i), alphas(i));
     prettify; axis([1 1e3 1e-3 1])
-    title(i)
-    pause
+    name = ['neuron ' num2str(i) ', alpha = ' num2str(alphas(i))];
+    title(name)
+    saveas(gcf,[name '.png'])
+%     pause
 end
 clear i
 
@@ -118,8 +122,29 @@ scatter(H_m,alphas,'.')
 scatter(mc,alphas,'.')
 scatter(fir,alphas,'.')
 scatter(prob_tot,alphas,'.')
+legend({'T_{IF}','modal','finite impulse','strongest path'})
+xlabel('metric values');ylabel('\alpha')
 hold off
 prettify
+
+%%
+figure(1)
+scatter(mc,alphas,'.'); prettify
+xlabel('modal controllability'); ylabel('\alpha')
+figure(2)
+scatter(fir,alphas,'.'); prettify
+xlabel('finite impulse response'); ylabel('\alpha')
+% corr(fir,alphas')
+figure(3)
+scatter(H_m,alphas,'.'); prettify
+xlabel('T_{IF}'); ylabel('\alpha')
+figure(4)
+scatter(prob_tot,alphas,'.'); prettify
+xlabel('path strength (AND prob)'); ylabel('\alpha')
+
+
+
+
 
 
 

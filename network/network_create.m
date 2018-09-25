@@ -14,6 +14,7 @@ num_edges = ceil(p.frac_conn * num_edges_max);
 degree = ceil(p.frac_conn * degree_max);
 A = network_connect(p.graph_type, p.N, p.frac_conn, num_edges,...
     degree, p.p_rewire);
+A(A>0) = A(A>0) + 2*p.noise_ampl*rand(size(A(A>0))) - p.noise_ampl;
 A = network_weigh(A, p.weighting, p.weighting_params, p.weigh_by_neuron);
 if p.add_noise
     A(A>0) = A(A>0) + 2*p.noise_ampl*rand(size(A(A>0))) - p.noise_ampl;

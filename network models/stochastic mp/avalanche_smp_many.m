@@ -1,4 +1,4 @@
-function [X, order] = avalanche_mp_many(x0s,probs,A,T,K)
+function [X, order] = avalanche_smp_many(x0s,probs,A,T,K)
 %
 %
 %   x0s:

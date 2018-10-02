@@ -1,4 +1,4 @@
-function xn = mp_stochastic(x,A) %,B,u)
+function xn = stochastic_mcculloch_pitts(x,A)
 %
 %   A: a NxN weight matrix, row i -> column j
 %   x: a Nx1 column vector

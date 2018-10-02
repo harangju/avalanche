@@ -12,8 +12,10 @@ degree_max = num_edges_max / p.N;
 num_edges = ceil(p.frac_conn * num_edges_max);
 % degree = 2*ceil(p.frac_conn * degree_max);
 degree = ceil(p.frac_conn * degree_max);
+% wiring
 A = network_connect(p.graph_type, p.N, p.frac_conn, num_edges,...
     degree, p.p_rewire);
+% weighting
 A(A>0) = A(A>0) + 2*p.noise_ampl*rand(size(A(A>0))) - p.noise_ampl;
 A = network_weigh(A, p.weighting, p.weighting_params, p.weigh_by_neuron);
 if p.add_noise
@@ -24,12 +26,21 @@ if ~p.allow_autapses
     A = A .* ~diag(ones(p.N,1));
 end
 if p.critical_branching
-    A = scale_weights_to_criticality(A);
+    b = branching(A);
+    b(b==0) = 1;
+    A = A ./ b;
 end
-% input output connectivity
+if p.critical_convergence
+    c = convergence(A);
+    c(c==0) = 1;
+    A = A ./ c;
+end
+% input & output connectivity
 idx_io = randperm(p.N, p.N);
 idx_i = idx_io(1:p.N_in);
 idx_o = idx_io(end+1-p.N_out:end);
 B = zeros(p.N, 1); B(idx_i) = 1;
 C = zeros(p.N, 1); C(idx_o) = 1;
+% display statistics
+
 end

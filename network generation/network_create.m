@@ -31,7 +31,7 @@ if p.critical_branching
     A = A ./ b;
 end
 if p.critical_convergence
-    c = convergence(A);
+    c = convergence(A)';
     c(c==0) = 1;
     A = A ./ c;
 end

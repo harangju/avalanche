@@ -5,7 +5,6 @@ trials = 1e4;
 Ys = cell(1,length(ns));
 orders = cell(1,length(ns));
 Xs = cell(1,length(ns));
-nodes_tr = 50;
 for i = 1 : length(ns)
     n = ns(i);
     disp(n)
@@ -19,8 +18,8 @@ for i = 1 : length(ns)
     [A, B] = network_create(p);
     [pats, probs] = pings_single(p.N);
     [Ys{i},orders{i}] = avalanche_smp_many(pats,probs,A,dur,trials);
-    Xs{i} = avalanche_linear(A,B,pats,dur);
-end; clear n
+    Xs{i} = avalanche_linear_many(inputs,A,dur);
+end
 %%
 df = cell(1,length(ns));
 for i = 1 : length(ns)

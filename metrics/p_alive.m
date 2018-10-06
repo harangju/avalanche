@@ -14,10 +14,7 @@ function pa = p_alive(x0,A,T)
 %       pa = p_alive([1 0]',[.5 .5; .5 .5],10);
 
 xt = avalanche_linear(A,ones(size(A,1),1),x0,T);
-pa = zeros(1,T);
-for t = 1 : T
-    pa(t) = prod(1-xt(:,t));
-end
+pa = 1 - prod(1-xt,1);
 
 end
 

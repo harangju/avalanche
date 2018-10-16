@@ -1,4 +1,4 @@
-function X_t = avalanche_linear(A, B, u_t, max_duration)
+function X_t = avl_linear(A, B, u_t, max_duration)
 %avalanche_average_analytical Models propagation of spikes as a linear
 %system
 %   

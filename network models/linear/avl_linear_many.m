@@ -1,4 +1,4 @@
-function X = avalanche_linear_many(x0s,A,dur)
+function X = avl_linear_many(x0s,A,dur)
 %UNTITLED Summary of this function goes herea
 %   Detailed explanation goes here
 

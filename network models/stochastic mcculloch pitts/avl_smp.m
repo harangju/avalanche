@@ -1,4 +1,4 @@
-function X = avalanche_smp(x0,A,T)
+function X = avl_smp(x0,A,T)
 %avalanche_mp Avalanche generation via stochastic McCulloch-Pitts model
 %   
 %   Parameters:

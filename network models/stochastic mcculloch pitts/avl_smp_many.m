@@ -15,7 +15,7 @@ for k = 1 : K
     pat = sum(int8(prob_cumsum < rand)) + 1;
     order(k) = pat;
     x0 = x0s{pat};
-    X{k} = avalanche_smp(x0,A,T);
+    X{k} = avl_smp(x0,A,T);
 end
 
 end

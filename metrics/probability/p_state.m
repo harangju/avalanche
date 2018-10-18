@@ -13,7 +13,7 @@ Ns = size(S,2);
 idx = state_index(si,S);
 p = zeros(Ns,1);
 for i = 1 : length(idx)
-    p(i) = p(i) + 1;
+    p(idx(i)) = p(idx(i)) + 1;
 end
 p = p / length(idx);
 

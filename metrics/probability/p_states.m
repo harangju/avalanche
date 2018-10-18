@@ -12,7 +12,7 @@ function p1 = p_states(p0, T)
 
 Ns = size(T,1);
 p0s = repmat(p0, [1 Ns]);
-
+p1 = sum(T*p0s,1)';
 
 end
 

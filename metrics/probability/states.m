@@ -1,5 +1,5 @@
 function s = states(N)
-%states
+%states(N)
 %
 %   Parameters
 %       N: # parameters

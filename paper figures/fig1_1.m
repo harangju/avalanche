@@ -20,9 +20,9 @@ webweb(A,nodeNames)
 dur = 15;
 trials = 1e4;
 [pats, probs] = pings_single(p.N);
-[Y,order] = avalanche_smp_many(pats,probs,A,dur,trials);
+[Y,order] = avl_smp_many(pats,probs,A,dur,trials);
 %% 
-X = avalanche_linear_many(pats,A,dur);
+X = avl_linear_many(pats,A,dur);
 %%
 colormap(flipud(gray))
 %%

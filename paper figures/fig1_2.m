@@ -17,8 +17,8 @@ for i = 1 : length(ns)
     p.critical_convergence = true;
     [A, B] = network_create(p);
     [pats, probs] = pings_single(p.N);
-    [Ys{i},orders{i}] = avalanche_smp_many(pats,probs,A,dur,trials);
-    Xs{i} = avalanche_linear_many(pats,A,dur);
+    [Ys{i},orders{i}] = avl_smp_many(pats,probs,A,dur,trials);
+    Xs{i} = avl_linear_many(pats,A,dur);
 end; clear i n A B pats probs
 %%
 df = cell(1,length(ns));

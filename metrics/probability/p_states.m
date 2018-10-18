@@ -1,18 +1,22 @@
-function p1 = p_states(p0, T)
+function P = p_states(p1, T, tmax)
 %p_states
 %
 %   Parameters
-%       A: connectivity matrix, row-to-column, i-j
-%       states: column vectors of states
-%       p0: probability of being in initial states
-%       ptrans: transition probabilities
+%       p1: probability of being in initial states
+%       T: transition probabilities
+%       tmax: how many steps into the future
 %
 %   Returns
-%       p1: probability of being in states in the next time step
+%       P: probability of being in states at time t
 
 Ns = size(T,1);
-p0s = repmat(p0, [1 Ns]);
-p1 = sum(T*p0s,1)';
+P = zeros(Ns,tmax);
+P(:,1) = p1;
+
+for t = 2 : tmax
+    ps = repmat(P(:,t-1), [1 Ns]);
+    P(:,t) = sum(T .* ps, 1)';
+end
 
 end
 

@@ -12,7 +12,6 @@ function P = p_states(p1, T, tmax)
 Ns = size(T,1);
 P = zeros(Ns,tmax);
 P(:,1) = p1;
-
 for t = 2 : tmax
     ps = repmat(P(:,t-1), [1 Ns]);
     P(:,t) = sum(T .* ps, 1)';

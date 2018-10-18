@@ -1,4 +1,4 @@
-function p1 = p_states(A, states, p0, ptrans)
+function p1 = p_states(p0, T)
 %p_states
 %
 %   Parameters
@@ -10,6 +10,8 @@ function p1 = p_states(A, states, p0, ptrans)
 %   Returns
 %       p1: probability of being in states in the next time step
 
+Ns = size(T,1);
+p0s = repmat(p0, [1 Ns]);
 
 
 end

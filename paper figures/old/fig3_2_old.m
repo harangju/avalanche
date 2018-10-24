@@ -2,10 +2,16 @@
 %%
 N = 10;
 A0 = triu(ones(N)) - eye(N);
+% A0 = A0 ./ fliplr(1:N)';
 A0 = A0 .* 0.2;
 B = ones(N,1);
 %%
-pats = pings_single(N);
+pats = cell(1,N);
+for i = 1 : N
+    x = zeros(N,1);
+    x(i) = 1;
+    pats{i} = x;
+end; clear i x
 %% rewire probabilities
 ps = 0 : 0.1 : 1;
 trials = 10;

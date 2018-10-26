@@ -1,9 +1,7 @@
 
 %% load distributions
-% result_dir = 'avalanche/paper data/20180717_140743';
-% result_dir = 'avalanche/paper data/20180718_130604';
-% result_dir = 'avalanche/paper data/20180730_174425';
 result_dir = '~/Desktop/20180806_124849';
+% result_dir = '~/Desktop/20180808_135704';
 subdirs = dir(result_dir);
 
 durs = cell(1,length(subdirs)-2);
@@ -22,6 +20,18 @@ for d = 3 : length(subdirs)
     patses{d-2} = pats;
     durations = cellfun(@length,Y) - 1;
     durs{d-2} = durations;
+    % duration
+%     activity = squeeze(sum(Y,1))';
+%     durations = zeros(1,iter);
+%     for j = 1 : iter
+%         if sum(activity(j,:)) > 0
+%             durations(j) = find(activity(j,:)>0,1,'last');
+%         else
+%             durations(j) = 0;
+%         end
+%     end
+%     durs{d-2} = durations;
+%     durs{d-2} = cellfun(@length,Y) - 1;
     % variance
 %     v = zeros(size(Y,1), dur);
 %     for t = 1 : dur
@@ -57,7 +67,7 @@ x_int = zeros(1,length(xs));
 % pts = 10:30;
 for i = 1 : length(distr)
     if i == 1 || i == length(distr)
-        pts = 20:40;
+%         pts = 20:40;
         pts = 30:50;
     else
         pts = 10:30;
@@ -101,6 +111,34 @@ hold on
 f_dur = polyfit(distr,slopes,2);
 plot(distr,polyval(f_dur,distr),'Color',[3.1 18.8 42]./100)
 
+%% calculate - avalanche predictor
+
+pred = zeros(length(As),length(patses{1}));
+for i = 1 : length(As)
+    for p = 1 : length(patses{i})
+        H = avalanche_predictor(As{i},patses{i}{p},dur_max(i));
+        pred(i,p) = mean(H.*(1:dur_max(i)),2);
+    end
+end
+clear i p H
+
+%% plots - delta w vs pred
+yyaxis right
+scatter(distr,mean(pred,2)',20,[2 43.9 69]./100,'filled')
+prettify
+hold on
+f_pred = polyfit(distr,mean(pred,2)',2);
+plot(distr,polyval(f_pred,distr),'Color',[2 43.9 69]./100)
+disp([2 43.9 69]./100.*255)
+hold off
+
+
+
+
+
+
+%% ---- OLD ----
+
 %% calculate - slope of var
 slopes_var = zeros(1,length(xs));
 for i = 1 : length(vars)
@@ -132,3 +170,5 @@ hold on
 f_var = polyfit(distr,slopes_var,2);
 plot(distr,polyval(f_var,distr),'Color',[2 43.9 69]./100)
 disp([2 43.9 69]./100.*255)
+
+

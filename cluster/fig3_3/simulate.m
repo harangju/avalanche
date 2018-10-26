@@ -1,13 +1,6 @@
 
 %% stimulus
-pats = cell(1,N);
-for i = 1 : N
-    pats{i} = zeros(N,1);
-    pats{i}(i) = 1;
-end
-
-%% simulate
-probs = ones(1,length(pats)) / length(pats);
+[pats, probs] = pings_single(N);
 tic
-[Y,pat] = trigger_many_avalanches(A,B,pats,probs,dur,iter);
+[Y, order] = avl_smp_many(pats, probs, A, dur, iter);
 toc

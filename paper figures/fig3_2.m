@@ -2,7 +2,7 @@
 %%
 N = 10;
 A0 = triu(ones(N)) - eye(N);
-A0 = A0 .* 0.15;
+A0 = A0 .* 0.2;
 B = ones(N,1);
 %% rewire probabilities
 ps = 0 : 0.1 : 1;
@@ -47,24 +47,19 @@ end
 
 %% load cycle count from python
 
-%% compare slopes to cycle counts
-slopes = fits(:,:,1)';
-x = log10(cycle_count/sum(sum(A0>0)));
-y = slopes(:);
-y(isinf(x)) = 0;
-x(isinf(x)) = 0;
-scatter(x, y, 200, [3.1 18.8 42]./100, '.')
+%%
+mdur = cellfun(@mean,durations)';
+x = cycle_count/sum(sum(A0>0));
+y = mdur(:);
+scatter(x,y,50,[3.1 18.8 42]./100,'.')
 prettify
-
-%% log
-f = polyfit(x, y, 1);
-p = min(x) : 0.01 : max(x);
+f = polyfit(x,y,1);
+z = min(x) : 1e-2 : max(x);
 hold on
-plot(p,polyval(f,p),'r')
+plot(z, z*f(1)+f(2),'r')
+axis([-2 22 0 6])
 hold off
-
-
-
+c = corr(x,y);
 
 
 

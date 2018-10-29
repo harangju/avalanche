@@ -1,0 +1,25 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2014 The MathWorks, Inc.
+                   R2014b (8.4.0.150421) 64-bit (glnxa64)
+                             September 15, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+**********
+CfN admin: FYI, it appears matlab was started with the -singleCompThread option
+for single-threaded operation. This is not an error, just informational.
+**********
+[Warning: Name is nonexistent or not a directory:
+powerlaws_full_v0.0.10-2012-01-17] 
+[> In path at 109
+  In addpath at 86
+  In load_libs at 9] 
+[Warning: Name is nonexistent or not a directory: dijkstra] 
+[> In path at 109
+  In addpath at 86
+  In load_libs at 11] 
+Elapsed time is 4.072065 seconds.
+>> 

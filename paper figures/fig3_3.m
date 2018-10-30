@@ -1,7 +1,8 @@
 
 %% load distributions
-result_dir = '~/Desktop/20181026_153621'; % 4-cycle, seed = 2
-% result_dir = '~/Desktop/20181029_104029'; % 4-cycle, seed = 2
+% result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
+result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
+% result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed2/20181029_104029';
 subdirs = dir(result_dir);
 
 durs = cell(1,length(subdirs)-2);
@@ -38,16 +39,11 @@ clear bin_count
 slopes = zeros(1,length(xs));
 y_int = zeros(1,length(xs));
 x_int = zeros(1,length(xs));
+pts = cell(1,length(xs));
 % pts = 10:30;
 for i = 1 : length(distr)
-%     if i == 1 || i == length(distr)
-%         pts = 20:40;
-%         pts = 30:50;
-%     else
-%         pts = 10:30;
-%     end
-    pts = 30:50;
-    f = polyfit(xs{i}(pts), ys{i}(pts), 1);
+    pts{i} = floor(length(xs{i})/2) : length(xs{i})-1;
+    f = polyfit(xs{i}(pts{i}), ys{i}(pts{i}), 1);
     slopes(i) = f(1);
     y_int(i) = f(2);
     x_int(i) = -1 * y_int(i)/slopes(i);
@@ -68,8 +64,9 @@ clf; hold on
 for i = 1 : length(idx_distr)
     idx = idx_distr(i);
     scatter(xs{idx},ys{idx},36,'.','MarkerEdgeColor',colors(i,:))
-    plts(i) = plot(xs{idx},...
-        polyval([slopes(idx) y_int(idx)],xs{idx}),'Color',colors(i,:));
+    plts(i) = plot(xs{idx}(3:max(pts{idx})),...
+        polyval([slopes(idx) y_int(idx)], xs{idx}(3:max(pts{idx}))),...
+        'Color',colors(i,:));
     lgnd{i} = ['\Deltaw=' num2str(distr(idx))];
 end
 prettify

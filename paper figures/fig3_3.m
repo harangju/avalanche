@@ -1,7 +1,7 @@
 
 %% load distributions
-% result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
-result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
+result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
+% result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
 % result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed2/20181029_104029';
 subdirs = dir(result_dir);
 
@@ -73,7 +73,7 @@ prettify
 % axis([0 3.1 -5 0])
 legend(plts,lgnd,'Location','Northeast')
 clear idx_distr colors plts lgnd i idx
-
+min
 %% plots - delta w vs slopes
 clf
 scatter(distr,slopes,20,[3.1, 18.8, 42]./100,'filled')
@@ -83,13 +83,8 @@ hold on
 f_dur = polyfit(distr,slopes,2);
 plot(distr,polyval(f_dur,distr),'Color',[3.1 18.8 42]./100)
 
-%% calculate - slope of var
-slopes_var = zeros(1,length(xs));
-for i = 1 : length(vars)
-    f = polyfit(1:size(vars{i},2), mean(vars{i},1), 1);
-    slopes_var(i) = f(1);
-end
-clear i f
+%% calculate - 
+
 
 %% plots - example var
 clf; hold on

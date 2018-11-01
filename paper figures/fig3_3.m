@@ -88,30 +88,10 @@ eigvals = zeros(1,length(distr));
 for i = 1 : length(distr)
     eigvals(i) = eig_sum(As{i}');
 end; clear i
-figure(2)
+figure(2); clf; hold on
 scatter(eigvals,slopes,20,[2 43.9 69]./100,'filled')
-prettify
-
-%% plots - example var
-clf; hold on
-idx_var = 1 : 3 : length(xs)/2;
-colors = linspecer(length(idx_var));
-lgnd = cell(1,length(idx_var));
-for i = 1 : length(idx_var)
-    idx = idx_var(i);
-    plot(mean(vars{idx},1),'Color',colors(i,:))
-    lgnd{i} = ['\Deltaw=' num2str(distr(idx))];
-end
-clear i idx idx_var
-hold off
-prettify
-legend(lgnd,'Location','Northwest')
-
-%% plots - delta w vs slopes var
-scatter(distr, slopes_var, 20, [2 43.9 69]./100, 'filled')
-prettify
-axis([-.1 1.1 0 .3])
-hold on
-f_var = polyfit(distr,slopes_var,2);
-plot(distr,polyval(f_var,distr),'Color',[2 43.9 69]./100)
-disp([2 43.9 69]./100.*255)
+f = polyfit(eigvals',slopes',1);
+x = min(eigvals):0.01:max(eigvals);
+plot(x,polyval(f,x),'r');
+disp(corr(eigvals',slopes'))
+hold off; prettify

@@ -1,10 +1,9 @@
 
 %% load distributions
-% result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
+result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
 % result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
-result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed2/20181029_104029';
+% result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed2/20181029_104029';
 subdirs = dir(result_dir);
-
 durs = cell(1,length(subdirs)-2);
 dur_max = zeros(1,length(subdirs)-2);
 distr = zeros(1,length(subdirs)-2);
@@ -23,13 +22,16 @@ end
 
 clearvars -except durs dur_max distr vars As order
 
-%% calculate histogram counts
+%% calculate durations
+dur_mean = zeros(1,length(As));
+for i = 1 : length(As)
+    dur_mean(i) = mean(durs{i});
+end; clear i
 
+%% calculate histogram counts
 xs = cell(1,length(durs));
 ys = cell(1,length(durs));
-
 bin_count = 1e5;
-
 for i = 1 : length(xs)
     [xs{i}, ys{i}] = hist_log10(durs{i}, bin_count);
 end
@@ -42,7 +44,7 @@ x_int = zeros(1,length(xs));
 pts = cell(1,length(xs));
 % pts = 10:30;
 for i = 1 : length(distr)
-    pts{i} = floor(length(xs{i})/5) : length(xs{i})-1;
+    pts{i} = ceil(length(xs{i})/2) : length(xs{i})-1;
     f = polyfit(xs{i}(pts{i}), ys{i}(pts{i}), 1);
     slopes(i) = f(1);
     y_int(i) = f(2);
@@ -60,7 +62,7 @@ colors = [3.1, 18.8, 42;...
     81.6, 82, 90.2] ./ 100;
 plts = zeros(1,length(idx_distr));
 lgnd = cell(1,length(idx_distr));
-clf; hold on
+figure(1); clf; hold on
 for i = 1 : length(idx_distr)
     idx = idx_distr(i);
     scatter(xs{idx},ys{idx},36,'.','MarkerEdgeColor',colors(i,:))
@@ -75,23 +77,37 @@ legend(plts,lgnd,'Location','Northeast')
 clear idx_distr colors plts lgnd i idx
 
 %% plots - delta w vs slopes
-clf
-scatter(distr,slopes,20,[3.1, 18.8, 42]./100,'filled')
+figure(2); clf
+yyaxis left
+scatter(distr,slopes,10,[3.1, 18.8, 42]./100,'filled')
 prettify
-% axis([-.1 1.1 -3 0])
 hold on
 f_dur = polyfit(distr,slopes,2);
 plot(distr,polyval(f_dur,distr),'Color',[3.1 18.8 42]./100)
+axis([-.1 1.1 -6 0])
+% axis([-.1 1.1 -8 0])
 
 %% calculate eigenvalues
-eigvals = zeros(1,length(distr));
+ev_sum = zeros(1,length(distr));
 for i = 1 : length(distr)
-    eigvals(i) = eig_sum(As{i}');
+    ev_sum(i) = eig_sum(As{i}');
 end; clear i
-figure(2); clf; hold on
-scatter(eigvals,slopes,20,[2 43.9 69]./100,'filled')
-f = polyfit(eigvals',slopes',1);
-x = min(eigvals):0.01:max(eigvals);
-plot(x,polyval(f,x),'r');
-disp(corr(eigvals',slopes'))
+
+%%
+ax1 = gca;
+ax2 = axes('Position', ax1.Position,...
+    'box','off', ...
+    'XAxisLocation', 'top', ...
+    'YAxisLocation', 'right', ...
+    'Color', 'none', ...
+    'YTick', []);
+yyaxis right
+scatter(ev_sum,slopes,10,[2, 43.9, 69]./100,'filled')
+hold on
+f = polyfit(ev_sum',slopes',1);
+x = min(ev_sum):0.01:max(ev_sum);
+plot(x,polyval(f,x),'Color',[2, 43.9, 69]./100);
+disp(corr(ev_sum',slopes'))
+axis([.5 4.5 -6 0])
+% axis([.9 2.1 -8 0])
 hold off; prettify

@@ -1,7 +1,7 @@
 %% 2-3 dominant eigenvalue analysis
 iter = 100;
-dur = 1e4;
-trials = 1e4;
+dur = 100;
+trials = 1e5;
 N = 10;
 As = cell(1,iter);
 Ys = cell(1,iter);
@@ -28,7 +28,36 @@ for i = 1 : iter
     ev_sum(i) = eig_sum(As{i}');
 end
 
-%% durations
+%% mean durations
+durs = cell(1,iter);
+dm = zeros(1,iter);
+for i = 1 : iter
+    durs{i} = avl_durations_cell(Ys{i});
+    dm(i) = mean(durs{i});
+end; clear i
+
+%% dominant eigenvalue
+figure(1); clf; hold on
+scatter(ev_dom,dm,'.')
+f_dom = fit(ev_dom',dm',fittype('a*exp(b*x)+c'));
+plot(f_dom,ev_dom',dm')
+hold off; prettify
+c = corr(ev_dom',log10(dm'));
+disp(c)
+
+%% sum of eigenvalues
+figure(2); clf; hold on
+scatter(ev_sum,dm,'.')
+f_sum = fit(ev_sum',dm',fittype('a*exp(b*x)+c'));
+plot(f_sum,ev_sum',dm')
+hold off; prettify
+c = corr(ev_sum',log10(dm'));
+disp(c)
+
+
+
+
+%% durations - slopes
 durs = cell(1,length(As));
 xs = cell(1,length(As));
 ys = cell(1,length(As));
@@ -46,21 +75,8 @@ for i = 1 : length(As)
 end
 clear i f
 
-%% durations
-durs = cell(1,iter);
-dm = zeros(1,iter);
-for i = 1 : iter
-    durs{i} = avl_durations_cell(Ys{i});
-    dm(i) = mean(durs{i});
-end; clear i
-
 %% plot
 figure(2); clf; hold on
-% scatter(ev_dom,dm,'.')
-% scatter(ev_sum,dm,'.')
-% f = fit(eigvals',dm',fittype('a*exp(b*x)+c'));
-% f = polyfit(eigvals',dm',1);
-% plot(f,eigvals',dm')
 scatter(ev_dom,fits(:,1),'.')
 f = polyfit(ev_dom',fits(:,1),1);
 x = min(ev_dom) : 0.01 : max(ev_dom);
@@ -73,10 +89,3 @@ x = min(ev_sum) : 0.01 : max(ev_sum);
 plot(x,polyval(f_sum,x),'r')
 hold off; prettify
 disp(corr(ev_sum',fits(:,1)))
-
-%% linear regression
-lr = polyfit(eigvals',log10(dm'),1);
-c = corr(eigvals',log10(dm'));
-
-%% eigen projections
-

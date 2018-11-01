@@ -1,8 +1,8 @@
 
 %% load distributions
 % result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
-result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
-% result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed2/20181029_104029';
+% result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
+result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed2/20181029_104029';
 subdirs = dir(result_dir);
 
 durs = cell(1,length(subdirs)-2);
@@ -42,7 +42,7 @@ x_int = zeros(1,length(xs));
 pts = cell(1,length(xs));
 % pts = 10:30;
 for i = 1 : length(distr)
-    pts{i} = floor(length(xs{i})/2) : length(xs{i})-1;
+    pts{i} = floor(length(xs{i})/5) : length(xs{i})-1;
     f = polyfit(xs{i}(pts{i}), ys{i}(pts{i}), 1);
     slopes(i) = f(1);
     y_int(i) = f(2);
@@ -51,9 +51,9 @@ end
 clear i f
 
 %% plots - example distribution
-idx_distr = 1 : 11 : length(xs)/2+1;
-% idx_distr = 1 : 11 : length(xs)/2+1;
+% idx_distr = 1 : length(xs)/2;
 % colors = linspecer(length(idx_distr));
+idx_distr = 1 : 11 : length(xs)/2+1;
 colors = [3.1, 18.8, 42;...
     2, 43.9, 69;...
 %     45.5, 66.3, 81.2;...
@@ -73,7 +73,7 @@ prettify
 % axis([0 3.1 -5 0])
 legend(plts,lgnd,'Location','Northeast')
 clear idx_distr colors plts lgnd i idx
-min
+
 %% plots - delta w vs slopes
 clf
 scatter(distr,slopes,20,[3.1, 18.8, 42]./100,'filled')
@@ -83,12 +83,14 @@ hold on
 f_dur = polyfit(distr,slopes,2);
 plot(distr,polyval(f_dur,distr),'Color',[3.1 18.8 42]./100)
 
-%% calculate - 
-
-dom_eigvals = zeros(1,length(distr));
+%% calculate eigenvalues
+eigvals = zeros(1,length(distr));
 for i = 1 : length(distr)
-    dom_eigvals(i) = eig_dom(As{i}');
+    eigvals(i) = eig_sum(As{i}');
 end; clear i
+figure(2)
+scatter(eigvals,slopes,20,[2 43.9 69]./100,'filled')
+prettify
 
 %% plots - example var
 clf; hold on

@@ -1,7 +1,7 @@
 
 %% load distributions
-result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
-% result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
+% result_dir = '~/Developer/avalanche/paper figures/fig3_3_2cycle_seed1/20181029_105239';
+result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed1/20181026_153621';
 % result_dir = '~/Developer/avalanche/paper figures/fig3_3_4cycle_seed2/20181029_104029';
 subdirs = dir(result_dir);
 
@@ -85,6 +85,10 @@ plot(distr,polyval(f_dur,distr),'Color',[3.1 18.8 42]./100)
 
 %% calculate - 
 
+dom_eigvals = zeros(1,length(distr));
+for i = 1 : length(distr)
+    dom_eigvals(i) = eig_dom(As{i}');
+end; clear i
 
 %% plots - example var
 clf; hold on

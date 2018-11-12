@@ -12,27 +12,21 @@ A = diag([rand(1,94) rand(1,6)*(1-.9)+.9]);
 B = ones(N,1);
 
 %% 0.a random geometric
-N = 100;
+N = 10;
 p = default_network_parameters;
-p.num_nodes = N;
-p.num_nodes_input = N;
-p.num_nodes_output = N;
-p.frac_conn = 0.1;
-p.graph_type = 'RG';
-[A,B,C] = network_create(p);
-A = scale_weights_to_criticality(A);
-plot(graph_from_matrix(A))
+p.N = N; p.N_in = N; p.N_out = N;
+p.frac_conn = 0.2;
+p.graph_type = 'randomgeometric';
+A = network_create(p);
+% plot(graph_from_matrix(A))
 
 %% 0.a weigthed random / Erdos-Renyi
-N = 100;
+N = 10;
 p = default_network_parameters;
-p.num_nodes = N;
-p.num_nodes_input = N;
-p.num_nodes_output = N;
-p.frac_conn = 0.1;
-p.graph_type = 'WRG';
-[A,B,C] = network_create(p);
-A = scale_weights_to_criticality(A);
+p.N = N; p.N_in = N; p.N_out = N;
+p.frac_conn = 0.2;
+p.graph_type = 'weightedrandom';
+A = network_create(p);
 
 %% 0.b stimulus
 scale = 1;

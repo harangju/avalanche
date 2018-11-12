@@ -11,9 +11,9 @@ function [deigval, deigvec] = eig_dom(A)
 
 [v,d] = eig(A);
 d = diag(d);
-[deigval, idx] = max(d);
-if abs(min(d)) > deigval
-    deigval = min(d) * -1;
+[deigval, idx] = max(real(d));
+if abs(min(real(d))) > deigval
+    deigval = min(real(d)) * -1;
 end
 deigvec = v(:,idx);
 

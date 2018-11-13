@@ -10,6 +10,8 @@ T = size(Y,2);
 mi_pop = zeros(1,T);
 for i = 1 : T
     mi_pop(i) = mi(pat,code(:,i));
+%     code = pop_code(squeeze(Y(:,i,:)));
+%     mi_pop(i) = mi(pat,code);
 end
 
 end

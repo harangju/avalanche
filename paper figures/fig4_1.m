@@ -1,12 +1,12 @@
 
 %% network
 p = default_network_parameters;
-% p.weighting = 'bimodalgaussian';
-% p.weighting_params = [0.1 0.9 0.9 0.1 0.1];
+p.weighting = 'bimodalgaussian';
+p.weighting_params = [0.1 0.9 0.9 0.1 0.1];
 % p.weighting = 'uniform';
 % p.weighting_params = 1;
-p.weighting = 'gaussian';
-p.weighting_params = [0.5 0.1];
+% p.weighting = 'gaussian';
+% p.weighting_params = [0.5 0.1];
 p.N = 100;
 p.frac_conn = 0.2;
 A = network_create(p);
@@ -56,12 +56,11 @@ hold off; prettify; title('modal controllability'); axis([0 3 0 40]) %axis([.4 1
 figure(4); clf
 scatter(sumeig,ac,'.')
 prettify; xlabel('sum \lambda'); ylabel('fir')
-disp([corr(sumeig',dm') corr(ac,dm') corr(sumeig',ac)...
-    corr(mc,dm') corr(sumeig',mc)])
-[c,p] = corr(ac,dm')
-[c,p] = corr(sumeig',dm')
-[c,p] = corr(mc,dm')
-
+[c_ac,pval_ac] = corr(ac,dm');
+[c_se,pval_se] = corr(sumeig',dm');
+[c_mc,pval_mc] = corr(mc,dm');
+fprintf('\tAC\tMC\tSE\nCorr:\t%.4f\t%.4f\t%.4f\np-val:\t%.4f\t%.4f\t%.4f\n',...
+    c_ac,c_mc,c_se,pval_ac,pval_mc,pval_se);
 
 
 

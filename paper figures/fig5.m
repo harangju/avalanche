@@ -49,6 +49,13 @@ for i = 1 : length(pats)
     probs(i) = 0.5;
     [Ys{i}, orders(i,:)] = avl_smp_many(pats,probs,A,T,K);
 end; clear i probs; disp('done')
+%% durations
+dur = cell(1,length(pats));
+dm = zeros(1,length(pats));
+for i = 1 : length(pats)
+    dur{i} = avl_durations_cell(Ys{i});
+    dm(i) = mean(dur{i});
+end; clear i
 %% mutual information
 mi = zeros(length(pats),T);
 for i = 1 : length(pats)

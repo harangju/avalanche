@@ -9,7 +9,7 @@ T = size(Y,2);
 code = pop_code_by_step(Y);
 mi_pop = zeros(1,T);
 for t = 1 : T
-    mi_pop(i) = mi(pat,code(:,t));
+    mi_pop(t) = mi(pat,code(:,t));
 end
 
 end

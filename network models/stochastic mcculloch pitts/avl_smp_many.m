@@ -6,6 +6,10 @@ function [X, order] = avl_smp_many(x0s,probs,A,T,K)
 %   A: weight matrix, pre-post
 %   T: max duration
 %   K: number of trials
+%
+%   Returns
+%       X:
+%       order: 1-by-K matrix
 
 X = cell(1,K);
 prob_cumsum = cumsum(probs);

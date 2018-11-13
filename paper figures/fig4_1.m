@@ -59,7 +59,7 @@ prettify; xlabel('sum \lambda'); ylabel('fir')
 [c_ac,pval_ac] = corr(ac,dm');
 [c_se,pval_se] = corr(sumeig',dm');
 [c_mc,pval_mc] = corr(mc,dm');
-fprintf('\tAC\tMC\tSE\nCorr:\t%.4f\t%.4f\t%.4f\np-val:\t%.4f\t%.4f\t%.4f\n',...
+fprintf('\tAC\tMC\tSE\nCorr:\t%.4f\t%.4f\t%.4f\np-val:\t%.2g\t%.2g\t%.2g\n',...
     c_ac,c_mc,c_se,pval_ac,pval_mc,pval_se);
 
 

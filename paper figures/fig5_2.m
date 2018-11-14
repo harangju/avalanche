@@ -1,6 +1,6 @@
 
 %% sweep parameters
-rng(1)
+rng(1) 
 graph_types = {'weightedrandom','randomgeometric','wattsstrogatz',...
     'mod4comm'};
 iter = 30;
@@ -42,7 +42,7 @@ for i = 1 : length(graph_types)
         for k = 1 : length(pats{i,j})
             fprintf('.')
             probs = 0.5*ones(1,length(pats{i,j})) / (length(pats{i,j})-1);
-            probs(i) = 0.5;
+            probs(k) = 0.5;
             [Ys{i,j}{k}, orders{i,j}(k,:)] = avl_smp_many(pats{i,j},...
                 probs,As{i,j},T,K);
         end; fprintf('\n')
@@ -90,16 +90,17 @@ for i = 1 : length(graph_types)
     end
 end
 %% plot
+figure(1)
 for i = 1 : length(graph_types)
     for j = 1 : iter
-        clf; hold on
-        [~,order_dm] = sort(dm);
-        surf(t_range,dm(order_dm),mi(order_dm,t_range))
+        clf
+        [~,order_dm] = sort(dms{i,j});
+        surf(t_range,dms{i,j}(order_dm),mis{i,j}(order_dm,t_range))
         prettify; axis vis3d; view([45 15])
-        drawnow
+        drawnow; pause(0.1)
     end
 end
-figure(1)
+figure(2)
 boxplot(c_mis')
 prettify
 

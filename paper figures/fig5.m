@@ -4,8 +4,6 @@ rng(1)
 graph_types = {'weightedrandom','randomgeometric','wattsstrogatz',...
     'mod4comm'};
 iter = 30;
-% graph_types = {'weightedrandom','randomgeometric'};
-% iter = 2;
 %% simulation parameters
 T = 1e2; K = 1e3;
 stim_mag = 4;
@@ -89,19 +87,26 @@ for i = 1 : length(graph_types)
             squeeze(fit_mis{i,j}(:,1)));
     end
 end
-%% plot
-figure(1)
-for i = 1 : length(graph_types)
-    for j = 1 : iter
-        clf
-        [~,order_dm] = sort(dms{i,j});
-        surf(t_range,dms{i,j}(order_dm),mis{i,j}(order_dm,t_range))
-        prettify; axis vis3d; view([45 15])
-        drawnow; pause(0.1)
-    end
-end
-figure(2)
+%% plot summary
+figure(5)
 boxplot(c_mis')
+prettify; axis([.5 4.5 0 1])
+%% plot examples
+for i = 1 : length(graph_types)
+    j=1;
+    figure(i); clf
+    [~,order_dm] = sort(dms{i,j});
+    surf(t_range,dms{i,j}(order_dm),mis{i,j}(order_dm,t_range),...
+        'LineWidth',0.01)
+    prettify; axis vis3d; view([45 15])
+    title(graph_types{i})
+end
+%% plot example correlation
+figure(6); clf; hold on
+i=1;j=1;
+scatter(dms{i,j},fit_mis{i,j}(:,1),32,[3.1, 18.8, 42]./100,'.')
+x = min(dms{i,j}) : 1e-2 : max(dms{i,j});
+fit = polyfit(dms{i,j}, squeeze(fit_mis{i,j}(:,1)), 1);
+plot(x,polyval(fit,x),'r')
 prettify
-
 

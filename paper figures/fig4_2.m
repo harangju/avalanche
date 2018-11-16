@@ -1,4 +1,5 @@
 
+rng(1)
 iter = 30;
 % network
 p = default_network_parameters;
@@ -15,11 +16,13 @@ K = 1e3;
 As = cell(1,iter);
 Ys = cell(iter,length(pats));
 for i = 1 : iter
+    fprintf('iter: %d\n',i)
     As{i} = network_create(p);
+    disp(repmat('#',[1 length(pats)]))
     for j = 1 : length(pats)
-        disp([i j])
+        fprintf('.')
         Ys{i,j} = avl_smp_many({pats{j}},1,As{i},T,K);
-    end
+    end; fprintf('\n')
 end; clear i j
 
 %% durations
@@ -32,11 +35,13 @@ for i = 1 : iter
     end
 end; clear i j
 %% prediction
+% finite_time = 10;
+finite_time = 100;
 ac = zeros(length(pats),iter);
 mc = zeros(length(pats),iter);
 sumeig = zeros(length(pats),iter);
 for i = 1 : iter
-    ac(:,i) = finite_impulse_responses(As{i}',10);
+    ac(:,i) = finite_impulse_responses(As{i}',finite_time);
     mc(:,i) = control_modal(As{i}');
     for j = 1 : length(pats)
         [v,d] = eig(As{i}');

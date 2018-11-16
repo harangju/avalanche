@@ -9,7 +9,8 @@ T = 1e2; K = 1e3;
 stim_mag = 4;
 p = default_network_parameters;
 p.N = 100;
-p.frac_conn = 0.05;
+% p.frac_conn = 0.05;
+p.frac_conn = 0.2;
 p.weighting = 'bimodalgaussian';
 p.weighting_params = [0.1 0.9 0.9 0.1 0.1];
 %% simulation variables

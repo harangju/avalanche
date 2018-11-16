@@ -42,8 +42,8 @@ scatter(ev_dom,dm,'.')
 f_dom = fit(ev_dom',dm',fittype('a*exp(b*x)+c'));
 plot(f_dom,ev_dom',dm')
 hold off; prettify
-c = corr(ev_dom',log10(dm'));
-disp(c)
+[c_dom,pval_dom] = corr(ev_dom',log10(dm'));
+disp([c_dom pval_dom])
 
 %% sum of eigenvalues
 figure(2); clf; hold on
@@ -51,8 +51,8 @@ scatter(ev_sum,dm,'.')
 f_sum = fit(ev_sum',dm',fittype('a*exp(b*x)+c'));
 plot(f_sum,ev_sum',dm')
 hold off; prettify
-c = corr(ev_sum',log10(dm'));
-disp(c)
+[c_sum,pval_sum] = corr(ev_sum',log10(dm'));
+disp([c_sum pval_sum])
 
 
 

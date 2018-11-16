@@ -3,10 +3,10 @@ rng(1)
 iter = 30;
 % network
 p = default_network_parameters;
-% p.weighting = 'bimodalgaussian';
-% p.weighting_params = [0.1 0.9 0.9 0.1 0.1];
-p.weighting = 'uniform';
-p.weighting_params = 1;
+p.weighting = 'bimodalgaussian';
+p.weighting_params = [0.1 0.9 0.9 0.1 0.1];
+% p.weighting = 'uniform';
+% p.weighting_params = 1;
 p.N = 100;
 p.frac_conn = 0.2;
 pats = pings_single(p.N);
@@ -36,7 +36,7 @@ for i = 1 : iter
 end; clear i j
 %% prediction
 % finite_time = 10;
-finite_time = 100;
+finite_time = 1000;
 ac = zeros(length(pats),iter);
 mc = zeros(length(pats),iter);
 sumeig = zeros(length(pats),iter);

@@ -35,8 +35,7 @@ end; clear i
 sumeig = sum(abs((v\patsm) .* diag(d)));
 domeig = max(abs((v\patsm) .* diag(d)));
 %% controllability
-% finite_time = 10;
-finite_time = 5;
+finite_time = 10;
 ac = finite_impulse_responses(A',finite_time);
 mc = control_modal(A');
 %% plot
@@ -62,14 +61,15 @@ plot(x,polyval(f,x),'r')
 hold off; prettify; title('modal controllability');
 axis([0 3 0 40]) %axis([.4 1.6 0 40])
 figure(4); clf
-scatter(sumeig,ac,'.')
-prettify; xlabel('sum \lambda'); ylabel('fir')
+scatter(outdegree(A),dm,32,[3.1, 18.8, 42]./100,'.')
+prettify; xlabel('outdegree')
 [c_ac,pval_ac] = corr(ac,dm');
 [c_se,pval_se] = corr(sumeig',dm');
 [c_mc,pval_mc] = corr(mc,dm');
-fprintf(['\tAC\tMC\tSE\nCorr:\t%.4f\t%.4f\t%.4f\n'...
-    'p-val:\t%.2g\t%.2g\t%.2g\n'],...
-    c_ac,c_mc,c_se,pval_ac,pval_mc,pval_se);
+[c_od,pval_od] = corr(outdegree(A),dm');
+fprintf(['\tAC\tMC\tSE\tOD\nCorr:\t%.4f\t%.4f\t%.4f\t%.4f\n'...
+    'p-val:\t%.2g\t%.2g\t%.2g\t%.2g\n'],...
+    c_ac,c_mc,c_se,c_od,pval_ac,pval_mc,pval_se,pval_od);
 
 
 

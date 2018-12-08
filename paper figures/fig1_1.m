@@ -1,5 +1,6 @@
 
 %% generate wrg
+rng(2)
 p = default_network_parameters;
 p.N = 10; p.N_in = 10;
 p.frac_conn = 0.2;

@@ -111,3 +111,33 @@ fit = polyfit(dms{i,j}, squeeze(fit_mis{i,j}(:,1)), 1);
 plot(x,polyval(fit,x),'r')
 prettify
 
+%% correlate sum of eigenvalues with mean MI decay
+As_list = As';
+ev_sum = zeros(1, size(As,1)*size(As,2));
+for i = 1 : size(As,1)*size(As,2)
+    ev_sum(i) = eig_sum(As_list{i}');
+end; clear i
+%%
+fit_list = fit_mis';
+fits = fit_list(:);
+slopes = zeros(length(fits),1);
+for i = 1 : length(fits)
+    slopes(i) = mean(fits{i}(:,1));
+end; clear i
+c_ev_sum_fit_mis = corr(ev_sum', slopes);
+%%
+figure(7); clf; hold on
+colors = [3.1, 18.8, 42;...
+    2, 43.9, 69;...
+    45.5, 66.3, 81.2;...
+    81.6, 82, 90.2] ./ 100;
+for i = 1 : length(graph_types)
+    scatter(ev_sum(1+(i-1)*iter : i*iter),...
+        slopes(1+(i-1)*iter : i*iter),...
+        32,colors(i,:),'.')
+end; clear i
+legend(graph_types)
+f = polyfit(ev_sum,slopes',1);
+x = min(ev_sum) : 1e-3 : max(ev_sum);
+plot(x,polyval(f,x),'r')
+prettify; hold off

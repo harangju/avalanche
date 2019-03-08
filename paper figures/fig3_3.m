@@ -138,6 +138,7 @@ end; clear i
 figure(3); clf; hold on
 scatter(ev_sum,slopes,10,[3.1, 18.8, 42]./100,'filled')
 f = polyfit(ev_sum',slopes',1);
+[c_ev_slope, p_ev_slope] = corr(ev_sum',slopes');
 x = min(ev_sum):0.01:max(ev_sum);
 plot(x,polyval(f,x),'Color',[3.1, 18.8, 42]./100);
 disp(corr(ev_sum',slopes'))

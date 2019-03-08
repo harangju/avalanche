@@ -59,7 +59,7 @@ hold on
 plot(z, z*f(1)+f(2),'r')
 axis([-2 22 0 6])
 hold off
-c = corr(x,y);
+[c,p] = corr(x,y);
 
 
 

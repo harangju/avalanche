@@ -124,7 +124,7 @@ slopes = zeros(length(fits),1);
 for i = 1 : length(fits)
     slopes(i) = mean(fits{i}(:,1));
 end; clear i
-c_ev_sum_fit_mis = corr(ev_sum', slopes);
+[c_ev_sum_fit_mis, p_val_sum_fit_mis] = corr(ev_sum', slopes);
 %%
 figure(7); clf; hold on
 colors = [3.1, 18.8, 42;...

@@ -1,12 +1,6 @@
 function xn = smp(x,A)
-%
-%   A: a NxN weight matrix, row i -> column j
+%Stochastic McCulloch-Pitts model
+%   A: a NxN weight matrix, column j -> row i
 %   x: a Nx1 column vector
-
-% A_norm = A ./ sum(A,1);
-% xn = double(rand(size(x)) < A_norm'*x);
-
-xn = double(rand(size(x)) < A'*x);
-
+xn = double(rand(size(x)) < A*x);
 end
-

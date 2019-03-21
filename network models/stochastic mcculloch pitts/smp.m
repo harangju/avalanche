@@ -1,4 +1,4 @@
-function xn = stochastic_mcculloch_pitts(x,A)
+function xn = smp(x,A)
 %
 %   A: a NxN weight matrix, row i -> column j
 %   x: a Nx1 column vector

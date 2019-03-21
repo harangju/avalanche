@@ -6,7 +6,8 @@ function [A, te_pk, ci, te_pk_j, ci_j, filt] = ...
 %   recording_length: in ms
 %   filt_thresh: filter threshold
 % requires
-%   te_matlab https://code.google.com/archive/p/transfer-entropy-toolbox/downloads
+%   te_matlab 
+%      https://code.google.com/archive/p/transfer-entropy-toolbox/downloads
 
 N = length(spike_times);
 

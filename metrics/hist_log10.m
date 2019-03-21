@@ -6,10 +6,10 @@ x = [e(1:end-1); e(2:end)];
 x = mean(x,1);
 x = log10(x);
 y = log10(c);
-x(isinf(y)) = [];
-y(isinf(y)) = [];
-y(isinf(x)) = [];
-x(isinf(x)) = [];
+x(isinf(y)) = 0;
+y(isinf(y)) = 0;
+y(isinf(x)) = 0;
+x(isinf(x)) = 0;
 
 end
 

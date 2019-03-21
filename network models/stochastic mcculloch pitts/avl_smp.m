@@ -15,7 +15,7 @@ N = size(A,1);
 X = zeros(N,T);
 X(:,1) = x0;
 for t = 2 : T
-    X(:,t) = stochastic_mcculloch_pitts(X(:,t-1),A);
+    X(:,t) = smp(X(:,t-1),A);
     if sum(X(:,t)) == 0
         break
     end

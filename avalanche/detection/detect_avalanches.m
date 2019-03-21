@@ -1,4 +1,4 @@
-function avalanches = detect_avalanches(bins)
+function [avalanches, idx_start] = detect_avalanches(bins)
 %detect_avalanches
 %   bins: binned spikes, [#neurons by time]
 

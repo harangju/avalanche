@@ -13,7 +13,7 @@ max_tics = 100;
 X = cell(1,K);
 prob_cumsum = cumsum(probs);
 pind = zeros(1,K);
-fprintf([repmat('#',1,max_tics) '\n'])
+fprintf([repmat('=',1,max_tics) '\n'])
 for k = 1 : K
     if mod(k,int32(K/max_tics)) == 0; fprintf('.'); end
     pat = sum(int8(prob_cumsum < rand)) + 1;

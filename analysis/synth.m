@@ -8,11 +8,12 @@ sn_b = {...
     net.generate('hiermodsmallworld','mx_lvl',8,'e',1.7,'sz_cl',2)...
     };
 %% distribute weights, delta + truncated gaussian
-wd_sig = .042 : .002 : .048;
+% wd_sig = .042 : .002 : .048;
+wd_sig = .07 : .005 : .08;
 sn_w = cell(length(sn_b),length(wd_sig));
 for i = 1 : length(sn_b)
     for j = 1 : length(wd_sig)
-        sn_w{i,j} = net.distr_weights(sn_b{i}.A,'truncnorm','mu',0,...
+        sn_w{i,j} = net.distr_weights(sn_b{i}.A,'truncnorm','mu',-.1,...
             'sigma',wd_sig(j),'range',[0 2]);
     end
 end; clear i j
@@ -62,16 +63,19 @@ for i = 1 : length(sn_b)
         x = 10.^(0:.1:log10(av_T));
         e = [x av_T+1];
         y = histcounts(durs{i,j},e) ./ diff(e) / length(durs{i,j});
+        ml = eq_p(x,pl_p(i,1,j),pl_p(i,2,j));
         clf
         subplot(1,3,1); imagesc(sn_w{i,j}.A); prettify; colorbar
-        title(['topology: ' sn_b{i}.topology ', sig=' num2str(wd_sig(j))])
+        title(['topology: ' sn_b{i}.topology])
         subplot(1,3,2); histogram(sn_w{i,j}.A(sn_w{i,j}.A>0)); prettify
-        title('weight distribution')
+        title(['weight distribution, \sigma=' num2str(wd_sig(j))])
+        axis([0 0.3 0 1e3])
         subplot(1,3,3); loglog(x,y,'.'); hold on;
-        loglog(x,eq_p(x,pl_p(i,1,j),pl_p(i,2,j)),'-'); prettify;
+        loglog(x,ml,'-'); prettify;
         title(['\alpha=' num2str(pl_p(i,1,j)) ...
             ', s=' num2str(num2str(pl_p(i,2,j)))])
-        axis([0 av_T 1/av_K 1])
-        pause
+        axis([0 av_T -inf 1])
+        saveas(gcf,['i=' num2str(i) ' j=' num2str(j) '.png'])
+%         pause
     end
 end; clear i j x e y

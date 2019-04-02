@@ -59,26 +59,26 @@ eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
 eq_p = @(x,a,s) eq_c(a,1./s,1) .* eq_f(x,a,1./s,1);
 %%
-pl_p = zeros(length(sn_b),2,length(wd_sig));
+pl_p = zeros(length(sn_b),length(wd_sig),2);
 pl_e = zeros(length(sn_b),length(wd_sig));
-pl_g = zeros(length(sn_b),2,length(wd_sig));
-pl_ci = zeros(2,2,length(sn_b),length(wd_sig));
+pl_g = zeros(length(sn_b),length(wd_sig),2);
+pl_ci = zeros(length(sn_b),length(wd_sig),2,2);
 %%
-for i = 7 : length(sn_b)
+for i = 1 : length(sn_b)
     for j = 1 : length(wd_sig)
         disp(['Calculating MLE for topology ' num2str(i) '/'...
             num2str(length(sn_b)) ' & sig=' num2str(wd_sig(j))])
-        [pl_p(i,:,j),pl_ci(:,:,i,j)] = mle(durs{i,j},'pdf',eq_p,...
+        [pl_p(i,j,:),pl_ci(i,j,:,:)] = mle(durs{i,j},'pdf',eq_p,...
             'start',[3 2],'LowerBound',[.1 1],'UpperBound',[20 av_T]);
 %         pl_e(i,j) = mle(durs{i,j},'distribution','exp');
-%         pl_g(i,:,j) = mle(durs{i,j},'distribution','gam');
+%         pl_g(i,j,:) = mle(durs{i,j},'distribution','gam');
     end
 end; clear i j
 %%
 save
 %% plot
-for i = 1 : length(sn_b)
-    for j = 1 : length(wd_sig)
+for i = 12% : length(sn_b)
+    for j = 1% : length(wd_sig)
         x = unique(durs{i,j});
         e = [x av_T+1];
         y = histcounts(durs{i,j},e) / length(durs{i,j});
@@ -86,25 +86,28 @@ for i = 1 : length(sn_b)
 %         e = [x av_T+1];
 %         e = x;
 %         y = histcounts(durs{i,j},e) ./ diff(e) / length(durs{i,j});
-        ml_pl = eq_p(x,pl_p(i,1,j),pl_p(i,2,j));
-%         ml_pl = eq_p(x,3,5);
-        ml_ep = exppdf(x,pl_e(i,j));
-        ml_g = gampdf(x,pl_g(i,1,j),pl_g(i,2,j));
+        ml_pl = eq_p(x,pl_p(i,j,1),pl_p(i,j,2));
+%         ml_ep = exppdf(x,pl_e(i,j));
+%         ml_g = gampdf(x,pl_g(i,j,1),pl_g(i,j,2));
         clf
-        subplot(1,3,1); imagesc(sn_w{i,j}.A); prettify; colorbar
-        title(sn_b{i}.topology)
-        subplot(1,3,2); histogram(sn_w{i,j}.A(sn_w{i,j}.A>0)); prettify
-        title(['weights, \sigma=' num2str(wd_sig(j))])
-        axis([0 0.3 0 1e3])
-        subplot(1,3,3)
-        loglog(x,y,'.'); hold on;
+%         subplot(1,3,1); imagesc(sn_w{i,j}.A); prettify; colorbar
+%         title(sn_b{i}.topology)
+%         subplot(1,3,2); histogram(sn_w{i,j}.A(sn_w{i,j}.A>0)); prettify
+%         title(['weights, \sigma=' num2str(wd_sig(j))])
+%         axis([0 0.3 0 1e3])
+%         subplot(1,3,3)
+%         plot(x,y,'.'); hold on
+%         plot(x,ml_pl,'-');
+%         plot(x,eq_p(x,2,7),'--')
+        loglog(x,y,'s'); hold on
         loglog(x,ml_pl,'-');
+        loglog(x,eq_p(x,2,5),'--')
 %         loglog(x,ml_ep,'-')
 %         loglog(x,ml_g,'-')
-        prettify; title(['\alpha=' num2str(pl_p(i,1,j)) ...
-            ', s=' num2str(num2str(pl_p(i,2,j)))])
+        prettify; title(['\alpha=' num2str(pl_p(i,j,1)) ...
+            ', s=' num2str(num2str(pl_p(i,j,2)))])
         axis([0 av_T 10^-10 1])
-        saveas(gcf,['i=' num2str(i) ' j=' num2str(j) '.png'])
+%         saveas(gcf,['i=' num2str(i) ' j=' num2str(j) '.png'])
 %         pause
     end
 end; clear x e y
@@ -116,14 +119,13 @@ for i = 1:.003:3
     set(gca,'ZScale','log')
     axis vis3d; prettify; axis([1 3 1 10 .1 1]); pause(0.03);
 end
-%%
-clf; hold on; j=1:3;
-c = linspecer(length(sn_b));
-for i = 1 : length(sn_b)
-%     scatter(reshape(pl_p(i,1,j),1,[]),reshape(pl_p(i,2,j),1,[]),...
-%         100+1000*(sn_fc(i)-min(sn_fc))/range(sn_fc),c(i,:),'.')
-    scatter(reshape(pl_p(i,1,j),1,[]),reshape(pl_p(i,2,j),1,[]),...
-        100+1000*(wd_sig-min(wd_sig))/range(wd_sig),c(i,:),'.')
-end
-legend({},'Location','Northwest')
-prettify
+%% scatter plot
+i=1:length(sn_b);
+j=1:length(wd_sig);
+scatter(reshape(pl_p(i,j,1),1,[]),...
+    reshape(pl_p(i,j,2),1,[]),...
+    50+800*(repelem(wd_sig,1,length(i))-min(wd_sig))./range(wd_sig),...
+    repmat(sn_fc(i),1,length(j)),'LineWidth',3)
+prettify; colorbar; colormap summer; axis([1 5 0 1000])
+xlabel('\alpha'); ylabel('d'); ylabel(colorbar, 'density')
+clear i j

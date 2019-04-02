@@ -94,7 +94,7 @@ for i = 1 : length(sn_b)
         subplot(1,3,1); imagesc(sn_w{i,j}.A); prettify; colorbar
         title(sn_b{i}.topology)
         subplot(1,3,2); histogram(sn_w{i,j}.A(sn_w{i,j}.A>0)); prettify
-        title(['weight distribution, \sigma=' num2str(wd_sig(j))])
+        title(['weights, \sigma=' num2str(wd_sig(j))])
         axis([0 0.3 0 1e3])
         subplot(1,3,3)
         loglog(x,y,'.'); hold on;
@@ -104,8 +104,8 @@ for i = 1 : length(sn_b)
         prettify; title(['\alpha=' num2str(pl_p(i,1,j)) ...
             ', s=' num2str(num2str(pl_p(i,2,j)))])
         axis([0 av_T 10^-10 1])
-%         saveas(gcf,['i=' num2str(i) ' j=' num2str(j) '.png'])
-        pause
+        saveas(gcf,['i=' num2str(i) ' j=' num2str(j) '.png'])
+%         pause
     end
 end; clear x e y
 %%

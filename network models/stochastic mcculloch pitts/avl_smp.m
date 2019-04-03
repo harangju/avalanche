@@ -6,7 +6,7 @@ function X = avl_smp(x0,A,T)
 %       A (float; n-by-n) column j -> row i connectivity
 %       T (int) 
 n = size(A,1);
-X = zeros(n,T);
+X = zeros(n,T,'single');
 X(:,1) = x0;
 for t = 2 : T
     X(:,t) = smp(X(:,t-1),A);

@@ -46,8 +46,8 @@ for i = 1 : length(sn_b)
 end; clear i j l
 % disp([0 1:length(sn_sig); (1:length(sn_b))' cv_me])
 %% set parameters
-av_T = 1e2;
-av_K = 1e4;
+av_T = 1e3;
+av_K = 1e6;
 %% simulate
 durs = cell(length(sn_b),length(sn_sig));
 av_ef = zeros(length(sn_b),length(sn_sig));
@@ -63,8 +63,7 @@ for i = 1:length(sn_b)
         av_mt = (durs{i,j}==av_T-1);
         av_end = reshape(cell2mat(av(av_mt)),...
             [size(sn_w{i,j}.A,1) sum(av_mt) av_T]);
-        av_ef(i,j) = cellfun(...
-            @(x) sum(sum(x(:,:,end),1)==size(x,1))/size(x,2), av_end);
+        av_ef(i,j) = sum(sum(av_end(:,:,end),1)==size(av_end,1))/size(av_end,2);
         clear av av_mt av_end
         save
     end
@@ -92,49 +91,24 @@ for i = 1:length(sn_b)
         pl_g(i,j,:) = mle(durs{i,j},'distribution','gam');
     end
 end; clear i j
-%%
-save
 %% individual plots
-for i = 1 : length(sn_b)
-    for j = 1 : length(sn_sig)
+for i = 10 %1:length(sn_b)
+    for j = 5 %1:length(sn_sig)
         x = unique(durs{i,j});
 %         x = 10.^(0:.1:log10(av_T));
         e = [x av_T+1];
         y = histcounts(durs{i,j},e) / length(durs{i,j});
-%         y = histcounts(durs{i,j},e) ./ diff(e) / length(durs{i,j});
-%         ml_pl = eq_p(x,pl_p(i,j,1),pl_p(i,j,2));
-        ml_dpl = eq_l(x,pl_dp(i,j,1),pl_dp(i,j,2));
-%         ml_ep = exppdf(x,pl_e(i,j));
-%         ml_g = gampdf(x,pl_g(i,j,1),pl_g(i,j,2));
+        ml_tpl = eq_l(x,ft_pl_sim(i,j,1),ft_pl_sim(i,j,2));
         clf
-%         subplot(1,3,1); imagesc(sn_w{i,j}.A); prettify; colorbar
-%         title(sn_b{i}.topology)
-%         subplot(1,3,2); histogram(sn_w{i,j}.A(sn_w{i,j}.A>0)); prettify
-%         title(['weights, \sigma=' num2str(wd_sig(j))])
-%         axis([0 0.3 0 1e3])
-%         subplot(1,3,3)
-        loglog(x,y,'s'); hold on
-%         loglog(x,ml_pl,'-')
-        loglog(x,ml_dpl,'-')
-%         loglog(x,ml_ep,'-')
-%         loglog(x,ml_g,'-')
-        legend({'data',...
-            ['DPL (' num2str(pl_dp(i,j,1),3) ','...
-                num2str(pl_dp(i,j,2),3) ')']})
-%         legend({'data',...
-%             ['PL (' num2str(pl_p(i,j,1),3) ','...
-%                 num2str(pl_p(i,j,2),3) ')'],...
-%             ['DPL (' num2str(pl_dp(i,j,1),3) ','...
-%                 num2str(pl_dp(i,j,2),3) ')'],...
-%             ['exp (' num2str(pl_e(i,j),3) ')'],...
-%             ['\gamma (' num2str(pl_g(i,j,1),3) ','...
-%                 num2str(pl_g(i,j,2),3) ')']})
+        loglog(x,y,'.','Color',color,'MarkerSize',10); hold on
+        loglog(x,ml_tpl,'r-')
+        legend({'stochastic model','truncated power law'})
         prettify
-        axis([0 av_T 1e-8 1])
-        saveas(gcf,['i=' num2str(i) ' j=' num2str(j) '.png'])
+        axis([0 av_T 3e-5 1])
+%         saveas(gcf,['i=' num2str(i) ' j=' num2str(j) '.png'])
 %         pause
     end
-end; clear x e y ml_pl ml_dpl ml_ep ml_g
+end; clear x e y ml_tpl
 %% scatter plot
 % i=(1:4)+12;
 i=1:length(sn_b);
@@ -203,3 +177,118 @@ subplot(2,2,4)
 scatter(sn_f,pl_a,'.')
 prettify; xlabel('density'); ylabel('\alpha')
 clear i j
+
+%% paper figures - synth1 - lambda<1
+color = [3.1, 18.8, 42]/100;
+%% network
+cv_m = abs(cv_me(:));
+cv_s = cv_se(:);
+%% sim
+ft_pl_a_sim = ft_pl_sim(:,:,1);
+ft_pl_a_sim = ft_pl_a_sim(:);
+ft_pl_t_sim = 1./ft_pl_sim(:,:,2);
+ft_pl_t_sim = ft_pl_t_sim(:);
+durs_sim_max = cellfun(@max,durs(:));
+ft_pl_t_sim(ft_pl_t_sim>durs_sim_max) = ...
+    durs_sim_max(ft_pl_t_sim>durs_sim_max);
+ft_t_sim1 = fit(cv_m(cv_m<1),log10(ft_pl_t_sim(cv_m<1)),'poly1');
+ft_a_sim1 = fit(cv_m(cv_m<1&cv_m>.8),ft_pl_a_sim(cv_m<1&cv_m>.8),'poly1');
+[ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),log10(ft_pl_t_sim(cv_m<1)));
+[ce_r_a_sim1,ce_p_a_sim1] = corr(cv_m(cv_m<1&cv_m>.8),...
+    ft_pl_a_sim(cv_m<1&cv_m>.8));
+%% simulation - tau
+figure(1)
+clf
+semilogy(cv_m(cv_m<1),ft_pl_t_sim(cv_m<1),'.','MarkerSize',10,...
+    'Color',color)
+hold on
+x1 = min(cv_m(cv_m<1)):1e-3:max(cv_m(cv_m<1));
+[ci1,y1] = predint(ft_t_sim1,x1,.95,'observation','off');
+ci1 = 10.^ci1;
+y1 = 10.^y1;
+plot(x1,y1,'Color',color)
+patch([x1 fliplr(x1)],[ci1(:,1)' fliplr(ci1(:,2)')],...
+    color,'FaceAlpha',0.2,'LineStyle','none')
+prettify
+% xlabel('\lambda_1')
+% ylabel('\tau')
+% axis([.45 1.05 1 1000])
+clear x1 x2 ci1 ci2 y1 y2
+%% simulation - alpha
+figure(2)
+clf
+plot(cv_m(cv_m<1),ft_pl_a_sim(cv_m<1),'.','MarkerSize',10,'Color',color)
+hold on
+x1 = min(cv_m(cv_m<1&cv_m>.8)):1e-3:max(cv_m(cv_m<1&cv_m>.8));
+[ci1,y1] = predint(ft_a_sim1,x1,.95,'observation','off');
+plot(x1,y1,'Color',color)
+patch([x1 fliplr(x1)],[ci1(:,1)' fliplr(ci1(:,2)')],...
+    color,'FaceAlpha',0.15,'LineStyle','none')
+prettify
+% xlabel('\lambda_1')
+% ylabel('\tau')
+% axis([.45 1.05 1 1000])
+clear x1 x2 ci1 ci2 y1 y2
+
+%% paper figures - synth2 - lambda<1 & lambda>1
+%% network
+cv_m = abs(cv_me(:));
+cv_s = cv_se(:);
+%% sim
+ft_pl_a_sim = ft_pl_sim(:,:,1);
+ft_pl_a_sim = ft_pl_a_sim(:);
+ft_pl_t_sim = 1./ft_pl_sim(:,:,2);
+ft_pl_t_sim = ft_pl_t_sim(:);
+durs_sim_max = cellfun(@max,durs_sim(:));
+ft_pl_t_sim(ft_pl_t_sim>durs_sim_max) = ...
+    durs_sim_max(ft_pl_t_sim>durs_sim_max);
+ft_t_sim1 = fit(cv_m(cv_m<1),log10(ft_pl_t_sim(cv_m<1)),'poly1');
+ft_a_sim1 = fit(cv_m(cv_m<1),ft_pl_a_sim(cv_m<1),'poly1');
+[ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),log10(ft_pl_t_sim(cv_m<1)));
+[ce_r_a_sim1,ce_p_a_sim1] = corr(cv_m(cv_m<1),ft_pl_a_sim(cv_m<1));
+ft_t_sim2 = fit(cv_m(cv_m>1),log10(ft_pl_t_sim(cv_m>1)),'poly1');
+ft_a_sim2 = fit(cv_m(cv_m>1),ft_pl_a_sim(cv_m>1),'poly1');
+[ce_r_t_sim2,ce_p_t_sim2] = corr(cv_m(cv_m>1),log10(ft_pl_t_sim(cv_m>1)));
+[ce_r_a_sim2,ce_p_a_sim2] = corr(cv_m(cv_m>1),ft_pl_a_sim(cv_m>1));
+%% simulation - tau
+figure(1)
+clf
+semilogy(cv_m,ft_pl_t_sim,'k.','MarkerSize',10)
+hold on
+x1 = min(cv_m(cv_m<1)):1e-3:max(cv_m(cv_m<1));
+x2 = min(cv_m(cv_m>1)):1e-3:max(cv_m(cv_m>1));
+[ci1,y1] = predint(ft_t_sim1,x1,.95,'observation','off');
+[ci2,y2] = predint(ft_t_sim2,x2,.95,'observation','off');
+ci1 = 10.^ci1;
+ci2 = 10.^ci2;
+y1 = 10.^y1;
+y2 = 10.^y2;
+plot(x1,y1,'k')
+plot(x2,y2,'k')
+patch([x1 x2 fliplr([x1 x2])],...
+    [ci1(:,1)' ci2(:,1)' fliplr([ci1(:,2)' ci2(:,2)'])],...
+    'black','FaceAlpha',0.15,'LineStyle','none')
+prettify
+% xlabel('\lambda_1')
+% ylabel('\tau')
+% axis([.45 1.05 1 1000])
+clear x1 x2 ci1 ci2 y1 y2
+%% simulation - alpha
+figure(2)
+clf
+plot(cv_m,ft_pl_a_sim,'k.','MarkerSize',10)
+hold on
+x1 = min(cv_m(cv_m<1)):1e-3:max(cv_m(cv_m<1));
+x2 = min(cv_m(cv_m>1)):1e-3:max(cv_m(cv_m>1));
+[ci1,y1] = predint(ft_a_sim1,x1,.95,'observation','off');
+[ci2,y2] = predint(ft_a_sim2,x2,.95,'observation','off');
+plot(x1,y1,'k')
+plot(x2,y2,'k')
+patch([x1 x2 fliplr([x1 x2])],...
+    [ci1(:,1)' ci2(:,1)' fliplr([ci1(:,2)' ci2(:,2)'])],...
+    'black','FaceAlpha',0.15,'LineStyle','none')
+prettify
+% xlabel('\lambda_1')
+% ylabel('\tau')
+% axis([.45 1.05 1 1000])
+clear x1 x2 ci1 ci2 y1 y2

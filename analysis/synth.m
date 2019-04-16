@@ -25,9 +25,10 @@ sn_fc = zeros(length(sn_b),1);
 for i = 1 : length(sn_b)
     sn_fc(i) = nnz(sn_b{i}.A)/size(sn_b{i}.A,1)^2;
 end; clear i
-%% distribute weights, delta + truncated gaussian
+%% set weight parameters
 sn_tw = 4;
 sn_sig = repmat(.03:.01:.05,[1 sn_tw]);
+%% distribute weights (delta + truncated gaussian)
 sn_w = cell(length(sn_b),length(sn_sig));
 for i = 1 : length(sn_b)
     for j = 1 : length(sn_sig)
@@ -65,7 +66,7 @@ for i = 1:length(sn_b)
             [size(sn_w{i,j}.A,1) sum(av_mt) av_T]);
         av_ef(i,j) = sum(sum(av_end(:,:,end),1)==size(av_end,1))/size(av_end,2);
         clear av av_mt av_end
-        save
+%         save
     end
 end; clear x0 Px0 av
 sendmail('wngkfkd94@gmail.com','network analysis done')
@@ -193,9 +194,12 @@ ft_pl_t_sim(ft_pl_t_sim>durs_sim_max) = ...
     durs_sim_max(ft_pl_t_sim>durs_sim_max);
 ft_t_sim1 = fit(cv_m(cv_m<1),log10(ft_pl_t_sim(cv_m<1)),'poly1');
 ft_a_sim1 = fit(cv_m(cv_m<1&cv_m>.8),ft_pl_a_sim(cv_m<1&cv_m>.8),'poly1');
-[ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),log10(ft_pl_t_sim(cv_m<1)));
+[ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),...
+    ft_pl_t_sim(cv_m<1),'Type','Spearman');
+[ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),...
+    log10(ft_pl_t_sim(cv_m<1)),'Type','Spearman');
 [ce_r_a_sim1,ce_p_a_sim1] = corr(cv_m(cv_m<1&cv_m>.8),...
-    ft_pl_a_sim(cv_m<1&cv_m>.8));
+    ft_pl_a_sim(cv_m<1&cv_m>.8),'Type','Spearman');
 %% simulation - tau
 figure(1)
 clf

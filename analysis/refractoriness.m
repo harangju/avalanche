@@ -58,4 +58,5 @@ i = 1;
 j = find(avl_dur{i}>50,1);
 imagesc(avl_emp{i}{j})
 clear i j
- github
+%% find cycles
+

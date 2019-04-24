@@ -197,10 +197,10 @@ ft_t_sim1 = fit(cv_m(cv_m<1),log10(ft_pl_t_sim(cv_m<1)),'poly1');
 ft_a_sim1 = fit(cv_m(cv_m<1&cv_m>.8),ft_pl_a_sim(cv_m<1&cv_m>.8),'poly1');
 [ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),...
     ft_pl_t_sim(cv_m<1),'Type','Spearman');
-[ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),...
-    log10(ft_pl_t_sim(cv_m<1)),'Type','Spearman');
+% [ce_r_t_sim1,ce_p_t_sim1] = corr(cv_m(cv_m<1),...
+%     log10(ft_pl_t_sim(cv_m<1)),'Type','Spearman');
 [ce_r_a_sim1,ce_p_a_sim1] = corr(cv_m(cv_m<1&cv_m>.8),...
-    ft_pl_a_sim(cv_m<1&cv_m>.8),'Type','Spearman');
+    ft_pl_a_sim(cv_m<1&cv_m>.8));
 %% simulation - tau
 figure(1)
 clf

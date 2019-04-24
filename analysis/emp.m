@@ -3,7 +3,7 @@ data_dir = 'beggs data';
 files = dir([data_dir '/*.mat']);
 bin_size = 2;
 ns = cell(1,length(files));
-for i = length(files):-1:1
+for i = length(files):-1:
     disp(['Analyzing ' files(i).name '...'])
     load([data_dir '/' files(i).name]);
     ns{i} = net.generate('autoregressive',...
@@ -96,7 +96,8 @@ ft_pl_t_sim(ft_pl_t_sim>durs_sim_max) = ...
     durs_sim_max(ft_pl_t_sim>durs_sim_max);
 ft_t_sim = fit(cv_m',log10(ft_pl_t_sim)','poly1');
 ft_a_sim = fit(cv_m',ft_pl_a_sim','poly1');
-[ce_r_t_sim,ce_p_t_sim] = corr(cv_m',log10(ft_pl_t_sim)');
+[ce_r_t_sim,ce_p_t_sim] = corr(cv_m',log10(ft_pl_t_sim)',...
+    'Type','Spearman');
 [ce_r_a_sim,ce_p_a_sim] = corr(cv_m',ft_pl_a_sim');
 %% emp
 ft_pl_a_emp = ft_pl_emp(1,:,1);
@@ -106,7 +107,8 @@ ft_pl_t_emp(ft_pl_t_emp>durs_emp_max) = ...
     durs_emp_max(ft_pl_t_emp>durs_emp_max);
 ft_t_emp = fit(cv_m',log10(ft_pl_t_emp)','poly1');
 ft_a_emp = fit(cv_m',ft_pl_a_emp','poly1');
-[ce_r_t_emp,ce_p_t_emp] = corr(cv_m',log10(ft_pl_t_emp)');
+[ce_r_t_emp,ce_p_t_emp] = corr(cv_m',log10(ft_pl_t_emp)',...
+    'Type','Spearman');
 [ce_r_a_emp,ce_p_a_emp] = corr(cv_m',ft_pl_a_emp');
 %% simulation - tau
 % NOTE: Run synth - tau before this section

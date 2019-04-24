@@ -182,6 +182,7 @@ clear i j
 %% paper figures - synth1 - lambda<1
 color = [3.1, 18.8, 42]/100;
 %% network
+ft_r_pos_idx = ft_cmp_exp(:,:,1)>0;
 cv_m = abs(cv_me(:));
 cv_s = cv_se(:);
 %% sim

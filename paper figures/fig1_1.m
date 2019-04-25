@@ -56,3 +56,17 @@ for i = 1 : 20
     saveas(gcf,['aval_' num2str(i)],'pdf')
     pause
 end; clear i
+%%
+figure(7)
+Y_n_avg_t = zeros(size(Y_n));
+df_t = zeros(1,size(Y_n,3));
+for i = 1 : size(Y_n,3)
+    Y_n_avg_t(:,:,i) = mean(Y_n(:,:,1:i),3);
+    yavg = Y_n_avg_t(:,:,i);
+    df_t(i) = sum(X{n}(X{n}>0) - yavg(X{n}>0));
+end
+clear i yavg ylin
+% plot(df_t,'Color',[3.1, 18.8, 42]/100)
+plot(df_t,'k')
+axis([0 1100 -.5 1.8])
+prettify

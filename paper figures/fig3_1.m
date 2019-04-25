@@ -1,24 +1,28 @@
 
 %% acyclic 3-node graph
-A = [0 0.5 0; 0 0 0.5; 0 0 0];
-
+Aa = [0 .5 0; 0 0 .5; 0 0 0];
 %% cyclic 3-node graph
-A = [0 0.5 0; 0 0 0.5; 0.5 0 0];
-
+Ac = [0 .5 0; 0 0 .5; 0.5 0 0];
 %% simulation
 [pats,probs] = pings_single(3);
-dur = 1e4; iter = 1e4;
-tic
-[Y,pat] = avl_smp_many(pats,probs,A,dur,iter);
-toc; beep
+T = 1e4; K = 1e6;
+[Ya,pata] = avl_smp_many(pats,probs,Aa,T,K);
+[Yc,patc] = avl_smp_many(pats,probs,Ac,T,K);
 %%
-durations = avl_durations_cell(Y);
-[alpha, xmin] = plfit(durations);
-plplot(durations,xmin,alpha)
+dur_a = avl_durations_cell(Ya);
+dur_c = avl_durations_cell(Yc);
 %%
 colors = linspecer(2);
 %%
-scatter(x,y,10,[3.1, 18.8, 42]./100,'filled')
+figure(1)
+clf
+x = unique(dur_a);
+y = histcounts(dur_a,[x max(x)+1]);
+loglog(x,y/sum(y),'s','Color',colors(1,:),'MarkerSize',7)
+hold on
+x = unique(dur_c);
+y = histcounts(dur_c,[x max(x)+1]);
+loglog(x,y/sum(y),'.','Color',colors(2,:),'MarkerSize',10)
 prettify
-%%
+xlim([10^0 10^2])
 legend({'acyclic','cyclic'})

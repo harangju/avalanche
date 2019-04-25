@@ -70,7 +70,7 @@ for i = 1:length(sn_b)
     end
 end; clear x0 Px0 av
 sendmail('wngkfkd94@gmail.com','network analysis done')
- %% mle - power law with exponential cutoff
+%% mle - power law with exponential cutoff
 eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
 eq_p = @(x,a,s) eq_c(a,1./s,1) .* eq_f(x,a,1./s,1);

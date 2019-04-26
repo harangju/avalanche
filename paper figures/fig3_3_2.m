@@ -8,7 +8,7 @@ K = 1e4;
 dws = 0.02 : 0.02 : 0.98;
 seed = 4;
 %% 2-cycle
-A0 = [0 1; 1 0];
+A0 = [0 1; 1 0] * .99;
 N = 2;
 B = ones(N,1);
 redistr = 0.1;
@@ -30,7 +30,8 @@ for i = 1 : length(dws)
         end
         As{i}(n,new) = dws(i);
     end; clear n
-end; clear i
+end
+clear i og new
 %% simulate
 [pats, probs] = pings_single(N);
 Ys = cell(1,length(dws));
@@ -41,15 +42,18 @@ for i = 1 : length(dws)
     [Ys{i}, orders{i}] = avl_smp_many(pats, probs, As{i}, T, K);
 end; clear i; fprintf('\n')
 %% durations
-durs = avl_durations_cell(Ys);
-dur_mean = cellfun(@(x) sum(x(x<T-1)),durs);
+durs = cellfun(@avl_durations_cell,Ys,'uniformoutput',0);
+% dur_mean = cellfun(@(x) sum(x(x<T-1)),durs);
+dur_mean = cellfun(@(x) mean(x),durs);
 %% plot - individual
-d = distr(1:round(length(distr)/4):round(length(distr)/2));
+% d = distr(1:round(length(distr)/4):round(length(distr)/2));
+d = dws(1:round(length(dws)/4):round(length(dws)/2));
 colors = linspecer(length(d));
 figure(1)
 clf
 for i = 1 : length(d)
-    idx = find(distr==d(i));
+%     idx = find(distr==d(i));
+    idx = find(dws==d(i));
     x = unique(durs{idx});
     y = histcounts(durs{idx},[x max(x)+1]);
     loglog(x,y/sum(y),'.','Color',colors(i,:),'MarkerSize',10)

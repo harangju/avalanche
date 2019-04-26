@@ -129,10 +129,10 @@ xlabel('interspike interval (ms)')
 ylabel('counts')
 clear i j isi x y
 %% ISI summary
-isi_max = 6;
+isi_max = 4;
 % isi_ceil = 10;
 avl_isi_sum = zeros(length(avl_isi),isi_max);
-for i = 1 : length(avl_emp)
+for i = 1 : length(avl_isi)
 %     e = [1:isi_max isi_ceil max([avl_isi{i}{:}])];
     e = [1:isi_max max([avl_isi{i}{:}])];
     h = histcounts([avl_isi{i}{:}],e);
@@ -151,6 +151,6 @@ for i = 1 : isi_max
 end
 prettify
 xlim([0 26])
-legend({'ISI=1ms','ISI=2ms','ISI=3ms','ISI=4ms','ISI=5ms','5ms<ISI<=10ms'})
+legend({'ISI=1ms','ISI=2ms','ISI=3ms','ISI=4ms','ISI=5ms','ISI=6ms'})
 clear h i
 

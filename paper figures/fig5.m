@@ -113,10 +113,11 @@ prettify
 
 %% correlate sum of eigenvalues with mean MI decay
 As_list = As';
-ev_sum = zeros(1, size(As,1)*size(As,2));
-for i = 1 : size(As,1)*size(As,2)
-    ev_sum(i) = eig_sum(As_list{i}');
-end; clear i
+ev_sum = cellfun(@(x) mean(abs(eig(x'))),As_list);
+% ev_sum = zeros(1, size(As,1)*size(As,2));
+% for i = 1 : size(As,1)*size(As,2)
+%     ev_sum(i) = eig_sum(As_list{i}');
+% end; clear i
 %%
 fit_list = fit_mis';
 fits = fit_list(:);
@@ -127,17 +128,18 @@ end; clear i
 [c_ev_sum_fit_mis, p_val_sum_fit_mis] = corr(ev_sum', slopes);
 %%
 figure(7); clf; hold on
-colors = [3.1, 18.8, 42;...
-    2, 43.9, 69;...
-    45.5, 66.3, 81.2;...
-    81.6, 82, 90.2] ./ 100;
+% colors = [3.1, 18.8, 42;...
+%     2, 43.9, 69;...
+%     45.5, 66.3, 81.2;...
+%     81.6, 82, 90.2] ./ 100;
+colors = linspecer(4);
 for i = 1 : length(graph_types)
-    scatter(ev_sum(1+(i-1)*iter : i*iter),...
+    plot(ev_sum(1+(i-1)*iter : i*iter),...
         slopes(1+(i-1)*iter : i*iter),...
-        32,colors(i,:),'.')
+        '.','Color',colors(i,:),'MarkerSize',10)
 end; clear i
 legend(graph_types)
-f = polyfit(ev_sum,slopes',1);
-x = min(ev_sum) : 1e-3 : max(ev_sum);
+f = polyfit(ev_sum(:),slopes,1);
+x = min(ev_sum(:)) : 1e-3 : max(ev_sum(:));
 plot(x,polyval(f,x),'r')
 prettify; hold off

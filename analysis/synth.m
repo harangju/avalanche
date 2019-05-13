@@ -53,6 +53,7 @@ av_K = 1e6;
 durs = cell(length(sn_b),length(sn_sig));
 av_ef = zeros(length(sn_b),length(sn_sig));
 disp(repmat('-',[1 50]))
+av_act = cell(length(sn_b),length(sn_sig));
 for i = 1:length(sn_b)
     for j = 1:length(sn_sig)
         disp(['Simulating topology ' num2str(i) '/'...
@@ -60,6 +61,7 @@ for i = 1:length(sn_b)
             num2str(length(sn_sig))])
         [x0,Px0] = pings_single(size(sn_w{i,j}.A,1));
         av = avl_smp_many(x0,Px0,sn_w{i,j}.A,av_T,av_K);
+        av_act{i,j} = sum([av{:}]);
         durs{i,j} = avl_durations_cell(av);
         av_mt = (durs{i,j}==av_T-1);
         av_end = reshape(cell2mat(av(av_mt)),...
@@ -297,3 +299,49 @@ prettify
 % ylabel('\tau')
 % axis([.45 1.05 1 1000])
 clear x1 x2 ci1 ci2 y1 y2
+
+
+
+%% activity files
+for i = 1 : length(sn_b)
+    for j = 1 : length(sn_sig)
+        dlmwrite(['activity_i' num2str(i) '_j' num2str(j)...
+            '.txt'],av_act{i,j}')
+    end
+end
+%% correlate mre & duration
+m = mre(:);
+m = m(cv_m<1);
+durs_m = cellfun(@mean,durs);
+d = durs_m(:);
+d = d(cv_m<1);
+ma = mact(:);
+ma = ma(cv_m<1);
+[ce_r_m_t,ce_p_m_t] = corr(m,ft_pl_t_sim(cv_m<1),'type','spearman');
+[ce_r_m_a,ce_p_m_a] = corr(m,ft_pl_a_sim(cv_m<1),'type','spearman');
+[ce_r_m_d,ce_p_m_d] = corr(m,d,'type','pearson');
+%% plot
+c = linspecer(5);
+figure(2)
+clf; hold on
+plot(cv_m(cv_m<1),m,'k.')
+% plot(cv_m(cv_m<1 & mact(:)<20),m(ma<20),'o','Color',c(2,:))
+plot(cv_m(cv_m<1 & mact(:)<10),m(ma<10),'o','Color',c(1,:))
+axis([.3 1.1 .55 1.05])
+prettify
+figure(3)
+plot(ma,cv_m(cv_m<1),'.')
+prettify
+% plot(m,ft_pl_t_sim(cv_m<1),'.')
+% xlabel('m'); ylabel('\tau')
+prettify
+figure(4)
+plot(m,ft_pl_a_sim(cv_m<1),'.')
+xlabel('m'); ylabel('\alpha')
+prettify
+figure(5)
+plot(m,d,'.')
+xlabel('m'); ylabel('duration')
+prettify
+
+

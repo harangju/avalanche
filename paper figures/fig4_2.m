@@ -36,7 +36,8 @@ for i = 1 : iter
 end; clear i j
 %% prediction
 % finite_time = 10;
-finite_time = 1000;
+% finite_time = 1000;
+finite_time = 100;
 ac = zeros(length(pats),iter);
 mc = zeros(length(pats),iter);
 od = zeros(length(pats),iter);
@@ -65,8 +66,8 @@ for i = 1 : iter
 end; clear i j
 %% plot
 clf
-boxplot([corr_sumeig corr_ac corr_mc],...
-    'Labels',{'ME','AC','MC'})
+boxplot([corr_sumeig corr_mc corr_ac],...
+    'Labels',{'ME','MC','AC'})
 fprintf(['\tAC\tMC\tME\n'...
     'mean\t%.4f\t%.4f\t%.4f\n'],...
     mean(corr_ac),mean(corr_mc),mean(corr_sumeig))

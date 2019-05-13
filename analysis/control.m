@@ -54,7 +54,7 @@ hold on
 boxplot(ce_r_fd)
 plot(ce_fd_tb, ce_r_fd, 'k.')
 prettify
-axis([.5 4.5 -.05 .5])
+% axis([.5 4.5 -.05 .5])
 %% zoomed in
 figure(2)
 clf
@@ -65,12 +65,13 @@ prettify
 axis([.9 1.1 -.05 .35])
 %% plot example
 figure(3)
-j = 2;
-[~,i] = max(ce_r_fd(:,j));
+j = 4;
+% [~,i] = max(ce_r_fd(:,j));
+i = 16;
 clf
-plot(firs_x0_emp{i,j},durs_emp{i},'.','Color',color)
+plot(firs_x0_emp{i,j},durs_emp{i},'k.')
 disp(i)
-axis([1 1.07 0 1500])
+% axis([1 1.07 0 1500])
 prettify
 clear i j
 

@@ -35,7 +35,7 @@ end; clear i
 sumeig = sum(abs((v\patsm) .* diag(d)));
 domeig = max(abs((v\patsm) .* diag(d)));
 %% controllability
-finite_time = 10;
+finite_time = 100;
 ac = finite_impulse_responses(A',finite_time);
 mc = control_modal(A');
 %% plot
@@ -45,21 +45,21 @@ f = polyfit(ac,dm',1);
 x = min(ac) : 1e-2 : max(ac);
 plot(x,polyval(f,x),'r')
 hold off; prettify; title('fir')
-% axis([1 1.22 0 40])
+% axis([1.4 3 0 40])
 figure(2); clf; hold on
 scatter(sumeig,dm,32,[3.1, 18.8, 42]./100,'.')
 f = polyfit(sumeig',dm',1);
 x = min(sumeig) : 1e-2 : max(sumeig);
 plot(x,polyval(f,x),'r')
 hold off; prettify; title('sum \lambda')
-axis([0 30 0 40]) %axis([0 15 0 40])
+% axis([3 11 0 40]) %axis([0 15 0 40])
 figure(3); clf; hold on
 scatter(mc,dm,32,[3.1, 18.8, 42]./100,'.')
 f = polyfit(mc,dm',1);
 x = min(mc) : 1e-2 : max(mc);
 plot(x,polyval(f,x),'r')
 hold off; prettify; title('modal controllability');
-axis([0 3 0 40]) %axis([.4 1.6 0 40])
+% axis([.4 1.6 0 40]) %axis([.4 1.6 0 40])
 figure(4); clf
 scatter(outdegree(A),dm,32,[3.1, 18.8, 42]./100,'.')
 prettify; xlabel('outdegree')

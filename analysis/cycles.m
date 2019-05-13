@@ -81,8 +81,9 @@ clear i e h
 %%
 figure(2)
 clf
-% h = bar(avl_lps_cnt./cellfun(@length,avl_emp)','stacked');
-h = bar(avl_lps_cnt,'stacked');
+h = bar(avl_lps_cnt./cellfun(@length,avl_emp)','stacked');
+sum(mean(avl_lps_cnt./cellfun(@length,avl_emp)'))  
+% h = bar(avl_lps_cnt,'stacked');
 % set(gca,'YScale','log')
 colors = linspecer(lps_cnt_max);
 for i = 1 : lps_cnt_max

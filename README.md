@@ -1,6 +1,6 @@
 # cascades
 
-This repository contains code for simulation and analysis used in [Ju et al. 2019](https://arxiv.org/abs/1812.09361) "Network structure of neural systems supporting cascading dynamics predicts stimulus propagation and recovery".
+This repository contains code for simulation and analysis used in [Ju et al. 2019](https://arxiv.org/abs/1812.09361) *Network structure of neural systems supporting cascading dynamics predicts stimulus propagation and recovery*.
 
 ## Setup
 

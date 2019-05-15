@@ -20,13 +20,13 @@ The repository's high-level structure is:
     ├──dynamics
     ├──graph
     ├──information
-    └──probability
+    └──markov
 ├──dynamics
     ├──inputs
     └──models
 └──figures
+    └──supplement
 ```
-
 #### Analysis
 
 #### Dynamics

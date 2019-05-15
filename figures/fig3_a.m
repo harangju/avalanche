@@ -1,5 +1,4 @@
-
-%% acyclic 3-node graph
+%% acyclic 3-node graph 
 Aa = [0 .5 0; 0 0 .5; 0 0 0];
 %% cyclic 3-node graph
 Ac = [0 .5 0; 0 0 .5; 0.5 0 0];
@@ -14,8 +13,7 @@ dur_c = avl_durations_cell(Yc);
 %%
 colors = linspecer(2);
 %%
-figure(1)
-clf
+figure
 x = unique(dur_a);
 y = histcounts(dur_a,[x max(x)+1]);
 loglog(x,y/sum(y),'s','Color',colors(1,:),'MarkerSize',7)

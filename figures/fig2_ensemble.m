@@ -2,7 +2,6 @@
 % ns = 50 : 50 : 300;
 graph_types = {'weightedrandom','ringlattice','mod4comm','wattsstrogatz'};
 iter = 30;
-dur = 100;
 N = 12;
 trials = 1e6;
 Ys = cell(length(graph_types),iter,N);
@@ -46,9 +45,5 @@ for i = 1 : length(graph_types)
     end
 end
 %% plot
-% figure(1)
-% boxplot(reshape(rmses, [length(graph_types), iter*N])')
-% prettify
 mean(reshape(rmses, [4,30*12]),2)'
 max(reshape(rmses, [4,30*12])')
-

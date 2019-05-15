@@ -23,6 +23,7 @@ for i = 1 : length(graph_types)
     for j = 1 : iter
         fprintf('%s graph #%d\n',graph_types{i},j)
         % network
+        % NEED TO UPDATE TO USE NETWORK-GENERATOR
         p.graph_type = graph_types{i};
         As{i,j} = network_create(p);
         % stimulus
@@ -88,37 +89,23 @@ for i = 1 : length(graph_types)
             squeeze(fit_mis{i,j}(:,1)));
     end
 end
-%% plot summary
-figure(5)
+%% fig5j
+figure
 boxplot(c_mis')
 prettify; axis([.5 4.5 0 1])
-%% plot examples
+%% fig5efgh
 for i = 1 : length(graph_types)
     j=1;
-    figure(i); clf
+    figure
     [~,order_dm] = sort(dms{i,j});
     surf(t_range,dms{i,j}(order_dm),mis{i,j}(order_dm,t_range),...
         'LineWidth',0.01)
     prettify; axis vis3d; view([45 15])
     title(graph_types{i})
 end
-%% plot example correlation
-figure(6); clf; hold on
-i=1;j=1;
-scatter(dms{i,j},fit_mis{i,j}(:,1),32,[3.1, 18.8, 42]./100,'.')
-x = min(dms{i,j}) : 1e-2 : max(dms{i,j});
-fit = polyfit(dms{i,j}, squeeze(fit_mis{i,j}(:,1)), 1);
-plot(x,polyval(fit,x),'r')
-prettify
-
 %% correlate sum of eigenvalues with mean MI decay
 As_list = As';
 ev_sum = cellfun(@(x) mean(abs(eig(x'))),As_list);
-% ev_sum = zeros(1, size(As,1)*size(As,2));
-% for i = 1 : size(As,1)*size(As,2)
-%     ev_sum(i) = eig_sum(As_list{i}');
-% end; clear i
-%%
 fit_list = fit_mis';
 fits = fit_list(:);
 slopes = zeros(length(fits),1);
@@ -126,12 +113,9 @@ for i = 1 : length(fits)
     slopes(i) = mean(fits{i}(:,1));
 end; clear i
 [c_ev_sum_fit_mis, p_val_sum_fit_mis] = corr(ev_sum', slopes);
-%%
-figure(7); clf; hold on
-% colors = [3.1, 18.8, 42;...
-%     2, 43.9, 69;...
-%     45.5, 66.3, 81.2;...
-%     81.6, 82, 90.2] ./ 100;
+%% fig5k
+figure
+hold on
 colors = linspecer(4);
 for i = 1 : length(graph_types)
     plot(ev_sum(1+(i-1)*iter : i*iter),...

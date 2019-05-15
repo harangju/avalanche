@@ -74,6 +74,7 @@ eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
 eq_p = @(x,a,s) eq_c(a,1./s,1) .* eq_f(x,a,1./s,1);
 eq_l = @(x,a,l) eq_c(a,l,1) .* eq_f(x,a,l,1);
+%% paper figures
 %% fig2d
 i = 10;
 j = 5;

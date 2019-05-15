@@ -48,47 +48,16 @@ for i = 1:length(ns)
     clear av av_mt av_end x0 Px0
     save
 end; clear i
-%% plot summary
-%%
-clf
-subplot(2,2,1)
-semilogy(cv_m,pl_d,'k.','MarkerSize',10)
-prettify; xlabel('\lambda_1'); ylabel('\tau')
-subplot(2,2,2)
-semilogy(cv_s,pl_d,'k.','Markersize',10)
-prettify; xlabel('\Sigma\lambda'); ylabel('\tau')
-subplot(2,2,3)
-plot(cv_m,pl_a,'k.','MarkerSize',10)
-prettify; xlabel('\lambda_1'); ylabel('\alpha')
-subplot(2,2,4)
-plot(cv_s,pl_a,'k.','MarkerSize',10)
-prettify; xlabel('\Sigma\lambda'); ylabel('\alpha')
-clear durs_max
 %% power law pdf
 eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
 eq_l = @(x,a,l) eq_c(a,l,1) .* eq_f(x,a,l,1);
-%% plot individual
-d = durs;
-for i = 1:length(d)
-    clf
-    x = unique(d{i});
-    loglog(x,histcounts(d{i},[x max(x)+1])./length(d{i}),'s')
-    hold on
-    loglog(x,eq_l(x,pl_dp(1,i,1),pl_dp(1,i,2)))
-    axis([10^0 10^4 10^-6 10^0])
-    prettify
-    pause
-end
-clear eq* d i x
-
-
 %% paper figures
-color = [2 43.9 69]/100;
-%% network
+color = linspecer(1);
+%% network measures
 cv_m = abs(cv_me);
 cv_s = cv_se;
-%% sim
+%% find correlations
 ft_pl_a_sim = ft_pl_sim(1,:,1);
 ft_pl_t_sim = 1./ft_pl_sim(1,:,2);
 durs_sim_max = cellfun(@max,durs_sim);
@@ -112,34 +81,25 @@ ft_a_emp = fit(cv_m',ft_pl_a_emp','poly1');
 [ce_r_t_emp,ce_p_t_emp] = corr(cv_m',log10(ft_pl_t_emp)',...
     'Type','Spearman');
 [ce_r_a_emp,ce_p_a_emp] = corr(cv_m',ft_pl_a_emp');
-%% simulation - tau
-% NOTE: Run synth - tau before this section
-figure(1)
-% clf
-% semilogy(cv_m,ft_pl_t_sim,'k.','MarkerSize',10)
+%% fig2e empirical
+figure
 semilogy(cv_m,ft_pl_t_sim,'.','MarkerSize',10,'Color',color)
 hold on
 x = min(cv_m):1e-3:max(cv_m);
 [ci,y] = predint(ft_t_sim,x,.95,'functional','off');
 ci = 10.^ci;
 y = 10.^y;
-% plot(x,y,'k')
-% patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],
-% 'black','FaceAlpha',0.15,...
-%     'LineStyle','none')
 plot(x,y,'Color',color)
 patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],color,...
     'FaceAlpha',0.1,'LineStyle','none')
+hold off
 prettify
 % xlabel('\lambda_1')
 % ylabel('\tau')
 % axis([.45 1.05 1 1000])
 clear x ci y
-%% simulation - alpha
-% NOTE: Run synth - alpha before this section
-figure(2)
-% clf
-% plot(cv_m,ft_pl_a_sim,'k.','MarkerSize',10)
+%% fig2f empirical
+figure
 plot(cv_m,ft_pl_a_sim,'.','MarkerSize',10,'Color',color)
 hold on
 x = min(cv_m):1e-3:max(cv_m);
@@ -154,8 +114,8 @@ prettify
 % ylabel('\alpha')
 % axis([.45 1.05 .9 1.6])
 clear x ci y
-%% empirical - tau
-figure(3)
+%% fig2g
+figure
 clf
 semilogy(cv_m,ft_pl_t_emp,'.','MarkerSize',10,'Color',color)
 hold on
@@ -170,9 +130,9 @@ prettify
 % xlabel('\lambda_1')
 % ylabel('\tau')
 % axis([.45 1.05 1 1000])
-clear x %ci y
-%% empirical - alpha
-figure(4)
+clear x ci y
+%% fig2h
+figure
 clf
 plot(cv_m,ft_pl_a_emp,'.','MarkerSize',10,'Color',color)
 hold on

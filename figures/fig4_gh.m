@@ -1,82 +1,64 @@
-
-%% 
-% NEED TO UPDATE TO USE NETWORK-GENERATOR
-rng(1)
-iter = 30;
-% network
-p = default_network_parameters;
-p.weighting = 'bimodalgaussian';
-p.weighting_params = [0.1 0.9 0.9 0.1 0.1];
-% p.weighting = 'uniform';
-% p.weighting_params = 1;
-p.N = 100;
-p.frac_conn = 0.2;
-pats = pings_single(p.N);
-patsm = cell2mat(pats);
-T = 1e3;
-K = 1e3;
-As = cell(1,iter);
-Ys = cell(iter,length(pats));
-for i = 1 : iter
-    fprintf('iter: %d\n',i)
-    As{i} = network_create(p);
-    disp(repmat('#',[1 length(pats)]))
-    for j = 1 : length(pats)
-        fprintf('.')
-        Ys{i,j} = avl_smp_many({pats{j}},1,As{i},T,K);
-    end; fprintf('\n')
-end; clear i j
-
-%% durations
-dur = cell(length(pats),iter);
-dm = zeros(length(pats),iter);
-for i = 1 : iter
-    for j = 1 : length(pats)
-        dur{j,i} = avl_durations_cell(Ys{i,j});
-        dm(j,i) = mean(dur{j,i});
+%% try loading pre-generated data
+if exist('source_data_dir','var')
+    load([source_data_dir '/fig4_g.mat'])
+else
+    iter = 30;
+    T = 1e3;
+    K = 1e3;
+    ns = cell(1,iter);
+    y0s = pings_single(100);
+    y0sm = cell2mat(y0s);
+    Ys = cell(iter,length(y0s));
+    durs = cell(1,iter);
+    durm = cell(1,iter);
+    sumeig = cell(1,iter);
+    fac = cell(1,iter);
+    mc = cell(1,iter);
+    r_se = zeros(1,iter);
+    pval_se = zeros(1,iter);
+    r_mc = zeros(1,iter);
+    pval_mc = zeros(1,iter);
+    r_fac = zeros(1,iter);
+    pval_ac = zeros(1,iter);
+    for i = 1 : iter
+        disp(['Iteration ' num2str(i)])
+        % create network
+        ns{i} = net.generate('erdosrenyi','n',100,'p',.2,'dir',true);
+        % UNCOMMENT for figures h
+%         n = net.distr_weights(n.A,'skewbinorm',...
+%             'mus',[.1 .9],'sigma',.001,'props',[.9 .1],'range',[0 1]);
+        ns{i}.A = ns{i}.A ./ sum(ns{i}.A,2);
+        disp('Simulate cascades...')
+        disp(repmat('#',[1 length(y0s)]))
+        for j = 1 : length(y0s)
+            fprintf('.')
+            Ys{i,j} = simulate(@smp,ns{i}.A,y0s(j),T,1,K);
+        end
+        fprintf('\n')
+        % durations
+        durs{i} = cellfun(@csc_durations,Ys(i,:),'uniformoutput',0);
+        durm{i} = cellfun(@mean,durs{i});
+        % eigenprojection
+        [v,d] = eig(ns{i}.A);
+        sumeig{i} = sum(abs((v\y0sm) .* diag(d)));
+        clear v d
+        % controllability
+        F = 100;
+        fac{i} = finite_impulse_responses(ns{i}.A,F);
+        mc{i} = control_modal(ns{i}.A);
+        % correlations
+        [r_se(i),p_se(i)] = corr(sumeig{i}',durm{i}');
+        [r_mc(i),p_mc(i)] = corr(mc{i},durm{i}');
+        [r_fac(i),p_fac(i)] = corr(fac{i},durm{i}');
     end
-end; clear i j
-%% prediction
-% finite_time = 10;
-% finite_time = 1000;
-finite_time = 100;
-ac = zeros(length(pats),iter);
-mc = zeros(length(pats),iter);
-od = zeros(length(pats),iter);
-sumeig = zeros(length(pats),iter);
-fprintf('iter: ')
-for i = 1 : iter
-    fprintf('%d ',i)
-    ac(:,i) = finite_impulse_responses(As{i}',finite_time);
-    mc(:,i) = control_modal(As{i}');
-    for j = 1 : length(pats)
-        [v,d] = eig(As{i}');
-        sumeig(:,i) = sum(abs((v\patsm) .* diag(d)))';
-    end
-    od(:,i) = sum(As{i},2);
-end; clear i j v d; fprintf('done\n')
-%% correlations
-corr_ac = zeros(iter,1);
-corr_mc = zeros(iter,1);
-corr_sumeig = zeros(iter,1);
-corr_od = zeros(iter,1);
-for i = 1 : iter
-    corr_ac(i) = corr(ac(:,i),dm(:,i));
-    corr_mc(i) = corr(mc(:,i),dm(:,i));
-    corr_sumeig(i) = corr(sumeig(:,i),dm(:,i));
-%     corr_od(i) = corr(od(:,i),dm(:,i));
-end; clear i j
+clear i j
+end
 %% fig4g,h
-clf
-boxplot([corr_sumeig corr_mc corr_ac],...
+figure
+boxplot([r_se r_mc r_fac],...
     'Labels',{'ME','MC','AC'})
-fprintf(['\tAC\tMC\tME\n'...
+fprintf(['\tSE\tMC\tAC\n'...
     'mean\t%.4f\t%.4f\t%.4f\n'],...
-    mean(corr_ac),mean(corr_mc),mean(corr_sumeig))
-% boxplot([corr_ac corr_mc corr_sumeig corr_od],...
-%     'Labels',{'AC','MC','ME','OD'})
-% fprintf(['\tAC\tMC\tME\tOD\n'...
-%     'mean\t%.4f\t%.4f\t%.4f\t%.4f\n'],...
-%     mean(corr_ac),mean(corr_mc),mean(corr_sumeig),mean(corr_od))
+    mean(r_se),mean(r_mc),mean(r_fac))
 prettify
 

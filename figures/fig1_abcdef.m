@@ -1,25 +1,25 @@
-%% source
-% uncomment to use same data from paper, Ju et al. 2019
-% basedir = '~/Downloads/Source Data';
-%% a
-if exist('basedir','var')
-    load([basedir '/fig1_abcdef'])
+%% try loading pre-generated data
+if exist('source_data_dir','var')
+    load([source_data_dir '/fig1_abcdef.mat'])
 else
+    % generate network
     n = net.generate('erdosrenyi','n',10,'p',0.2,'dir',true);
     n.A = n.A./sum(n.A,1);
     n.A(isnan(n.A)) = 0;
+    %
+    K = 1e5;
+    Tmax = 15;
+    if ~exist('basedir','var')
+        [y0s,p_y0s] = pings_single(size(n.A,1));
+        [Y,i_y0s] = simulate(@smp,n.A,y0s,Tmax,p_y0s,K);
+    end
+    neur = 8;
+    Y_n = Y(i_y0s==neur);
+    idx = [8 1 20 2];
 end
+%% a
 % use webweb to generate graph (https://github.com/dblarremore/webweb)
 %% b
-K = 1e5;
-Tmax = 15;
-if ~exist('basedir','var')
-    [y0s,p_y0s] = pings_single(size(n.A,1));
-    [Y,i_y0s] = simulate(@smp,n.A,y0s,Tmax,p_y0s,K);
-end
-neur = 8;
-Y_n = Y(i_y0s==neur);
-idx = [8 1 20 2];
 figure
 for i = 1 : length(idx)
     subplot(1,length(idx),i)

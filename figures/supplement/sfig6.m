@@ -24,4 +24,3 @@ for i = 1 : length(files)
         bin_sum(:,i),'delimiter','\t')
 end
 clear i
-%% synthetic

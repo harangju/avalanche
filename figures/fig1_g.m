@@ -1,12 +1,10 @@
-%% source
-% uncomment to use same data from paper, Ju et al. 2019
-% basedir = '~/Downloads/Source Data';
-%% simulate
-N = 10;
-P = 0.2;
-if exist('basedir','var')
-    load([basedir '/fig1_g'])
+%% try loading pre-generated data
+if exist('source_data_dir','var')
+    load([source_data_dir '/fig1_g.mat'])
 else
+    disp('Simulating...')
+    N = 10;
+    P = 0.2;
     num_neur = 50 : 50 : 300;
     Tmax = 15;
     K = 1e4;
@@ -14,18 +12,16 @@ else
     i_y0s = cell(1,length(num_neur));
     Xs = cell(1,length(num_neur));
     for i = 1 : length(num_neur)
-        num = num_neur(i);
-        disp(num)
+        fprintf(['\twith ' num2str(num_neur(i)) ' neurons'])
         n = net.generate('erdosrenyi','n',N,'p',P,'dir',true);
         n.A = n.A./sum(n.A,1);
         n.A(isnan(n.A)) = 0;
         [y0s, p_y0s] = pings_single(size(n.A,1));
         [Ys{i},i_y0s{i}] = simulate(@smp,n.A,y0s,Tmax,p_y0s,K);
         Xs{i} = simulate(@linear,n.A,y0s,Tmax);
-    end; clear i num n pats probs
-end
-%% calculate
-if ~exist('basedir','var')
+        fprintf('\n')
+    end
+    clear i num n pats probs
     df = cell(1,length(num_neur));
     for i = 1 : length(num_neur)
         df{i} = 0;
@@ -37,7 +33,7 @@ if ~exist('basedir','var')
     end
     clear i n Y_n Y_n_avg
 end
-%% g
+%% fig1g
 df_m = cellfun(@mean,df);
 df_sd = cellfun(@std,df);
 figure

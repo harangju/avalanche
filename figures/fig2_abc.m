@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig3_a.mat'])
+    load([source_data_dir '/fig2_abc.mat'])
 else
     % network
     n = net.generate('erdosrenyi','n',10,'p',0.2,'dir',true);

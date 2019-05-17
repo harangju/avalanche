@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig3_a.mat'])
+    load([source_data_dir '/fig2_def.mat'])
 else
     disp('Generating networks...')
     sn_b = {...
@@ -58,10 +58,11 @@ else
     durs = cellfun(@csc_durations,cascades,'uniformoutput',0);
     save('durs','durs','T')
     disp(['Run fig2_efgh.ipynb in jupyter notebook for exponential'...
-        'power laws. Then, run next section in the script.'])
+        'power laws. Load ft_pl. Then run next section in the script.'])
 end
 %% continuing...
 if exist('source_data_dir','var') ~= 1
+    disp('Calculating correlations...')
     eigmax_vec = eigmax(:);
     eigsum_vec = eigsum(:);
     ft_pl_a = ft_pl(:,:,1);
@@ -102,8 +103,8 @@ clear i j x e y eq_c eq_f eq_l
 %% fig2e
 figure
 clf
-semilogy(eigmax_vec(eigmax_vec<1),ft_pl_t(eigmax_vec<1),'.','MarkerSize',10,...
-    'Color',color)
+semilogy(eigmax_vec(eigmax_vec<1),ft_pl_t(eigmax_vec<1),'.',...
+    'MarkerSize',10,'Color',color)
 hold on
 x1 = min(eigmax_vec(eigmax_vec<1)):1e-3:max(eigmax_vec(eigmax_vec<1));
 [ci1,y1] = predint(ft_t,x1,.95,'observation','off');
@@ -119,9 +120,11 @@ clear x1 x2 ci1 ci2 y1 y2
 %% fig2f
 figure
 clf
-plot(eigmax_vec(eigmax_vec<1),ft_pl_a(eigmax_vec<1),'.','MarkerSize',10,'Color',color)
+plot(eigmax_vec(eigmax_vec<1),ft_pl_a(eigmax_vec<1),'.',...
+    'MarkerSize',10,'Color',color)
 hold on
-x1 = min(eigmax_vec(eigmax_vec<1&eigmax_vec>.8)):1e-3:max(eigmax_vec(eigmax_vec<1&eigmax_vec>.8));
+x1 = min(eigmax_vec(eigmax_vec<1&eigmax_vec>.8)) : 1e-3 :...
+    max(eigmax_vec(eigmax_vec<1&eigmax_vec>.8));
 [ci1,y1] = predint(ft_a,x1,.95,'observation','off');
 plot(x1,y1,'Color',color)
 patch([x1 fliplr(x1)],[ci1(:,1)' fliplr(ci1(:,2)')],...

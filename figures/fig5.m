@@ -50,6 +50,7 @@ else
                 [Ys{i,j}{k}, i_y0s{i,j}(k,:)] = simulate(@smp,...
                     ns{i,j}.A,y0s{i,j},T,probs,K);
             end
+            clear probs
             fprintf('\n')
         end
     end
@@ -77,8 +78,8 @@ else
                 y0 = i_y0s{i,j}(k,:)';
                 y0(i_y0s{i,j}(k,:)==k) = 1;
                 y0(i_y0s{i,j}(k,:)~=k) = 0;
-                m = mutual_info_pop(csc_cell_to_mat(Ys{i,j}{k}),y0);
-                mis{i,j}(k,1:length(m)) = m;
+                mis{i,j}(k,1:length(m)) = ...
+                    mutual_info_pop(csc_cell_to_mat(Ys{i,j}{k}),y0);
             end
             fprintf('\n')
             % fits
@@ -130,13 +131,16 @@ figure
 hold on
 colors = linspecer(4);
 for i = 1 : length(graphs)
-    plot(me(1+(i-1)*iter : i*iter),...
-        slopes(1+(i-1)*iter : i*iter),...
+%     plot(me(1+(i-1)*iter : i*iter),...
+%         slopes(1+(i-1)*iter : i*iter),...
+%         '.','Color',colors(i,:),'MarkerSize',10)
+    plot(me(sub2ind([length(graphs) iter], i*ones(1,iter), 1:iter)),...
+        slopes(sub2ind([length(graphs) iter], i*ones(1,iter), 1:iter)),...
         '.','Color',colors(i,:),'MarkerSize',10)
 end
-clear clear i
+clear i
 legend(graphs)
-f = polyfit(me(:),slopes,1);
+f = polyfit(me,slopes,1);
 x = min(me(:)) : 1e-3 : max(me(:));
 plot(x,polyval(f,x),'r')
 prettify

@@ -33,7 +33,7 @@ else
         fprintf('\n')
     end
     clear T active
-    % calculate correlations
+    disp('Calculating correlations...')
     ps = zeros(length(nets),length(Ts));
     rs = zeros(length(nets),length(Ts));
     for i = 1 : length(nets)

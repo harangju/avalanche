@@ -3,7 +3,6 @@ function cycles = find_struct_cycles(A)
 %   returns the simple cycles, cycles, in the network adjacency matrix A
 %   uses python & networkx
 py.importlib.import_module('networkx');
-clear ans
 g = py.networkx.DiGraph();
 for i = 1 : size(A,1)
     for j = 1 : size(A,2)

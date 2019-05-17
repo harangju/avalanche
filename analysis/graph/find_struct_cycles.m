@@ -12,3 +12,4 @@ for i = 1 : size(A,1)
     end
 end
 cycles = cell(py.list(py.networkx.simple_cycles(g)));
+cycles = cellfun(@(x) cell2mat(cell(x)),cycles,'uniformoutput',0);

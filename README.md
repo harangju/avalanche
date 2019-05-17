@@ -8,12 +8,14 @@ Code developed using `MATLAB 2018a` and `python 3.7.3`.
 * [Network generator](https://github.com/BassettLab/network-generator) (for figures 1, 2, 4, and 5)
 * [MIToolbox](https://github.com/Craigacp/MIToolbox) (for mutual information analysis in Figure 5)
 * [linspecer](https://www.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-colormap) (for figures 2, 3, and 5)
+* [powerlaw](https://github.com/jeffalstott/powerlaw) (for figure 2)
 
 ## Use
 The repository's high-level structure is:
 ```
 ├──analysis
     ├──cascades
+    ├──depracated code
     ├──dynamics
     ├──graph
     ├──information

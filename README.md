@@ -2,7 +2,7 @@
 This repository contains code for simulation and analysis used in [Ju et al. 2019](https://arxiv.org/abs/1812.09361) (*Network structure of neural systems supporting cascading dynamics predicts stimulus propagation and recovery*).
 
 ## Setup
-Code developed using `MATLAB 2018a` and `python 3.7.3`.
+Code developed using `MATLAB 2018a` and `python 3.7.3`. For help using python in MATLAB, see [system configuration](https://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html).
 
 ### Dependencies
 * [Network generator](https://github.com/BassettLab/network-generator) (for figures 1, 2, 4, and 5)

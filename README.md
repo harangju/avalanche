@@ -30,7 +30,7 @@ The repository's high-level structure is:
 ### Figure generation
 
 **To generate the figures from pre-generated data**,
-1. Set `source_data_dir` to the directory containing the source data (e.g. `source_data_dir = '/Users/username/Downloads/Source Data';`). Download the pre-generated **source data** from [figshare](https://figshare.com/s/7fde7bdbc09c7b34074a).
+1. Set `source_data_dir` to the directory containing the source data (e.g. `source_data_dir = '/Users/username/Downloads/Source Data';`). Download the pre-generated **source data** from [figshare](https://figshare.com/s/f517286cad7994ab0aa9).
 2. Run the scripts in `figures`.
 
 **To generate all figures from scratch**,

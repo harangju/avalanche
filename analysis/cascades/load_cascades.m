@@ -2,8 +2,9 @@ function cascades = load_cascades(emp_data_dir)
 % cascades = load_cascades(emp_data_dir)
 %   returns a cell array of cascade from empirical data (see README)
 
+bin_size = 5;
+
 files = dir([emp_data_dir '/*.mat']);
-bin_size = 2;
 cascades = cell(1,length(files));
 for i = 1 : length(files)
     disp(['Analyzing ' files(i).name '...'])

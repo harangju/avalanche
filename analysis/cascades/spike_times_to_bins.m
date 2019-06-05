@@ -12,7 +12,9 @@ bs = zeros(N, bin_max);
 for n = 1 : N
     bins = spike_bins{n};
     bins(bins==0) = [];
-    bs(n,bins) = bs(n,bins) + 1; % this removes #spikes in bins
+%     bs(n,bins) = bs(n,bins) + 1; % this removes #spikes in bins
+    bs(n,unique(bins)) = bs(n,unique(bins)) + ...
+        histcounts(bins,[unique(bins) max(bins)+1]); % this counts #spikes
 end
 
 end

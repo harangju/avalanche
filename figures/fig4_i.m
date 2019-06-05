@@ -19,7 +19,7 @@ else
     Ts = 1:10;
     fac_x0 = cell(length(nets),length(Ts));
     for i = 1 : length(cascades)
-        fprintf(['\trecording ' num2str(i) '; t ='])
+        fprintf(['\t recording ' num2str(i) '; t ='])
         for j = 1 : length(Ts)
             fprintf([' ' num2str(j)])
             fac_x0{i,j} = zeros(1,length(cascades{i}));

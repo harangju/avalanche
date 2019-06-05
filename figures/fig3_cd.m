@@ -33,7 +33,7 @@ clear i lps_r x
 %% fig3d
 figure
 clf
-h = bar(lp_cnt./csc_cnt','stacked');
+h = bar(lp_cnt./csc_cnt,'stacked');
 colors = linspecer(lps_cnt_max);
 for i = 1 : lps_cnt_max
     h(i).FaceColor = colors(i,:);

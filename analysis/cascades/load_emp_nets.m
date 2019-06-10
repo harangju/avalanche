@@ -14,7 +14,7 @@ if exist(emp_nets_filename,'file') == 2
     nets = data.nets;
 else
     files = dir([emp_data_dir '/*.mat']);
-    nets = cell(1,length(files));
+    nets = cell(length(files),1);
     for i = 1 : length(files)
         disp(['Analyzing ' files(i).name '...'])
         x = load([emp_data_dir '/' files(i).name]);

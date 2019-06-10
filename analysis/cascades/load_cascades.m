@@ -5,7 +5,7 @@ function cascades = load_cascades(emp_data_dir)
 bin_size = 5;
 
 files = dir([emp_data_dir '/*.mat']);
-cascades = cell(1,length(files));
+cascades = cell(length(files),1);
 for i = 1 : length(files)
     disp(['Analyzing ' files(i).name '...'])
     x = load([emp_data_dir '/' files(i).name]);

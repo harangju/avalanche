@@ -1,9 +1,8 @@
-%% ks test
+%% load data
 if exist('source_data_dir','var')
     load([source_data_dir '/fig2_efgh.mat'])
 end
-%% 
-% figure
+%% figure
 clf
 hold on
 boxplot([ft_cmp_emp.exp_power_v_exp(:,1)...

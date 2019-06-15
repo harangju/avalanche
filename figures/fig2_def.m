@@ -101,7 +101,7 @@ i = 79;
 x = unique(durs{i});
 y = histcounts(durs{i},[x T+1]) / length(durs{i});
 clf
-loglog(x,y,'.','Color',color,'MarkerSize',12)
+loglog(x,y,'k.','MarkerSize',12)
 hold on
 eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);

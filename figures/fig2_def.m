@@ -97,15 +97,11 @@ end
 %% fig2d
 figure
 color = linspecer(1);
-<<<<<<< HEAD
 i = 79;
-=======
-i =78;
->>>>>>> 3ee94b8f81cce8ec14a929f7dc5ef754365f530c
 x = unique(durs{i});
 y = histcounts(durs{i},[x T+1]) / length(durs{i});
 clf
-loglog(x,y,'.','Color',color,'MarkerSize',10)
+loglog(x,y,'.','Color',color,'MarkerSize',12)
 hold on
 eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);

@@ -176,11 +176,12 @@ xlabel('\lambda_1')
 ylabel('\alpha')
 clear x ci y color
 
+%% display stats
+disp(ft_corr)
+disp(['Alpha = ' num2str(mean(ft_pl_emp.Alpha))...
+    '+-' num2str(std(ft_pl_emp.Alpha)/sqrt(length(dur_emp)))])
 
-
-
-
-% %%
+%%
 % subplot(2,1,1)
 % plot(dur_avg,ft_pl_emp.Alpha,'k.','MarkerSize',10)
 % prettify

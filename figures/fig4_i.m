@@ -51,3 +51,8 @@ boxplot(rs)
 plot(Ts, rs, 'k.')
 prettify
 % axis([.5 4.5 -.05 .5])
+%% display stats
+disp('Spearmans rho')
+disp([rs; mean(rs)])
+disp('p-value')
+disp(ps)

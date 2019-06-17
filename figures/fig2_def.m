@@ -142,4 +142,7 @@ prettify
 xlabel('\lambda_1')
 ylabel('\alpha')
 clear x1 x2 ci1 ci2 y1 y2
-
+%% display stats
+disp(ft_corr)
+disp(['Alpha = ' num2str(mean(ft_pl_sim.Alpha))...
+    '+-' num2str(std(ft_pl_sim.Alpha)/sqrt(length(durs)))])

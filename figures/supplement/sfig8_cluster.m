@@ -6,8 +6,8 @@
 
 %% load data
 bin_width = 5;
-disp(['Loading ' emp_data_dir '"/Dataset' num2str(idx_data) '.mat"...'])
-x = load([emp_data_dir '/Dataset' num2str(idx_data) '.mat']);
+disp(['Loading ' emp_data_dir '"/DataSet' num2str(idx_data) '.mat"...'])
+x = load([emp_data_dir '/DataSet' num2str(idx_data) '.mat']);
 data.raster = bin_spike_times(x.data.spikes, bin_width);
 Av = avprops(data, 'ratio', 'fingerprint');
 clear x data

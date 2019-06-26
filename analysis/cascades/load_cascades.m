@@ -1,4 +1,4 @@
-function cascades = load_cascades(emp_data_dir)
+function [cascades, files] = load_cascades(emp_data_dir)
 % cascades = load_cascades(emp_data_dir)
 %   returns a cell array of cascade from empirical data (see README)
 

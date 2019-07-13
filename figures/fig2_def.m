@@ -95,12 +95,13 @@ if exist('source_data_dir','var') ~= 1
     disp(ft_corr)
 end
 %% fig2d
+figure
 color = linspecer(1);
-i =78;
+i = 79;
 x = unique(durs{i});
 y = histcounts(durs{i},[x T+1]) / length(durs{i});
 clf
-loglog(x,y,'.','Color',color,'MarkerSize',10)
+loglog(x,y,'k.','MarkerSize',12)
 hold on
 eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
@@ -141,4 +142,7 @@ prettify
 xlabel('\lambda_1')
 ylabel('\alpha')
 clear x1 x2 ci1 ci2 y1 y2
-
+%% display stats
+disp(ft_corr)
+disp(['Alpha = ' num2str(mean(ft_pl_sim.Alpha))...
+    '+-' num2str(std(ft_pl_sim.Alpha)/sqrt(length(durs)))])

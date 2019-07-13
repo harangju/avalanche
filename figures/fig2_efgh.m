@@ -34,10 +34,8 @@ if exist('source_data_dir','var') ~= 1
     disp('Loading power law fits...')
     load('ft_pl.mat')
     ft_pl = squeeze(ft_pl);
-    ft_pl_sim = table(ft_pl(:,1),...
-        1./ft_pl(:,2),...
-        min(1./ft_pl(:,2),T),...
-        ft_pl(:,3),...
+    ft_pl_sim = table(...
+        ft_pl(:,1), 1./ft_pl(:,2), min(1./ft_pl(:,2),T), ft_pl(:,3),...
         'VariableNames',{'Alpha','Tau','Tau_prime','Xmin'},...
         'RowNames',arrayfun(@num2str,1:length(ft_pl),'un',0));
     clear ft_pl
@@ -56,13 +54,24 @@ end
 if exist('source_data_dir','var') ~= 1
     disp('Loading power law fits...')
     load('ft_pl.mat')
-    ft_pl_emp = table(ft_pl(:,1),...
-        1./ft_pl(:,2),...
-        min(1./ft_pl(:,2),cellfun(@max,dur_emp)'),...
-        ft_pl(:,3),...
+    ft_pl_emp = table(...
+        ft_pl(:,1), 1./ft_pl(:,2),...
+        min(1./ft_pl(:,2),cellfun(@max,dur_emp)), ft_pl(:,3),...
         'VariableNames',{'Alpha','Tau','Tau_prime','Xmin'},...
         'RowNames',arrayfun(@num2str,1:length(ft_pl),'un',0));
-    clear ft_pl
+%     ft_cmp_emp = table(...
+%         t_tpl_exp(:,1), t_tpl_exp(:,2),...
+%         t_pl_exp(:,1), t_pl_exp(:,2),...
+%         t_pl_tpl(:,1), t_pl_tpl(:,2),...
+%         'VariableNames',...
+%         {'R_exp_power_v_exp','p_exp_power_v_exp',...
+%         'R_power_v_exp','p_power_v_exp',...
+%         'R_power_v_exp_power','p_power_v_exp_power'});
+    ft_cmp_emp = table(...
+        t_tpl_exp, t_pl_exp, t_pl_tpl,...
+        'VariableNames',...
+        {'exp_power_v_exp', 'power_v_exp', 'power_v_exp_power'});
+    clear ft_pl t_*
 end
 %% continuing...
 if exist('source_data_dir','var') ~= 1
@@ -103,16 +112,16 @@ if exist('source_data_dir','var') ~= 1
     disp(ft_corr)
 end
 %% fig2e empirical
-figure
-color = linspecer(1);
-semilogy(eigmax,ft_pl_sim.Tau_prime,'.','MarkerSize',10,'Color',color)
+% figure
+color = linspecer(2);
+semilogy(eigmax,ft_pl_sim.Tau_prime,'.','MarkerSize',10,'Color',color(2,:))
 hold on
 x = min(eigmax):1e-3:max(eigmax);
 [ci,y] = predint(ft_lin.Tau_prime{1},x,.95,'functional','off');
 ci = 10.^ci;
 y = 10.^y;
-plot(x,y,'Color',color)
-patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],color,...
+plot(x,y,'Color',color(2,:))
+patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],color(2,:),...
     'FaceAlpha',0.1,'LineStyle','none')
 hold off
 prettify
@@ -121,15 +130,15 @@ ylabel('\tau')
 clear x ci y
 %% fig2f empirical
 figure
-plot(eigmax,ft_pl_sim.Alpha,'.','MarkerSize',10,'Color',color)
+plot(eigmax,ft_pl_sim.Alpha,'.','MarkerSize',10,'Color',color(2,:))
 hold on
 x = min(eigmax):1e-3:max(eigmax);
 [ci,y] = predint(ft_lin.Alpha{1},x,.95,'functional','off');
 ci(ci<=0) = 0;
 y(y<=0) = 0;
-plot(x,y,'Color',color)
-patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],color,'FaceAlpha',0.1,...
-    'LineStyle','none')
+plot(x,y,'Color',color(2,:))
+patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],color(2,:),...
+    'FaceAlpha',0.1,'LineStyle','none')
 prettify
 xlabel('\lambda_1')
 ylabel('\alpha')
@@ -137,15 +146,15 @@ clear x ci y
 %% fig2g
 figure
 clf
-semilogy(eigmax,ft_pl_emp.Tau_prime,'.','MarkerSize',10,'Color',color)
+semilogy(eigmax,ft_pl_emp.Tau_prime,'.','MarkerSize',10,'Color',color(2,:))
 hold on
 x = min(eigmax):1e-3:max(eigmax);
 [ci,y] = predint(ft_lin.Tau_prime{2},x,.95,'functional','on');
 ci = 10.^ci;
 y = 10.^y;
-plot(x,y,'Color',color)
+plot(x,y,'Color',color(2,:))
 patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
-    color,'FaceAlpha',0.15, 'LineStyle','none')
+    color(2,:),'FaceAlpha',0.15, 'LineStyle','none')
 prettify
 xlabel('\lambda_1')
 ylabel('\tau')
@@ -153,169 +162,170 @@ clear x ci y
 %% fig2h
 figure
 clf
-plot(eigmax,ft_pl_emp.Alpha,'.','MarkerSize',10,'Color',color)
+plot(eigmax,ft_pl_emp.Alpha,'.','MarkerSize',10,'Color',color(2,:))
 hold on
 x = min(eigmax):1e-3:max(eigmax);
 [ci,y] = predint(ft_lin.Alpha{2},x,.95,'functional','on');
 ci(ci<=0) = 0;
 y(y<=0) = 0;
-plot(x,y,'Color',color)
+plot(x,y,'Color',color(2,:))
 patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
-    color,'FaceAlpha',0.15,'LineStyle','none')
+    color(2,:),'FaceAlpha',0.15,'LineStyle','none')
 prettify
 xlabel('\lambda_1')
 ylabel('\alpha')
 clear x ci y color
 
-
-
-
+%% display stats
+disp(ft_corr)
+disp(['Alpha = ' num2str(mean(ft_pl_emp.Alpha))...
+    '+-' num2str(std(ft_pl_emp.Alpha)/sqrt(length(dur_emp)))])
 
 %%
-subplot(2,1,1)
-plot(dur_avg,ft_pl_emp.Alpha,'k.','MarkerSize',10)
-prettify
-xlabel('\lambda_1')
-ylabel('\alpha')
-title(['r=' num2str(ft_corr.r_alpha(2)) ...
-    '; p=' num2str(ft_corr.p_alpha(2))])
-clear x ci y color
-subplot(2,1,2)
-semilogy(dur_avg,ft_pl_emp.Tau_prime,'k.','MarkerSize',10)
-prettify
-xlabel('\lambda_1')
-ylabel('\tau')
-title(['r=' num2str(ft_corr.r_tau(2)) ...
-    '; p=' num2str(ft_corr.p_tau(2))])
-clear x ci y
-%%
-[~,idx] = sort(eigmax);
-for i = idx
-    clf
-    
-    subplot(2,4,1)
-    hold on
-    plot(eigmax,ft_pl_emp.Alpha,'k.','MarkerSize',10)
-    plot(eigmax(i),ft_pl_emp.Alpha(i),'xr')
-    x = min(eigmax):1e-3:max(eigmax);
-    [ci,y] = predint(ft_lin.Alpha{2},x,.95,'functional','on');
-    ci(ci<=0) = 0;
-    y(y<=0) = 0;
-    plot(x,y,'g')
-    patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
-        'g','FaceAlpha',0.15,'LineStyle','none')
-    prettify
-    xlabel('\lambda_1')
-    ylabel('\alpha')
-    title(['emp r=' num2str(ft_corr.r_alpha(2)) ...
-        '; p=' num2str(ft_corr.p_alpha(2))])
-    clear x ci y color
-    
-    subplot(2,4,2)
-    semilogy(eigmax,ft_pl_emp.Tau_prime,'k.','MarkerSize',10)
-    hold on
-    plot(eigmax(i),ft_pl_emp.Tau_prime(i),'xr')
-    x = min(eigmax):1e-3:max(eigmax);
-    [ci,y] = predint(ft_lin.Tau_prime{2},x,.95,'functional','on');
-    ci = 10.^ci;
-    y = 10.^y;
-    plot(x,y,'g')
-    patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
-        'g','FaceAlpha',0.15, 'LineStyle','none')
-    prettify
-    xlabel('\lambda_1')
-    ylabel('\tau')
-    title(['emp r=' num2str(ft_corr.r_tau_p(2)) ...
-        '; p=' num2str(ft_corr.p_tau_p(2))])
-    clear x ci y
-    
-    subplot(2,4,3)
-    hold on
-%     plot(eigmax,ft_pl_sim.Alpha,'k.','MarkerSize',10)
-%     plot(eigmax(i),ft_pl_sim.Alpha(i),'xr')
+% subplot(2,1,1)
+% plot(dur_avg,ft_pl_emp.Alpha,'k.','MarkerSize',10)
+% prettify
+% xlabel('\lambda_1')
+% ylabel('\alpha')
+% title(['r=' num2str(ft_corr.r_alpha(2)) ...
+%     '; p=' num2str(ft_corr.p_alpha(2))])
+% clear x ci y color
+% subplot(2,1,2)
+% semilogy(dur_avg,ft_pl_emp.Tau_prime,'k.','MarkerSize',10)
+% prettify
+% xlabel('\lambda_1')
+% ylabel('\tau')
+% title(['r=' num2str(ft_corr.r_tau(2)) ...
+%     '; p=' num2str(ft_corr.p_tau(2))])
+% clear x ci y
+% %%
+% [~,idx] = sort(eigmax);
+% for i = idx
+%     clf
+%     
+%     subplot(2,4,1)
+%     hold on
+%     plot(eigmax,ft_pl_emp.Alpha,'k.','MarkerSize',10)
+%     plot(eigmax(i),ft_pl_emp.Alpha(i),'xr')
 %     x = min(eigmax):1e-3:max(eigmax);
-    plot(eigmax_plus,ft_pl_sim.Alpha,'k.','MarkerSize',10)
-    plot(eigmax_plus(i),ft_pl_sim.Alpha(i),'xr')
-    x = min(eigmax_plus):1e-3:max(eigmax_plus);
-    [ci,y] = predint(ft_lin.Alpha{1},x,.95,'functional','on');
-    ci(ci<=0) = 0;
-    y(y<=0) = 0;
-    plot(x,y,'g')
-    patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
-        'g','FaceAlpha',0.15,'LineStyle','none')
-    prettify
-    xlabel('\lambda_1')
-    ylabel('\alpha')
-    title(['sim r=' num2str(ft_corr.r_alpha(1)) ...
-        'p=' num2str(ft_corr.p_alpha(1))])
-    clear x ci y color
-    
-    subplot(2,4,4)
-%     semilogy(eigmax,ft_pl_sim.Tau_prime,'k.','MarkerSize',10)
-    semilogy(eigmax_plus,ft_pl_sim.Tau_prime,'k.','MarkerSize',10)
-    hold on
-%     plot(eigmax(i),ft_pl_sim.Tau_prime(i),'xr')
+%     [ci,y] = predint(ft_lin.Alpha{2},x,.95,'functional','on');
+%     ci(ci<=0) = 0;
+%     y(y<=0) = 0;
+%     plot(x,y,'g')
+%     patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
+%         'g','FaceAlpha',0.15,'LineStyle','none')
+%     prettify
+%     xlabel('\lambda_1')
+%     ylabel('\alpha')
+%     title(['emp r=' num2str(ft_corr.r_alpha(2)) ...
+%         '; p=' num2str(ft_corr.p_alpha(2))])
+%     clear x ci y color
+%     
+%     subplot(2,4,2)
+%     semilogy(eigmax,ft_pl_emp.Tau_prime,'k.','MarkerSize',10)
+%     hold on
+%     plot(eigmax(i),ft_pl_emp.Tau_prime(i),'xr')
 %     x = min(eigmax):1e-3:max(eigmax);
-    plot(eigmax_plus(i),ft_pl_sim.Tau_prime(i),'xr')
-    x = min(eigmax_plus):1e-3:max(eigmax_plus);
-    [ci,y] = predint(ft_lin.Tau_prime{1},x,.95,'functional','on');
-    ci = 10.^ci;
-    y = 10.^y;
-    plot(x,y,'g')
-    patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
-        'g','FaceAlpha',0.15, 'LineStyle','none')
-    prettify
-    xlabel('\lambda_1')
-    ylabel('\tau')
-    title(['sim r=' num2str(ft_corr.r_tau_p(1)) ...
-        '; p=' num2str(ft_corr.p_tau_p(1))])
-    clear x ci y
-    
-    subplot(2,4,5)
-    plot_log(dur_emp{i})
-    title(num2str(eigmax(i)))
-    hold on
-    plot_pl_fit(dur_emp{i},ft_pl_emp.Alpha(i),ft_pl_emp.Tau_prime(i),...
-        ft_pl_emp.Xmin(i))
-    
-    subplot(2,4,6)
-    imagesc(nets{i}.A)
-    prettify
-    colorbar
-    n1 = round(1000*-1*min(nets{i}.A(:)));
-    n2 = round(1000*max(nets{i}.A(:)));
-    colormap([linspace(0,1,n1)' linspace(0,1,n1)' ones(n1,1);...
-        ones(n2,1) linspace(1,0,n2)' linspace(1,0,n2)'])
-    clear n1 n2
-    
-    subplot(2,4,7)
-    plot_log(dur_sim_plus{i})
-    title(num2str(eigmax_plus(i)))
-    hold on
-    plot_pl_fit(dur_sim_plus{i},ft_pl_sim.Alpha(i),ft_pl_sim.Tau(i),...
-        ft_pl_sim.Xmin(i))
-    
-    saveas(gcf,[num2str(find(idx==i)) '.png'])
-end
-clear i idx
-%%
-clf
-plot_log(d)
-hold on
-plot_pl_fit(d,ft_pl(1),1/ft_pl(2),ft_pl(3))
-function plot_log(d)
-x = unique(d);
-% x = 10.^(0:0.01:log10(max(d)));
-y = histcounts(d,[x max(x)+1]);
-loglog(x,y./sum(y),'.')
-axis([1 10^4 10^-6 1])
-prettify
-end
-function plot_pl_fit(d,a,t,xmin)
-x = unique(d);
-eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
-eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
-eq_l = @(x,a,l,xm) eq_c(a,l,xm) .* eq_f(x,a,l,xm);
-y = eq_l(x,a,1./t,xmin);
-loglog(x,y./sum(y),'b-')
-end
+%     [ci,y] = predint(ft_lin.Tau_prime{2},x,.95,'functional','on');
+%     ci = 10.^ci;
+%     y = 10.^y;
+%     plot(x,y,'g')
+%     patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
+%         'g','FaceAlpha',0.15, 'LineStyle','none')
+%     prettify
+%     xlabel('\lambda_1')
+%     ylabel('\tau')
+%     title(['emp r=' num2str(ft_corr.r_tau_p(2)) ...
+%         '; p=' num2str(ft_corr.p_tau_p(2))])
+%     clear x ci y
+%     
+%     subplot(2,4,3)
+%     hold on
+% %     plot(eigmax,ft_pl_sim.Alpha,'k.','MarkerSize',10)
+% %     plot(eigmax(i),ft_pl_sim.Alpha(i),'xr')
+% %     x = min(eigmax):1e-3:max(eigmax);
+%     plot(eigmax_plus,ft_pl_sim.Alpha,'k.','MarkerSize',10)
+%     plot(eigmax_plus(i),ft_pl_sim.Alpha(i),'xr')
+%     x = min(eigmax_plus):1e-3:max(eigmax_plus);
+%     [ci,y] = predint(ft_lin.Alpha{1},x,.95,'functional','on');
+%     ci(ci<=0) = 0;
+%     y(y<=0) = 0;
+%     plot(x,y,'g')
+%     patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
+%         'g','FaceAlpha',0.15,'LineStyle','none')
+%     prettify
+%     xlabel('\lambda_1')
+%     ylabel('\alpha')
+%     title(['sim r=' num2str(ft_corr.r_alpha(1)) ...
+%         'p=' num2str(ft_corr.p_alpha(1))])
+%     clear x ci y color
+%     
+%     subplot(2,4,4)
+% %     semilogy(eigmax,ft_pl_sim.Tau_prime,'k.','MarkerSize',10)
+%     semilogy(eigmax_plus,ft_pl_sim.Tau_prime,'k.','MarkerSize',10)
+%     hold on
+% %     plot(eigmax(i),ft_pl_sim.Tau_prime(i),'xr')
+% %     x = min(eigmax):1e-3:max(eigmax);
+%     plot(eigmax_plus(i),ft_pl_sim.Tau_prime(i),'xr')
+%     x = min(eigmax_plus):1e-3:max(eigmax_plus);
+%     [ci,y] = predint(ft_lin.Tau_prime{1},x,.95,'functional','on');
+%     ci = 10.^ci;
+%     y = 10.^y;
+%     plot(x,y,'g')
+%     patch([x fliplr(x)],[ci(:,1)' fliplr(ci(:,2)')],...
+%         'g','FaceAlpha',0.15, 'LineStyle','none')
+%     prettify
+%     xlabel('\lambda_1')
+%     ylabel('\tau')
+%     title(['sim r=' num2str(ft_corr.r_tau_p(1)) ...
+%         '; p=' num2str(ft_corr.p_tau_p(1))])
+%     clear x ci y
+%     
+%     subplot(2,4,5)
+%     plot_log(dur_emp{i})
+%     title(num2str(eigmax(i)))
+%     hold on
+%     plot_pl_fit(dur_emp{i},ft_pl_emp.Alpha(i),ft_pl_emp.Tau_prime(i),...
+%         ft_pl_emp.Xmin(i))
+%     
+%     subplot(2,4,6)
+%     imagesc(nets{i}.A)
+%     prettify
+%     colorbar
+%     n1 = round(1000*-1*min(nets{i}.A(:)));
+%     n2 = round(1000*max(nets{i}.A(:)));
+%     colormap([linspace(0,1,n1)' linspace(0,1,n1)' ones(n1,1);...
+%         ones(n2,1) linspace(1,0,n2)' linspace(1,0,n2)'])
+%     clear n1 n2
+%     
+%     subplot(2,4,7)
+%     plot_log(dur_sim_plus{i})
+%     title(num2str(eigmax_plus(i)))
+%     hold on
+%     plot_pl_fit(dur_sim_plus{i},ft_pl_sim.Alpha(i),ft_pl_sim.Tau(i),...
+%         ft_pl_sim.Xmin(i))
+%     
+%     saveas(gcf,[num2str(find(idx==i)) '.png'])
+% end
+% clear i idx
+% %%
+% clf
+% plot_log(d)
+% hold on
+% plot_pl_fit(d,ft_pl(1),1/ft_pl(2),ft_pl(3))
+% function plot_log(d)
+% x = unique(d);
+% % x = 10.^(0:0.01:log10(max(d)));
+% y = histcounts(d,[x max(x)+1]);
+% loglog(x,y./sum(y),'.')
+% axis([1 10^4 10^-6 1])
+% prettify
+% end
+% function plot_pl_fit(d,a,t,xmin)
+% x = unique(d);
+% eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
+% eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
+% eq_l = @(x,a,l,xm) eq_c(a,l,xm) .* eq_f(x,a,l,xm);
+% y = eq_l(x,a,1./t,xmin);
+% loglog(x,y./sum(y),'b-')
+% end

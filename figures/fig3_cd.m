@@ -33,7 +33,7 @@ clear i lps_r x
 %% fig3d
 figure
 clf
-h = bar(lp_cnt./csc_cnt','stacked');
+h = bar(lp_cnt./csc_cnt,'stacked');
 colors = linspecer(lps_cnt_max);
 for i = 1 : lps_cnt_max
     h(i).FaceColor = colors(i,:);
@@ -42,3 +42,10 @@ prettify
 xlim([0 26])
 legend({'1-loop','2-loop','3-loop','4-loop'})
 clear i e h
+%%
+disp(['Mean # 1-, 2-, 3-, & 4-cycles: '...
+    num2str(mean(sum(lp_cnt,2)./csc_cnt))])
+disp(['Std err # 1-, 2-, 3-, & 4-cycles: '...
+    num2str(std(sum(lp_cnt,2)./csc_cnt) / sqrt(25))])
+disp(['Mean # cascades: ' num2str(mean(csc_cnt))])
+disp(['Std err # cascades: ' num2str(std(csc_cnt)/sqrt(25))])

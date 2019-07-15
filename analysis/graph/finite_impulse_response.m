@@ -8,7 +8,7 @@ function resp = finite_impulse_response(A,B,T)
 
 Wk = 0; % finite controllability Gramian
 for t = 0 : T
-    Wk = Wk + A^t*B*B'*A^t;
+    Wk = Wk + (A^t*B)*(B'*A'^t);
 end
 
 resp = trace(Wk);

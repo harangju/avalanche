@@ -14,8 +14,10 @@ weights = [];
 for i = 1 : N
     for j = 1 : N
         if A(i,j) > 0
-            source = [source i];
-            target = [target j];
+%             source = [source i];
+%             target = [target j];
+            source = [source j];
+            target = [target i];
             weights = [weights A(i,j)];
         end
     end

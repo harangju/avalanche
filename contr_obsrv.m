@@ -4,7 +4,7 @@ load(['/Users/harangju/Developer/cascade paper data' ...
 spikes = spike_times_to_bins(data.spikes,5);
 cascades = detect_cascades(spikes);
 n = net.generate('autoregressive',...
-    'v',cascades','pmin',1,'pmax',1);
+    'v',spikes','pmin',1,'pmax',1);
 n.v = [];
 %% plot network
 imagesc(n.A)

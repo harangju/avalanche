@@ -1,7 +1,7 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig4_g.mat'])
-%     load([source_data_dir '/fig4_h.mat'])
+    load([source_data_dir '/fig4a.mat'])
+%     load([source_data_dir '/fig4b.mat'])
 else
     iter = 30;
     T = 1e3;

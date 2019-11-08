@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig3_b.mat'])
+    load([source_data_dir '/fig3b.mat'])
 else
     N = 10;
     A0 = triu(ones(N)) - eye(N);

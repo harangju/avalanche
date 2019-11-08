@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig1_g.mat'])
+    load([source_data_dir '/fig1g.mat'])
 else
     disp('Simulating...')
     N = 10;

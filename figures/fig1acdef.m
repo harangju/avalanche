@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig1_abcdef.mat'])
+    load([source_data_dir '/fig1acdef.mat'])
 else
     disp('Generating network...')
     n = net.generate('erdosrenyi','n',10,'p',0.2,'dir',true);
@@ -28,33 +28,26 @@ else
     clear i yavg
 end
 %% fig1a
-% use webweb to generate graph (https://github.com/dblarremore/webweb)
-%% fig1b
+figure
+imagesc(A')
+%% fig1c
 figure
 for i = 1 : length(idx)
     subplot(1,length(idx),i)
     imagesc(Y_n{idx(i)})
 end
 clear i
-title('b')
-%% fig1c
+%% fig1d
 Y_n_avg = mean(csc_cell_to_mat(Y_n),3);
 figure
 imagesc(Y_n_avg)
 title('c')
-%% fig1d
-if ~exist('basedir','var')
-    
-end
+%% fig1e
 figure
 imagesc(X{neur})
 title('d')
-%% fig1e
+%% fig1f
 figure
 plot(df_t,'k')
 axis([0 1100 -.5 1.8])
 prettify
-%% fig1f
-df = Y_n_avg(Y_n_avg>0) - X{neur}(Y_n_avg>0);
-figure
-histogram(df,10); prettify; axis([-0.02 0.02 0 20])

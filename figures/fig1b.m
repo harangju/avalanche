@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig2_abc.mat'])
+    load([source_data_dir '/fig1b.mat'])
 else
     % network
     n = net.generate('erdosrenyi','n',10,'p',0.2,'dir',true);
@@ -24,17 +24,10 @@ else
     fp = 1 - P(1,1:max(dur));
     rmse = sqrt(mean((f-fp).^2));
 end
-%% fig2a
-figure
-imagesc(n.A)
-prettify
-%% fig2b
+%% fig1b
 figure
 loglog(1:length(f),f,'.')
 hold on
 loglog(1:length(fp),fp)
 hold off
 clear x
-%% fig2c
-figure
-plot(sum(Y{find(dur>20,1)}))

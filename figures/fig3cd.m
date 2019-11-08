@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig3_cd.mat'])
+    load([source_data_dir '/fig3cd.mat'])
 else
     % load empirical data
     disp('Load cascades...')

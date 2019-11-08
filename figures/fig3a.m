@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig3_a.mat'])
+    load([source_data_dir '/fig3a.mat'])
 else
     % acyclic 3-node graph
     Aa = [0 .5 0; 0 0 .5; 0 0 0];

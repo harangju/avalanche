@@ -1,6 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig4_i.mat'])
+    load([source_data_dir '/fig4c.mat'])
 else
     % load empirical data
     cascades = load_cascades(emp_data_dir);
@@ -44,7 +44,7 @@ else
     end
     clear i j k
 end
-%% fig4i
+%% fig4c
 figure
 hold on
 boxplot(rs)

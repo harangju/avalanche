@@ -1,6 +1,7 @@
+
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig2_def.mat'])
+    load([source_data_dir '/fig2bc.mat'])
 else
     disp('Generating networks...')
     sn_b = {...
@@ -30,7 +31,6 @@ else
     disp('Calculating eigen measures...')
     eigmax = cellfun(@(x) max(abs(eig(x.A))), sn_w);
 %     eigsum = cellfun(@(x) sum(abs(eig(x.A))), sn_w);
-%%    
     disp('Simulating...(this takes a while)')
     disp(repmat('-',[1 4 0]))
     T = 1e3;
@@ -94,7 +94,8 @@ if exist('source_data_dir','var') ~= 1
     clear r_* p_* idx
     disp(ft_corr)
 end
-%% fig2d
+%% fig2b
+% requires Symbolic Math Toolbox
 figure
 color = linspecer(1);
 i = 79;
@@ -103,6 +104,9 @@ y = histcounts(durs{i},[x T+1]) / length(durs{i});
 clf
 loglog(x,y,'k.','MarkerSize',12)
 hold on
+% function l = eq_l(x,a,t,xm)
+%     l = eq_c(a,1./t,xm) .* eq_f(x,a,1./t,xm);
+% end
 eq_c = @(a,l,xm) l.^(1-a) ./ igamma(1-a,l.*xm);
 eq_f = @(x,a,l,xm) (x/xm).^-a .* exp(-l.*x);
 eq_l = @(x,a,t,xm) eq_c(a,1./t,xm) .* eq_f(x,a,1./t,xm);
@@ -112,7 +116,7 @@ legend({'stochastic model','truncated power law'})
 prettify
 axis([0 max(x) 8e-7 1])
 clear i x y eq_c eq_f eq_l
-%% fig2e
+%% fig2c
 figure
 clf
 semilogy(eigmax,ft_pl_sim.Tau_prime,'.','MarkerSize',10,'Color',color)
@@ -127,20 +131,6 @@ patch([x1 fliplr(x1)],[ci1(:,1)' fliplr(ci1(:,2)')],...
 prettify
 xlabel('\lambda_1')
 ylabel('\tau')
-clear x1 x2 ci1 ci2 y1 y2
-%% fig2f
-figure
-clf
-plot(eigmax,ft_pl_sim.Alpha,'.','MarkerSize',10,'Color',color)
-hold on
-x1 = min(eigmax):1e-3:max(eigmax);
-[ci1,y1] = predint(ft_lin.Alpha,x1,.95,'observation','off');
-plot(x1,y1,'Color',color)
-patch([x1 fliplr(x1)],[ci1(:,1)' fliplr(ci1(:,2)')],...
-    color,'FaceAlpha',0.15,'LineStyle','none')
-prettify
-xlabel('\lambda_1')
-ylabel('\alpha')
 clear x1 x2 ci1 ci2 y1 y2
 %% display stats
 disp(ft_corr)

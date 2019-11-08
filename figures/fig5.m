@@ -98,7 +98,7 @@ else
     slopes = cellfun(@(x) mean(x(:,1)),fit_mis(:));
     [r_me_fit_mis, p_me_fit_mis] = corr(me, slopes);
 end
-%% fig5efgh
+%% fig5e
 for i = 1 : length(graphs)
     figure
     j = 1;
@@ -111,7 +111,7 @@ for i = 1 : length(graphs)
     title(graphs{i})
 end
 clear i j order_durm
-%% fig5i
+%% fig5f
 i = 1;
 j = 1;
 figure
@@ -121,12 +121,12 @@ f = polyfit(durm{i,j}',fit_mis{i,j}(:,1),1);
 x = min(durm{i,j}) : .1 : max(durm{i,j});
 plot(x,polyval(f,x),'r')
 clear i j f x
-%% fig5j
+%% fig5g
 figure
 boxplot(r_mis')
 prettify
 axis([.5 4.5 0 1])
-%% fig5k
+%% fig5h
 figure
 hold on
 colors = linspecer(4);

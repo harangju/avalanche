@@ -1,7 +1,6 @@
 %% try loading pre-generated data
 if exist('source_data_dir','var')
-    load([source_data_dir '/fig3_efgh.mat'])
-%     load([source_data_dir '/fig3_ijkl.mat'])
+    load([source_data_dir '/fig3efgh.mat'])
 else
     % 4-cycle
     seed = 1;

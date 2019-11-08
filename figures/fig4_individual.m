@@ -42,7 +42,7 @@ else
         'p-val:\t%.2g\t%.2g\t%.2g\n'],...
         r_se,r_mc,r_ac,pval_se,pval_mc,pval_ac);
 end
-%% fig4a,d
+%% 
 figure
 hold on
 plot(sumeig,durm,'k.')
@@ -51,7 +51,7 @@ x = min(sumeig) : 1e-2 : max(sumeig);
 plot(x,polyval(f,x),'r')
 prettify
 title('fig4a,d')
-%% fig4b,e
+%% 
 figure
 hold on
 plot(mc,durm,'k.')
@@ -60,7 +60,7 @@ x = min(mc) : 1e-2 : max(mc);
 plot(x,polyval(f,x),'r')
 prettify
 title('fig4b,e');
-%% fig4c,f
+%% 
 figure
 hold on
 plot(fac,durm,'k.')

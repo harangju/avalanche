@@ -1,5 +1,5 @@
 # cascades
-This repository contains code for simulation and analysis used in [Ju et al. 2019](https://arxiv.org/abs/1812.09361) (*Network structure of neural systems supporting cascading dynamics predicts stimulus propagation and recovery*).
+This repository contains code for simulation and analysis used in [Ju et al. 2020](https://doi.org/10.1088/1741-2552/abbff1) (*Network structure of neural systems supporting cascading dynamics predicts stimulus propagation and recovery*).
 
 ## Setup
 Code developed using `MATLAB 2018a` and `python 3.7.3`. For help using python in MATLAB, see [system configuration](https://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html).

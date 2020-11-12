@@ -6,7 +6,7 @@ function nets = load_emp_nets(emp_data_dir)
 %   data & saves to 'emp_nets'.
 
 bin_size = 5;
-pmax = 1;
+pmax = 4;
 
 emp_nets_filename = 'emp_nets.mat';
 if exist(emp_nets_filename,'file') == 2
@@ -22,8 +22,8 @@ else
         nets{i} = net.generate('autoregressive',...
             'v',spike_times_to_bins(data.spikes,bin_size)',...
             'pmin',1,'pmax',pmax);
-        nets{i}.v = [];
-        nets{i}.A = sum(nets{i}.A,3);
+%         nets{i}.v = [];
+        nets{i}.Asum = sum(nets{i}.A,3);
     end
     save(emp_nets_filename)
 end
